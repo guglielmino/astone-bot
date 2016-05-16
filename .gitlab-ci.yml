@@ -1,5 +1,6 @@
-bot_test:
-  stage: test
-  sctipt:
+image: node:4.3.2
+
+test_only:
+  script:
     - npm install
     - npm test
