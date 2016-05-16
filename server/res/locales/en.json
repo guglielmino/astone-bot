@@ -1,0 +1,14 @@
+{
+	"Sorry, no Auctions active now": "Sorry, no Auctions active now",
+	"*Ops!* We updating our BOT now, retry later. Sorry for the inconvenient :-(": "*Ops!* We updating our BOT now, retry later. Sorry for the inconvenient :-(",
+	"Before bidding You must choose an active auction": "Before bidding You must choose an active auction",
+	"Sorry, we have some problems starting this Auction right now, please retry later.": "Sorry, we have some problems starting this Auction right now, please retry later.",
+	"from": "from",
+	"AUCTION SUBCRIBED": "AUCTION SUBCRIBED",
+	"You are bidding on another Auction, would You like to leave it and start this one?": "You are bidding on another Auction, would You like to leave it and start this one?",
+	"Yes": "Yes",
+	"No": "No",
+	"You are best bidder now\n price is * € ": "You are best bidder now\n price is * € ",
+	"Your offer is lower than current value": "Your offer is lower than current value",
+	"Your offer is lower than current value (€ 601)": "Your offer is lower than current value (€ 601)"
+}

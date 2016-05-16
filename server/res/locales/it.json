@@ -1,0 +1,15 @@
+{
+  "Sorry, no Auctions active now": "Nessuna Asta attiva al momento",
+  "*Ops!* We updating our BOT now, retry later. Sorry for the inconvenient :-(":
+  "*Ops!* Stiamo aggiornando il BOT. Siamo spiacenti, riprova tra un po' :-(",
+  "Before bidding You must choose an active auction": "Prima di fare offerte devi selezionare un'asta",
+  "Sorry, we have some problems starting this Auction right now, please retry later.":
+  "Mi spiace ma non posso avviare l'asta ora, per favore riprova più tardi.",
+  "from": "da",
+  "AUCTION SUBCRIBED": "ASTA SOTTOSCRITTA",
+  "You are bidding on another Auction, would You like to leave it and start this one?":
+  "Stai già facendo offerte su un'altra Asta, vuoi abbandonarla?"
+  "Yes": "Si",
+  "No": "No",
+  "You are best bidder now\n price is * € ": "Sei il miglior offerente\n il prezzo è ora * € "
+}
