@@ -21,8 +21,11 @@ const telegram = new Telegram(request, config.telegram.api_key);
 
 const storageProvider = new StorageProvider(config);
 
-
 const sched = new RepeatingScheduler();
+
+// We want all dates in UTC
+process.env.TZ = 'UTC';
+
 
 i18n.configure({
 	locales:['en', 'it'],
@@ -38,6 +41,7 @@ storageProvider
 		const chatter = new TelegramChatter(logger);
 		const auctionManager = new AuctionManager(storageProvider.auctionProvider);
 		const auctionTimer = new AuctionTimer(telegram, i18n, auctionManager);
+		auctionTimer.start();
 		commands(chatter, telegram, i18n, auctionManager);
 
 		let lastupdateId = 0;

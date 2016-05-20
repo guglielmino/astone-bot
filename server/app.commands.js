@@ -18,5 +18,6 @@ export default (chatManager, telegram, i18n, auctionManager) => {
 	// QueryResponse command (ie 'out-of-band' commands on callback button action)
 	const startAuctionCmd = new StartAuctionCommand(telegram, i18n, auctionManager);
 	chatManager.addCommand(constants.QCOMMAND_START_AUCTION, startAuctionCmd, 'QueryResponse');
+	chatManager.addCommand(constants.QCOMMAND_BID, bidCmd, 'QueryResponse');
 
 };

@@ -10,22 +10,25 @@ export default class AuctionListCommand extends BaseCommand {
 	}
 
 	execute(state, ...params) {
-
-		state.wait_for = constants.QCOMMAND_START_AUCTION;
-
+		const now = new Date();
 		this._auctionManager
-			.getActiveAuctions()
+			.getActiveAuctions(now)
 			.then((res) => {
 				if (res && res.length > 0) {
 
 					res.forEach((item) => {
 						let buttons = [];
-						buttons.push([{text: `Start bidding on ${item.title}`, callback_data: item._id.toString() }]);
+
+						buttons.push([{
+							text: `Start bidding on ${item.title}`, callback_data: 
+								this.encodeQueryCommand(constants.QCOMMAND_START_AUCTION, item._id.toString())
+						}]);
+
 
 						this._telegram
 							.sendMessage({
 								chat_id: state.chat.id,
-								text: `*${item.title} (${this.t('from')} € ${item.startingPrice})*\n${item.image}\n${item.description}\n`,
+								text: `*${item.title} (${this.t('price')} € ${item.price})*\n${item.image}\n${item.description}\n`,
 								parse_mode: 'Markdown',
 								reply_markup: {
 									inline_keyboard: buttons

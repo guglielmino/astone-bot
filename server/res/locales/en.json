@@ -10,5 +10,13 @@
 	"No": "No",
 	"You are best bidder now\n price is * € ": "You are best bidder now\n price is * € ",
 	"Your offer is lower than current value": "Your offer is lower than current value",
-	"Your offer is lower than current value (€ 601)": "Your offer is lower than current value (€ 601)"
+	"Your offer is lower than current value (€ 601)": "Your offer is lower than current value (€ 601)",
+	"Your offer is lower than current value (€ 602)": "Your offer is lower than current value (€ 602)",
+	"Your offer is lower than current value (€ 604)": "Your offer is lower than current value (€ 604)",
+	"Your offer is lower than current value (€ 606)": "Your offer is lower than current value (€ 606)",
+	"Your offer is lower than current value (€ 609)": "Your offer is lower than current value (€ 609)",
+	"Your offer is lower than current value (€ 611)": "Your offer is lower than current value (€ 611)",
+	"Your offer is lower than current value (€ 614)": "Your offer is lower than current value (€ 614)",
+	"Your offer is lower than current value (€ 632)": "Your offer is lower than current value (€ 632)",
+	"price": "price"
 }

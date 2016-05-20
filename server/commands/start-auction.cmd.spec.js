@@ -13,7 +13,11 @@ describe('StartAuctionCommand', () => {
 		i18n.__ = (label) => { return label; };
 	});
 
-	it('Should set auctionId in state when succeed', () => {
+	it('Should set \'inline_keyboard\' in sendMessage with encode value and command', () => {
+		false.should.be.ok;
+	});
+
+	it('Should set \'wait_for\' to QCOMMAND_BID when succeed', () => {
 		false.should.be.ok;
 	});
 	

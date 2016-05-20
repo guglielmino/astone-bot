@@ -1,3 +1,5 @@
+import MsgEncoder from '../utilities/msg-encoder';
+
 export default class TelegramChatter {
 
 	constructor(logger) {
@@ -28,16 +30,18 @@ export default class TelegramChatter {
 	}
 
 	_handleQueryRequest(callback_query, state) {
-		let data = callback_query.data;
-		let waitFor = state.wait_for;
+		let queryData = new MsgEncoder().decode(callback_query.data);
+	
 		let callback_query_id = callback_query.id;
-		console.log(`wait_for ${waitFor} - data ${data}`);
-		let command = this._getCommand(waitFor, 'QueryResponse');
+		
+		this.logger.debug(`command ${queryData.c} - data ${queryData.d}`);
+		
+		let command = this._getCommand(queryData.c, 'QueryResponse');
 		if (command) {
 			// TODO: Check if callback_query_id dependency can be handled in other ways
 			state.callback_query_id = callback_query_id;
 			try {
-				command.cmd.execute(state, data);
+				command.cmd.execute(state, queryData.d);
 			}
 			catch(err) {
 				this.logger.error(`_handleQueryRequest ${err.description}`);

@@ -1,9 +1,18 @@
+import MsgEncoder from '../services/utilities/msg-encoder';
 
 export default class BaseCommand {
 	
 	constructor(telegram, i18n) {
 		this._telegram = telegram;
 		this._i18n = i18n;
+
+	}
+
+	encodeQueryCommand(command, data) {
+		return new MsgEncoder().encode({
+			c: command,
+			d: data
+		});
 	}
 
 	/**
@@ -29,3 +38,4 @@ export default class BaseCommand {
 		return this._i18n.__(label);
 	}
 }
+

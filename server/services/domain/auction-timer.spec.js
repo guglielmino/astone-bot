@@ -11,7 +11,6 @@ chai.should();
 let expect = chai.expect;
 
 describe('AuctionTimer', () => {
- 	let auctionTimer;
 	let i18n;
 
 	beforeEach(() => {
@@ -20,20 +19,28 @@ describe('AuctionTimer', () => {
 			return label;
 		};
 
-		let telegam = {};
-		let auctionManager = {};
-		auctionManager.getActiveAuctions = sinon.stub().returns(Promise.resolve([]));
-		
-		auctionTimer = new AuctionTimer(telegam, i18n, auctionManager);
+
 	});
 
 	it('Should call _timerFunc every seconds', () => {
+		let telegam = {};
+		let auctionManager = {};
+		auctionManager.getActiveAuctions = sinon.stub().returns(Promise.resolve([]));
+
 		let clock = sinon.useFakeTimers();
-		let stub  = sinon.stub(auctionTimer, '_timerFunc');
+
+		let auctionTimer = new AuctionTimer(telegam, i18n, auctionManager);
+		let timerFunc = sinon.stub(auctionTimer, '_timerFunc');
 
 		auctionTimer.start();
 		// Fake tick 1sec
-		clock.tick(1000);
-		stub.should.be.calledOnce;
+		clock.tick(1100);
+		clock.restore();
+		expect(timerFunc).calledOnce.should.be.ok;
 	});
+
+	it('Should call \'_sendMessageToSubscribers\' when Auction is older than 60 seconds', () => {
+
+	});
+	
 });

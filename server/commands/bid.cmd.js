@@ -1,6 +1,6 @@
 'use strict';
 import BaseCommand from './base-cmd';
-
+import * as constants from './consts';
 
 export default class BidCommand extends BaseCommand {
 
@@ -9,22 +9,52 @@ export default class BidCommand extends BaseCommand {
 		this._auctionManager = auctionManager;
 
 		this._responses = {
-			'Success': (chat, auction) => {
-				this.simpleResponse(chat.id,
-					this.t('You are best bidder now\n price is * € ') + auction.price.toFixed(2) + '*');
-					auction.subscribers.filter((sub) => sub.username !== chat.username)
-						.forEach((subscriber) => {
-							let to = `@${subscriber.username}`;
-							let mess = `${auction.title} price is now € ${auction.price}`;
-							this.simpleResponse(to, mess);
+			'Success': (state, auction) => {
+
+
+				const currentPrice = auction.price.toFixed(2);
+				const nextBid = parseFloat(auction.price + parseFloat(auction.bidStep || 1.00)).toFixed(2);
+				const bidRespMessage = `*€ ${currentPrice}* bid, now ${nextBid}, now ${nextBid}, will ya give me *€ ${nextBid}* ?`;
+
+				this._telegram
+					.answerCallbackQuery(state.callback_query_id, 'Bid accepted!', false);
+
+				auction.subscribers.forEach((subscriber) => {
+					this._telegram
+						.sendMessage({
+							chat_id: state.chat.id, // NO: I must use username
+							text: bidRespMessage,
+							parse_mode: 'Markdown',
+							reply_markup: {
+								inline_keyboard: [[{
+									text: `Bid € ${nextBid}`,
+									callback_data: this.encodeQueryCommand(constants.QCOMMAND_BID, nextBid)
+								}]
+								]
+							}
 						});
-				},
-			'NotAccepted': (chat, auction) => {
-				this.simpleResponse(chat.id, this.t('Offer can\'t be accepted. Try again.')); },
-			'ValueToLow': (chat, auction) => {
-				this.simpleResponse(chat.id, this.t(`Your offer is lower than current value (€ ${auction.price})`)); },
-			'AuctionNotActive': (chat, auction) => {
-				this.simpleResponse(chat.id, this.t('Can\'t bid on this Auction because is inactive')); }
+				});
+			},
+			'NotAccepted': (state, auction) => {
+				this._telegram
+					.answerCallbackQuery(state.callback_query_id, 'Bid NOT accepted!', false);
+				this.simpleResponse(state.chat.id, this.t('Offer can\'t be accepted. Try again.'));
+			},
+			'ValueToLow': (state, auction) => {
+				this._telegram
+					.answerCallbackQuery(state.callback_query_id, 'Bid NOT accepted!', false);
+				this.simpleResponse(state.chat.id, this.t(`Your offer is lower than current value (€ ${auction.price})`));
+			},
+			'AuctionNotActive': (state, auction) => {
+				this._telegram
+					.answerCallbackQuery(state.callback_query_id, 'Bid NOT accepted!', false);
+				this.simpleResponse(state.chat.id, this.t('Can\'t bid on this Auction because is inactive'));
+			},
+			'InsufficientSubscribers': (state, auction) => {
+				this._telegram
+					.answerCallbackQuery(state.callback_query_id, 'Bid NOT accepted!', false);
+				this.simpleResponse(state.chat.id, `We need at least *${auction.minSubscribers || 10}* participants to start the Auction`);
+			}
 		};
 	}
 
@@ -36,13 +66,13 @@ export default class BidCommand extends BaseCommand {
 		}
 
 		if (params.length > 0) {
-			const bidValue = parseFloat(params[0][0]);
+			const bidValue = parseFloat(params[0]);
 			if (bidValue > 0.0) {
 				this._auctionManager
 					.bid(state.auctionId, {username: state.chat.username}, bidValue)
 					.then((res) => {
-						if (res.status.name in this._responses){
-							this._responses[res.status.name](state.chat, res.auction);
+						if (res.status.name in this._responses) {
+							this._responses[res.status.name](state, res.auction);
 						}
 					});
 			}
