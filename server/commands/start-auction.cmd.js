@@ -17,6 +17,7 @@ export default class StartAuctionCommand extends BaseCommand {
 				.then((res) => {
 
 					if (res.status.name === 'Success') {
+						// TODO: State can be changhed in this way!!!
 						state.auctionId = auctionId.toString();
 
 						this._telegram

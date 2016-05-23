@@ -7,6 +7,7 @@ import Promise from 'bluebird';
 import api from './api';
 import StorageProvider from './services/storage/mongodb';
 import RepeatingScheduler from './services/scheduler/RepeatingScheduler';
+import StateManager from './services/bot/state-manager';
 import TelegramChatter from './services/bot/telegram-chatter';
 import i18n from 'i18n';
 import AuctionManager from './services/domain/auction-manager';
@@ -38,7 +39,8 @@ storageProvider
 	.then((db) => {
 		logger.debug("Db connected, configuring providers");
 
-		const chatter = new TelegramChatter(logger);
+		const stateManager = new StateManager();
+		const chatter = new TelegramChatter(logger, stateManager);
 		const auctionManager = new AuctionManager(storageProvider.auctionProvider);
 		const auctionTimer = new AuctionTimer(telegram, i18n, auctionManager);
 		auctionTimer.start();

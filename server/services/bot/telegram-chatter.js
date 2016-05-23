@@ -2,8 +2,8 @@ import MsgEncoder from '../utilities/msg-encoder';
 
 export default class TelegramChatter {
 
-	constructor(logger) {
-		this.states = {};
+	constructor(logger, stateManager) {
+		this.stateManager = stateManager;
 		this.commands = {};
 		this.logger = logger;
 	}
@@ -14,11 +14,11 @@ export default class TelegramChatter {
 		let message = request.message || request.callback_query.message;
 
 		const chatId = message.chat.id;
-		if (!this.states[chatId]) {
-			this.states[chatId] = {chat: message.chat};
+		if (!this.stateManager.exists(chatId)) {
+			this.stateManager.setState(chatId, {chat: message.chat});
 		}
 
-		let state = this.states[chatId];
+		let state = this.stateManager.getState(chatId);
 
 		if (message.text)
 			this._handleTextRequest(message.text, state);
@@ -39,7 +39,9 @@ export default class TelegramChatter {
 		let command = this._getCommand(queryData.c, 'QueryResponse');
 		if (command) {
 			// TODO: Check if callback_query_id dependency can be handled in other ways
-			state.callback_query_id = callback_query_id;
+			//state.callback_query_id = callback_query_id;
+			state = this.stateManager.updateState(state.chat.id, {callback_query_id: callback_query_id });
+			
 			try {
 				command.cmd.execute(state, queryData.d);
 			}

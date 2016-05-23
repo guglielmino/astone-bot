@@ -7,13 +7,16 @@ chai.should();
 
 import logger from '../logger';
 import TelegramChatter from './telegram-chatter';
+import StateManager from './state-manager';
 
 describe('TelegramChatter', () => {
 	let chatter;
 	let loggerStub = sinon.stub(logger);
 	beforeEach(() => {
 
-		chatter = new TelegramChatter(loggerStub);
+		let stateManager = new StateManager();
+		let mock = sinon.stub(stateManager);
+		chatter = new TelegramChatter(loggerStub, mock);
 	});
 	
 	it('Should throw exception if request type is not right', () => {

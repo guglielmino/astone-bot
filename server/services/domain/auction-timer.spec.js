@@ -40,7 +40,7 @@ describe('AuctionTimer', () => {
 	});
 
 	it('Should call \'_sendMessageToSubscribers\' when Auction is older than 60 seconds', () => {
-
+		false.should.be.true;
 	});
 	
 });
