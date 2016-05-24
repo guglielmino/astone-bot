@@ -15,7 +15,7 @@ export default class AuctionSearchCommand extends BaseCommand{
 			this._telegram
 				.sendChatAction(state.chat.id, 'typing');
 
-			this._auctionManager
+			return this._auctionManager
 				.search(term)
 				.then((res) => {
 
@@ -26,6 +26,8 @@ export default class AuctionSearchCommand extends BaseCommand{
 							parse_mode: 'Markdown'
 						});
 					});
+					
+					Promise.resolve(null);
 
 				});
 		}

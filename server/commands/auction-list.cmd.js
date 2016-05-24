@@ -11,7 +11,7 @@ export default class AuctionListCommand extends BaseCommand {
 
 	execute(state, ...params) {
 		const now = new Date();
-		this._auctionManager
+		return this._auctionManager
 			.getActiveAuctions(now)
 			.then((res) => {
 				if (res && res.length > 0) {
@@ -34,15 +34,17 @@ export default class AuctionListCommand extends BaseCommand {
 									inline_keyboard: buttons
 								}
 							});
+						
+						Promise.resolve(null);
 
 					});
 				}
 				else {
-					this.simpleResponse(state.chat.id, this.t('Sorry, no Auctions active now'));
+					return this.simpleResponse(state.chat.id, this.t('Sorry, no Auctions active now'));
 				}
 			})
 			.catch((err) => {
-				this.simpleResponse(state.chat.id, this.t('*Ops!* We updating our BOT now, retry later. Sorry for the inconvenient :-('));
+				return this.simpleResponse(state.chat.id, this.t('*Ops!* We updating our BOT now, retry later. Sorry for the inconvenient :-('));
 			});
 	}
 }

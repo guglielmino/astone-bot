@@ -27,6 +27,7 @@ export default class BaseCommand {
 				text: message,
 				parse_mode: 'Markdown'
 			});
+		 return Promise.resolve(null);
 	}
 
 	/**

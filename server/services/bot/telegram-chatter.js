@@ -29,25 +29,19 @@ export default class TelegramChatter {
 		return lastupdateId;
 	}
 
+
 	_handleQueryRequest(callback_query, state) {
 		let queryData = new MsgEncoder().decode(callback_query.data);
-	
+
 		let callback_query_id = callback_query.id;
-		
+
 		this.logger.debug(`command ${queryData.c} - data ${queryData.d}`);
-		
+
 		let command = this._getCommand(queryData.c, 'QueryResponse');
 		if (command) {
 			// TODO: Check if callback_query_id dependency can be handled in other ways
-			//state.callback_query_id = callback_query_id;
-			state = this.stateManager.updateState(state.chat.id, {callback_query_id: callback_query_id });
-			
-			try {
-				command.cmd.execute(state, queryData.d);
-			}
-			catch(err) {
-				this.logger.error(`_handleQueryRequest ${err.description}`);
-			}
+			state = this.stateManager.updateState(state.chat.id, {callback_query_id: callback_query_id});
+			this._executeCommand(command, state, queryData.d);
 		}
 	}
 
@@ -58,16 +52,31 @@ export default class TelegramChatter {
 		if (cli.length > 0) {
 			let command = this._getCommand(cli[0], 'Interactive')
 			if (command) {
-				try {
-					command.cmd.execute(state, cli.slice(1));
-				}
-				catch (err) {
-					this.logger.error(`_handleTextRequest ${err.description}`);
-				}
+				this._executeCommand(command, state, cli.slice(1));
 			}
 			else {
 				this.logger.debug("Unrecognized command => " + text);
 			}
+		}
+	}
+
+	/**
+	 * Execute command and use returned object to update state (if present)
+	 * @param state
+	 * @param data
+	 * @private
+	 */
+	_executeCommand(command, state, data) {
+		try {
+			command.cmd.execute(state, data)
+				.then((res) => {
+					if (res) {
+						this.stateManager.updateState(state.chat.id, res);
+					}
+				});
+		}
+		catch (err) {
+			this.logger.error(err.description);
 		}
 	}
 

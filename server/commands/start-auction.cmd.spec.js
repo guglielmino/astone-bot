@@ -17,15 +17,12 @@ describe('StartAuctionCommand', () => {
 		false.should.be.ok;
 	});
 
-	it('Should set \'wait_for\' to QCOMMAND_BID when succeed', () => {
+
+	it('Should create a reminder when selected auction isn\'t started', () => {
 		false.should.be.ok;
 	});
 	
-	it('Should not start an auction when another one is running', () => {
-		false.should.be.ok;
-	});
-
-	it('Should create a reminder when selected auction isn\'t started', () => {
+	it('Should set selected auctionId in state when called', () => {
 		false.should.be.ok;
 	});
 	

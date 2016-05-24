@@ -183,6 +183,39 @@ describe('AuctionManager', ()=> {
 			})
 		
 	});
+
+	it('Should fail when bid on a closed Auction', (done) => {
+		let auctionProvider = {};
+
+		auctionProvider.getAuctionById = sinon.stub().returns(Promise.resolve({
+			_id: ObjectID("572cc825de91f5b2bc3c24d8"),
+			title: "aaa",
+			description: "Csdfdsfdssdori!",
+			image: "http://www.oldcomputers.net/pics/C64-left.jpg",
+			startDate: Date("2016-06-14T22:00:00.000Z"),
+			startingPrice: 10,
+			price: 10.2,
+			username: "guglielmino",
+			minSubscribers: 3,
+			subscribers: [
+				{ username: "alpha", chatId: 1234},
+				{ username: "beta", chatId: 5678 }
+			],
+			closed: true
+			
+		}));
+
+		const auctionManager = new AuctionManager(auctionProvider);
+		auctionManager.bid(ObjectID("572cc825de91f5b2bc3c24d8"), {username: 'guglielmino'}, 100)
+			.then((res) => {
+				res.status.name.should.be.equal('AuctionClosed');
+				done();
+			})
+			.catch((err) => {
+				console.log(err.message);
+				done(err);
+			})
+	});
  
 	it('Should subscribe user to Auction when called', (done)=> {
 		let auctionProvider = {};
@@ -286,5 +319,7 @@ describe('AuctionManager', ()=> {
 				console.log(err);
 				done(err);
 			});
-	})
+	});
+	
+	
 });

@@ -12,7 +12,8 @@ BidResponse.initEnum([
 	'CanNotSubscribe',
 	'MultipleAuctionSubscribe',
 	'AuctionNotExist',
-	'InsufficientSubscribers'
+	'InsufficientSubscribers',
+	'AuctionClosed'
 ]);
 
 export class SubscribeResponse extends Enum {};
@@ -75,6 +76,10 @@ export default class AuctionManager {
 
 				if (auction.startDate > new Date()) {
 					return Promise.resolve({status: BidResponse.AuctionNotActive, auction: auction});
+				}
+
+				if (auction.closed) {
+					return Promise.resolve({status: BidResponse.AuctionClosed, auction: auction});
 				}
 
 				if(value === null) value = (auction.price || auction.startingPrice) + (auction.bidStep || 1.0);
