@@ -19,7 +19,6 @@ export default class BidCommand extends BaseCommand {
 					.answerCallbackQuery(state.callback_query_id, 'Bid accepted!', false);
 
 				auction.subscribers
-					.filter(x => x.chatId != state.chat.id)
 					.forEach((subscriber) => {
 						this
 							._sendMessageToSubscriber(subscriber, bidRespMessage, nextBid);

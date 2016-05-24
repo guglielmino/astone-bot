@@ -147,5 +147,10 @@ export default class AuctionManager {
 		return this._auctionProvider
 			.getAuctionById(auctionId);
 	}
+	
+	closeAuction(auctionId) {
+		return this._auctionProvider
+			.closeAuction(auctionId);
+	}
 }
 

@@ -26,17 +26,21 @@ describe('AuctionTimer', () => {
 		let telegam = {};
 		let auctionManager = {};
 		auctionManager.getActiveAuctions = sinon.stub().returns(Promise.resolve([]));
+		auctionManager.getRunningAuctionsBidAge = sinon.stub().returns(Promise.resolve([]));
 
 		let clock = sinon.useFakeTimers();
 
 		let auctionTimer = new AuctionTimer(telegam, i18n, auctionManager);
-		let timerFunc = sinon.stub(auctionTimer, '_timerFunc');
+		let timerFunc = sinon.stub(auctionTimer, '_timerFunc', () => {
+			console.log("CALLED!");
+		});
 
 		auctionTimer.start();
 		// Fake tick 1sec
-		clock.tick(1100);
+		clock.tick(1500);
 		clock.restore();
-		expect(timerFunc).calledOnce.should.be.ok;
+
+		auctionTimer._timerFunc.calledOnce.should.be.ok;
 	});
 
 	it('Should call \'_sendMessageToSubscribers\' when Auction is older than 60 seconds', () => {

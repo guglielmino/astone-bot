@@ -82,7 +82,7 @@ describe('BidCommand', () => {
 			});
 	});
 
-	it('Should send a message to all subscriber of Acution except the bidder when bid accepted', (done) => {
+	it('Should send a message to all subscriber of Acution when bid accepted', (done) => {
 		let auctionManager = {};
 		var startDate = new Date();
 		startDate.setDate(startDate.getDate() - 1);
@@ -108,7 +108,7 @@ describe('BidCommand', () => {
 
 		let command = new BidCommand(telegram, i18n, auctionManager);
 		let mock = sinon.mock(command);
-		let expectation = mock.expects('_sendMessageToSubscriber').exactly(2);
+		let expectation = mock.expects('_sendMessageToSubscriber').exactly(3);
 
 		command.execute({auctionId: "aabbcc", chat: {id: 123, username: "guglielmino"}}, [10])
 			.then((res) => {

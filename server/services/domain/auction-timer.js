@@ -2,11 +2,11 @@ import {CronJob} from 'cron';
 
 const ageMessages = {
 	65: (auction) => `No one offer more than € ${auction.price} ?`,
-	70: (auction) =>`Come on, don't be shy, make an offer`,
-	90: (auction) =>`*€ ${auction.price}* and one`,
-	95: (auction) =>`*€ ${auction.price}* and two`,
-	100: (auction) =>`*€ ${auction.price}* and three`,
-	103: (auction) =>`*${auction.title}* sold for *€ ${auction.price}*  💰`,
+	70: (auction) => `Come on, don't be shy, make an offer`,
+	90: (auction) => `*€ ${auction.price}* and one`,
+	95: (auction) => `*€ ${auction.price}* and two`,
+	100: (auction) => `*€ ${auction.price}* and three`,
+	103: (auction) => `*${auction.title}* sold for *€ ${auction.price}*  💰`
 }
 export default class AuctionTimer {
 
@@ -20,6 +20,8 @@ export default class AuctionTimer {
 			start: false,
 			timeZone: 'Europe/Rome'
 		});
+		let ages = Object.keys(ageMessages);
+		this._maxAge = Math.max.apply(null, ages);
 	}
 
 	start() {
@@ -31,20 +33,26 @@ export default class AuctionTimer {
 		this._auctionManager
 			.getRunningAuctionsBidAge(now, 60)
 			.then((res) => {
-					res.forEach((auction) => {
-						this._handleAuctionMessage(auction);
-					});
+				res.forEach((auction) => {
+					
+					this._handleAgeMessage(auction);
+					if(this._maxAge == auction.bidAge) {
+						this._auctionManager
+							.closeAuction(auction._id);
+					}
+				});
 			});
 	}
 
-	_handleAuctionMessage(auction) {
-		if(auction.bidAge > 60) {
+	_handleAgeMessage(auction) {
+		if (auction.bidAge > 60) {
+
 			console.log(`Auction ${auction.title} - ${auction.bidAge}`);
 			this._sendMessageToSubscribers(auction, ageMessages[auction.bidAge](auction))
 		}
 	}
 
-	_sendMessageToSubscribers(auction, message){
+	_sendMessageToSubscribers(auction, message) {
 		auction.subscribers.forEach((subscriber) => {
 			this._telegram.sendMessage({
 				chat_id: subscriber.chatId,
@@ -53,7 +61,6 @@ export default class AuctionTimer {
 			});
 		});
 	}
-
 
 
 }

@@ -63,7 +63,7 @@ export default class AuctionProvider {
 	 * @returns {Promise}
 	 */
 	getRunningAuctions() {
-		return this._findDocs({ lastBid: {$exists : true}});
+		return this._findDocs({lastBid: {$exists: true}});
 	}
 
 	search(term) {
@@ -144,8 +144,28 @@ export default class AuctionProvider {
 		return this._findDocs({username: username});
 	}
 
+	closeAuction(auctionId) {
+		return new Promise((resolve, reject) => {
+			this.db.collection(COLLECTION_NAME, (err, col) => {
+				if (err) {
+					reject(err);
+				}
+
+				col.updateOne({_id: ObjectID(auctionId)},
+					{$set: {closed: true}},
+					(err, r) => {
+						if (err) {
+							reject(err);
+						} else {
+							resolve(r.ok == 1);
+						}
+					});
+			});
+		});
+	}
+
 	/**
-	 * Helper for quering for documents 
+	 * Helper for quering for documents
 	 * @param query
 	 * @returns {Promise}
 	 * @private
