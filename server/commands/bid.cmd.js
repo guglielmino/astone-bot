@@ -48,7 +48,7 @@ export default class BidCommand extends BaseCommand {
 			'AuctionClosed': (state, auction) => {
 				this._telegram
 					.answerCallbackQuery(state.callback_query_id, 'Auction closed', false);
-				this.simpleResponse(state.chat.id, `This auction is closed and can't accept bidding`);
+				this.simpleResponse(state.chat.id, `This auction is closed and can't accept new bids`);
 			}
 		};
 	}
@@ -63,7 +63,7 @@ export default class BidCommand extends BaseCommand {
 			const bidValue = parseFloat(params[0]);
 			if (bidValue > 0.0) {
 				return this._auctionManager
-					.bid(state.auctionId, {username: state.chat.username}, bidValue)
+					.bid(state.auctionId, {username: state.chat.username, chatId: state.chat.id }, bidValue)
 					.then((res) => {
 						if (res.status.name in this._responses) {
 							this._responses[res.status.name](state, res.auction);

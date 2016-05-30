@@ -53,7 +53,7 @@ describe('BidCommand', () => {
 		command.execute({auctionId: "aabbcc", chat: {id: 10}}, [10])
 			.then((res) => {
 				command.simpleResponse
-					.calledWith(10, `This auction is closed and can't accept bidding`)
+					.calledWith(10, `This auction is closed and can't accept new bids`)
 					.should.be.ok;
 				done();
 			})

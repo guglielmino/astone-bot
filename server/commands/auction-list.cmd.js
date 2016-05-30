@@ -10,6 +10,9 @@ export default class AuctionListCommand extends BaseCommand {
 	}
 
 	execute(state, ...params) {
+		this._telegram
+			.sendChatAction(state.chat.id, 'typing');
+		
 		const now = new Date();
 		return this._auctionManager
 			.getActiveAuctions(now)
@@ -23,12 +26,11 @@ export default class AuctionListCommand extends BaseCommand {
 							text: `Start bidding on ${item.title}`, callback_data: 
 								this.encodeQueryCommand(constants.QCOMMAND_START_AUCTION, item._id.toString())
 						}]);
-
-
+							
 						this._telegram
 							.sendMessage({
 								chat_id: state.chat.id,
-								text: `*${item.title} (${this.t('price')} € ${item.price})*\n${item.image}\n${item.description}\n`,
+								text: `*${item.title} (${this.t('price')} € ${item.price})*\n${item.image}\n${item.description}`,
 								parse_mode: 'Markdown',
 								reply_markup: {
 									inline_keyboard: buttons

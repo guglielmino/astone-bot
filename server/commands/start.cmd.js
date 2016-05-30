@@ -12,17 +12,18 @@ export default class StartCommand extends BaseCommand {
 
 	constructor(telegram, i18n, userProvider) {
 		super(telegram, i18n);
-		this.userProvider = userProvider;
+	//	this.userProvider = userProvider;
 	}
 
 	execute(state, ...params) {
-		this.userProvider
-			.save(state.chat);
+		/*this.userProvider
+			.save(state.chat);*/
 
 		this.telegram.sendMessage({
 			chat_id: state.chat.id,
 			text: welcomeText,
-			parse_mode: 'Markdown'
+			parse_mode: 'Markdown',
+			
 		});
 
 		return Promise.resolve(null);

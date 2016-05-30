@@ -10,22 +10,32 @@ export default class StartAuctionCommand extends BaseCommand {
 	}
 
 	execute(state, ...params) {
+	
 		if (params && params.length > 0) {
 			const auctionId = params[0];
 			return this._auctionManager
 				.subscribe(auctionId, {username: state.chat.username, chatId: state.chat.id})
 				.then((res) => {
 
-					if (res.status.name === 'Success') {
-						this._telegram
-							.answerCallbackQuery(state.callback_query_id,
-								`${this.t('AUCTION SUBCRIBED')}`, false);
+					switch(res.status.name){
+						case 'Success':
+							this._telegram
+								.answerCallbackQuery(state.callback_query_id,
+									`${this.t('AUCTION SUBCRIBED')}`, false);
 
-						this._makeTelegramAnswer(state, res.auction);
+							this._makeTelegramAnswer(state, res.auction);
 
-						return Promise.resolve({ auctionId: auctionId.toString() });
+							return Promise.resolve({ auctionId: auctionId.toString() });
+						break;
+						case 'AuctionNotActive':
+							this._telegram
+								.sendMessage({
+									chat_id: state.chat.id,
+									text: `Sorry, this auction isn't active You can't start bidding on it.`,
+									parse_mode: 'Markdown'
+								});
+							break;
 					}
-					// TODO: Handling error cases
 				})
 				.catch((err) => {
 					return this.simpleResponse(state.chat.id,
