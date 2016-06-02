@@ -4,8 +4,8 @@ import * as constants from './consts';
 
 export default class BidCommand extends BaseCommand {
 
-	constructor(telegram, i18n, auctionManager) {
-		super(telegram, i18n);
+	constructor(telegram, auctionManager) {
+		super(telegram);
 		this._auctionManager = auctionManager;
 
 		this._responses = {
@@ -27,17 +27,17 @@ export default class BidCommand extends BaseCommand {
 			'NotAccepted': (state, auction) => {
 				this._telegram
 					.answerCallbackQuery(state.callback_query_id, 'Bid NOT accepted!', false);
-				this.simpleResponse(state.chat.id, this.t('Offer can\'t be accepted. Try again.'));
+				this.simpleResponse(state.chat.id, 'Offer can\'t be accepted. Try again.');
 			},
 			'ValueToLow': (state, auction) => {
 				this._telegram
 					.answerCallbackQuery(state.callback_query_id, 'Bid NOT accepted!', false);
-				this.simpleResponse(state.chat.id, this.t(`Your offer is lower than current value (€ ${auction.price})`));
+				this.simpleResponse(state.chat.id, `Your offer is lower than current value (€ ${auction.price})`);
 			},
 			'AuctionNotActive': (state, auction) => {
 				this._telegram
 					.answerCallbackQuery(state.callback_query_id, 'Bid NOT accepted!', false);
-				this.simpleResponse(state.chat.id, this.t('Can\'t bid on this Auction because is inactive'));
+				this.simpleResponse(state.chat.id, 'Can\'t bid on this Auction because is inactive');
 			},
 			'InsufficientSubscribers': (state, auction) => {
 				this._telegram
@@ -56,7 +56,7 @@ export default class BidCommand extends BaseCommand {
 	execute(state, ...params) {
 
 		if (!state.auctionId) {
-			return this.simpleResponse(state.chat.id, this.t('Before bidding You must choose an active auction'));
+			return this.simpleResponse(state.chat.id, 'Before bidding You must choose an active auction');
 		}
 
 		if (params.length > 0) {

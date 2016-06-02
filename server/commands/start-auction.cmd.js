@@ -4,8 +4,8 @@ import * as constants from './consts';
 
 export default class StartAuctionCommand extends BaseCommand {
 
-	constructor(telegram, i18n, auctionManager) {
-		super(telegram, i18n);
+	constructor(telegram, auctionManager) {
+		super(telegram);
 		this._auctionManager = auctionManager;
 	}
 
@@ -20,8 +20,7 @@ export default class StartAuctionCommand extends BaseCommand {
 					switch(res.status.name){
 						case 'Success':
 							this._telegram
-								.answerCallbackQuery(state.callback_query_id,
-									`${this.t('AUCTION SUBCRIBED')}`, false);
+								.answerCallbackQuery(state.callback_query_id, 'AUCTION SUBCRIBED', false);
 
 							this._makeTelegramAnswer(state, res.auction);
 
@@ -39,7 +38,7 @@ export default class StartAuctionCommand extends BaseCommand {
 				})
 				.catch((err) => {
 					return this.simpleResponse(state.chat.id,
-						this.t('Sorry, we have some problems starting this Auction right now, please retry later.'));
+						'Sorry, we have some problems starting this Auction right now, please retry later.');
 				});
 		}
 	}

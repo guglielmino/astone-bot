@@ -11,15 +11,9 @@ const expect = chai.expect;
 import BidCommand from './bid.cmd';
 
 describe('BidCommand', () => {
-	let i18n;
 	let telegram;
 
 	beforeEach(() => {
-		i18n = {};
-		i18n.__ = (label) => {
-			return label;
-		};
-
 		telegram = {};
 		telegram.sendMessage = sinon.stub();
 		telegram.answerCallbackQuery = sinon.stub();
@@ -28,7 +22,7 @@ describe('BidCommand', () => {
 
 	it('Should respond asking to select an Auction when trying to bid without selecting one', (done) => {
 		let auctionManager = {};
-		let command = new BidCommand(telegram, i18n, auctionManager);
+		let command = new BidCommand(telegram, auctionManager);
 
 		command.execute({chat: {id: 10}}, [10])
 			.then((res) => {
@@ -47,7 +41,7 @@ describe('BidCommand', () => {
 		auctionManager.bid = sinon.stub()
 			.returns(Promise.resolve({status: BidResponse.AuctionClosed}));
 
-		let command = new BidCommand(telegram, i18n, auctionManager);
+		let command = new BidCommand(telegram, auctionManager);
 		sinon.stub(command, 'simpleResponse');
 
 		command.execute({auctionId: "aabbcc", chat: {id: 10}}, [10])
@@ -67,7 +61,7 @@ describe('BidCommand', () => {
 		auctionManager.bid = sinon.stub()
 			.returns(Promise.resolve({status: BidResponse.AuctionNotActive}));
 
-		let command = new BidCommand(telegram, i18n, auctionManager);
+		let command = new BidCommand(telegram, auctionManager);
 		sinon.stub(command, 'simpleResponse');
 
 		command.execute({auctionId: "aabbcc", chat: {id: 10}}, [10])
@@ -106,7 +100,7 @@ describe('BidCommand', () => {
 				}
 			}));
 
-		let command = new BidCommand(telegram, i18n, auctionManager);
+		let command = new BidCommand(telegram, auctionManager);
 		let mock = sinon.mock(command);
 		let expectation = mock.expects('_sendMessageToSubscriber').exactly(3);
 
@@ -142,7 +136,7 @@ describe('BidCommand', () => {
 			]
 		}}));
 
-		let command = new BidCommand(telegram, i18n, auctionManager);
+		let command = new BidCommand(telegram, auctionManager);
 		sinon.stub(command, 'simpleResponse');
 
 		command.execute({auctionId: "aabbcc", chat: {id: 123, username: "guglielmino"}}, [10])

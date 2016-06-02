@@ -7,16 +7,10 @@ import StartAuctionCommand from './start-auction.cmd.js';
 
 describe('StartAuctionCommand', () => {
 	let telegram;
-	let i18n;
 	let auctionManager;
 
 	beforeEach(() => {
-		i18n = {};
-		i18n.__ = (label) => {
-			return label;
-		};
-
-		telegram = {};
+	  telegram = {};
 		auctionManager = {};
 
 		telegram.sendMessage = sinon.stub();
@@ -28,7 +22,7 @@ describe('StartAuctionCommand', () => {
 			.returns(Promise.resolve({ status: {name: 'Success'}}));
 
 
-		const command = new StartAuctionCommand(telegram, i18n, auctionManager);
+		const command = new StartAuctionCommand(telegram, auctionManager);
 		command.execute({callback_query_id: 100, chat: {id: 10}}, 123)
 			.then((res) => {
 				telegram.answerCallbackQuery
@@ -50,7 +44,7 @@ describe('StartAuctionCommand', () => {
 			.returns(Promise.resolve({ status: {name: 'AuctionNotActive'}}));
 
 
-		const command = new StartAuctionCommand(telegram, i18n, auctionManager);
+		const command = new StartAuctionCommand(telegram, auctionManager);
 		command.execute({callback_query_id: 100, chat: {id: 10}}, 123)
 			.then((res) => {
 				telegram.sendMessage

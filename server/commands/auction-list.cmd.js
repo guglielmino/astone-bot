@@ -4,8 +4,8 @@ import * as constants from './consts';
 
 export default class AuctionListCommand extends BaseCommand {
 
-	constructor(telegram, i18n, auctionManager) {
-		super(telegram, i18n);
+	constructor(telegram, auctionManager) {
+		super(telegram);
 		this._auctionManager = auctionManager;
 	}
 
@@ -30,7 +30,7 @@ export default class AuctionListCommand extends BaseCommand {
 						this._telegram
 							.sendMessage({
 								chat_id: state.chat.id,
-								text: `*${item.title} (${this.t('price')} € ${item.price})*\n${item.image}\n${item.description}`,
+								text: `*${item.title} (price € ${item.price})*\n${item.image}\n${item.description}`,
 								parse_mode: 'Markdown',
 								reply_markup: {
 									inline_keyboard: buttons
@@ -42,11 +42,11 @@ export default class AuctionListCommand extends BaseCommand {
 					});
 				}
 				else {
-					return this.simpleResponse(state.chat.id, this.t('Sorry, no Auctions active now'));
+					return this.simpleResponse(state.chat.id, 'Sorry, no Auctions active now');
 				}
 			})
 			.catch((err) => {
-				return this.simpleResponse(state.chat.id, this.t('*Ops!* We updating our BOT now, retry later. Sorry for the inconvenient :-('));
+				return this.simpleResponse(state.chat.id, '*Ops!* We updating our BOT now, retry later. Sorry for the inconvenient :-(');
 			});
 	}
 }

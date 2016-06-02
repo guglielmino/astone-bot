@@ -2,12 +2,15 @@ import MsgEncoder from '../services/utilities/msg-encoder';
 
 export default class BaseCommand {
 	
-	constructor(telegram, i18n) {
+	constructor(telegram) {
 		this._telegram = telegram;
-		this._i18n = i18n;
-
 	}
 
+	execute(state, ...params) {
+		throw new Error("\'execute\' must be implemented in subclass!");
+	}
+
+	// All following method MUST be removed from this class!!!
 	encodeQueryCommand(command, data) {
 		return new MsgEncoder().encode({
 			c: command,
@@ -28,15 +31,6 @@ export default class BaseCommand {
 				parse_mode: 'Markdown'
 			});
 		 return Promise.resolve(null);
-	}
-
-	/**
-	 * Traslate a string using i18n module
-	 * @param label
-	 * @returns {*}
-	 */
-	t(label) {
-		return this._i18n.__(label);
 	}
 }
 

@@ -12,15 +12,10 @@ import AuctionListCommand from './auction-list.cmd';
 
 describe('AuctionListCommand', () => {
 	let telegram;
-	let i18n;
+	
 	let auctionManager
 
 	beforeEach(() => {
-		i18n = {};
-		i18n.__ = (label) => {
-			return label;
-		};
-
 		telegram = {};
 		auctionManager = {};
 
@@ -53,7 +48,7 @@ describe('AuctionListCommand', () => {
 			])
 		);
 
-		const command = new AuctionListCommand(telegram, i18n, auctionManager);
+		const command = new AuctionListCommand(telegram, auctionManager);
 		command.execute({chat: {id: 10}})
 			.then((res) => {
 				telegram.sendMessage
@@ -70,7 +65,7 @@ describe('AuctionListCommand', () => {
 	it('Should respond with a message informing there are no active auction with called with empty auction list', (done)=>{
 		auctionManager.getActiveAuctions = sinon.stub().returns(Promise.resolve([]));
 
-		const command = new AuctionListCommand(telegram, i18n, auctionManager);
+		const command = new AuctionListCommand(telegram, auctionManager);
 		command.execute({chat: {id: 10}})
 			.then((res) => {
 				telegram.sendMessage
