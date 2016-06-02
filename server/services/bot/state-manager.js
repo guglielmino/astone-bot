@@ -1,29 +1,29 @@
-export default class StateManager {
+export default () => {
 
-	constructor() {
-		this.storage = {}
-	}
+	let storage = {};
 
-	setState(key, value) {
-		this.storage[key] = value;
-	}
+	return {
+		setState: (key, value) => {
+			storage[key] = value;
+		},
 
-	getState(key) {
-		return this.storage[key];
-	}
+		getState: (key) => {
+			return storage[key];
+		},
 
-	updateState(key, value) {
-		if(typeof value !== "object") {
-			throw Error("\'value\' must be an object");
+		updateState: (key, value) => {
+			if (typeof value !== "object") {
+				throw Error("\'value\' must be an object");
+			}
+
+			let stored = storage[key];
+			storage[key] = Object.assign(stored, value);
+
+			return storage[key];
+		},
+
+		exists: (key) => {
+			return storage.hasOwnProperty(key)
 		}
-
-		let stored = this.storage[key];
-		this.storage[key] = Object.assign(stored, value);
-		
-		return this.storage[key];
-	}
-
-	exists(key) {
-		return this.storage.hasOwnProperty(key)
 	}
 }

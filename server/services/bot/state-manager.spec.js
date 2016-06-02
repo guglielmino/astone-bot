@@ -14,7 +14,7 @@ describe('StateManager', () => {
 	let stateManager;
 
 	beforeEach(()=> {
-		stateManager = new StateManager();
+		stateManager = StateManager();
 	});
 
 	it('Should get state prevously set for key \'sample\'', ()=> {

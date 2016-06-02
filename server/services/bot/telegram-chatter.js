@@ -1,11 +1,11 @@
 import MsgEncoder from '../utilities/msg-encoder';
+import logger from '../logger';
 
 export default class TelegramChatter {
 
-	constructor(logger, stateManager) {
+	constructor(stateManager) {
 		this.stateManager = stateManager;
 		this.commands = {};
-		this.logger = logger;
 	}
 
 	processRequest(request) {
@@ -35,7 +35,7 @@ export default class TelegramChatter {
 
 		let callback_query_id = callback_query.id;
 
-		this.logger.debug(`command ${queryData.c} - data ${queryData.d}`);
+		logger.debug(`command ${queryData.c} - data ${queryData.d}`);
 
 		let command = this._getCommand(queryData.c, 'QueryResponse');
 		if (command) {
@@ -55,7 +55,7 @@ export default class TelegramChatter {
 				this._executeCommand(command, state, cli.slice(1));
 			}
 			else {
-				this.logger.debug("Unrecognized command => " + text);
+				logger.debug("Unrecognized command => " + text);
 			}
 		}
 	}
@@ -76,7 +76,8 @@ export default class TelegramChatter {
 				});
 		}
 		catch (err) {
-			this.logger.error(err.description);
+			console.log(err.message);
+			logger.error(err.message);
 		}
 	}
 
