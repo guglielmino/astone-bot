@@ -12,17 +12,25 @@ import BidCommand from './bid.cmd';
 
 describe('BidCommand', () => {
 	let telegram;
+	let managerFactory;
+	let auctionManager;
 
 	beforeEach(() => {
 		telegram = {};
 		telegram.sendMessage = sinon.stub();
 		telegram.answerCallbackQuery = sinon.stub();
 
+		auctionManager = {};
+		managerFactory = {
+			getAuctionManager: () =>{
+				return auctionManager;
+			}
+		};
+
 	});
 
 	it('Should respond asking to select an Auction when trying to bid without selecting one', (done) => {
-		let auctionManager = {};
-		let command = new BidCommand(telegram, auctionManager);
+		let command = new BidCommand(telegram, managerFactory);
 
 		command.execute({chat: {id: 10}}, [10])
 			.then((res) => {
@@ -37,11 +45,11 @@ describe('BidCommand', () => {
 	});
 
 	it('Should respond \'Auction closed\' when bid on a closed Auction', (done)=> {
-		let auctionManager = {};
+
 		auctionManager.bid = sinon.stub()
 			.returns(Promise.resolve({status: BidResponse.AuctionClosed}));
 
-		let command = new BidCommand(telegram, auctionManager);
+		let command = new BidCommand(telegram, managerFactory);
 		sinon.stub(command, 'simpleResponse');
 
 		command.execute({auctionId: "aabbcc", chat: {id: 10}}, [10])
@@ -57,11 +65,10 @@ describe('BidCommand', () => {
 	});
 
 	it('Should respond Auction isn\'t active when trying to bid on a not started one', (done) => {
-		let auctionManager = {};
 		auctionManager.bid = sinon.stub()
 			.returns(Promise.resolve({status: BidResponse.AuctionNotActive}));
 
-		let command = new BidCommand(telegram, auctionManager);
+		let command = new BidCommand(telegram, managerFactory);
 		sinon.stub(command, 'simpleResponse');
 
 		command.execute({auctionId: "aabbcc", chat: {id: 10}}, [10])
@@ -77,7 +84,7 @@ describe('BidCommand', () => {
 	});
 
 	it('Should send a message to all subscriber of Acution when bid accepted', (done) => {
-		let auctionManager = {};
+
 		var startDate = new Date();
 		startDate.setDate(startDate.getDate() - 1);
 		auctionManager.bid = sinon.stub().returns(Promise.resolve(
@@ -100,7 +107,7 @@ describe('BidCommand', () => {
 				}
 			}));
 
-		let command = new BidCommand(telegram, auctionManager);
+		let command = new BidCommand(telegram, managerFactory);
 		let mock = sinon.mock(command);
 		let expectation = mock.expects('_sendMessageToSubscriber').exactly(3);
 
@@ -115,7 +122,7 @@ describe('BidCommand', () => {
 	});
 
 	it('Should respond with min number of subscriber requests when bid and there are less than 10 subscribers', (done) => {
-		let auctionManager = {};
+
 		var startDate = new Date();
 		startDate.setDate(startDate.getDate() - 1);
 		auctionManager.bid = sinon.stub().returns(Promise.resolve({
@@ -136,7 +143,7 @@ describe('BidCommand', () => {
 			]
 		}}));
 
-		let command = new BidCommand(telegram, auctionManager);
+		let command = new BidCommand(telegram, managerFactory);
 		sinon.stub(command, 'simpleResponse');
 
 		command.execute({auctionId: "aabbcc", chat: {id: 123, username: "guglielmino"}}, [10])

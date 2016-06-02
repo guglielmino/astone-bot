@@ -4,9 +4,9 @@ import * as constants from './consts';
 
 export default class AuctionListCommand extends BaseCommand {
 
-	constructor(telegram, auctionManager) {
+	constructor(telegram, managerFactory) {
 		super(telegram);
-		this._auctionManager = auctionManager;
+		this._auctionManager = managerFactory.getAuctionManager();
 	}
 
 	execute(state, ...params) {
