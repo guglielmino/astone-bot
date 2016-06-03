@@ -2,6 +2,8 @@
 
 const config = {
 	env: process.env.NODE_ENV || 'development',
+	base_url: process.env.BASE_URL || 'https://bidbot.localtunnel.me',
+	cipher_password: process.env.CIPHER_PWD || 'password',
 	server: {
 		host: process.env.HOST || '0.0.0.0',
 		port: process.env.NODE_PORT || 9001
@@ -12,6 +14,11 @@ const config = {
 	},
 	mongo: {
 		uri: process.env.MONGO_URI
+	},
+	paypal: {
+		env: process.env.PAYPAL_ENV,
+		client_id: process.env.PAYPAL_CLIENT_ID,
+		client_secret: process.env.PAYPAL_CLIENT_SECRET
 	}
 };
 

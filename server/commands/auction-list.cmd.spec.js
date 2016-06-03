@@ -3,6 +3,7 @@
 import chai from 'chai';
 import sinon from 'sinon';
 import * as constants from './consts';
+import CommandHelper from './command-helper';
 import {ObjectID} from 'mongodb';
 
 chai.should();
@@ -14,20 +15,22 @@ describe('AuctionListCommand', () => {
 	let telegram;
 	let managerFactory;
 	let auctionManager;
-	
+	let commandHelper;
+
 
 	beforeEach(() => {
 		telegram = {};
 		auctionManager = {};
 
 		managerFactory = {
-			getAuctionManager: () =>{
+			getAuctionManager: () => {
 				return auctionManager;
 			}
 		};
-		
+
 		telegram.sendMessage = sinon.stub();
 		telegram.sendChatAction = sinon.stub();
+		commandHelper = sinon.stub(CommandHelper(telegram));
 	});
 
 	it('Should respond with a message for the active auction', (done) => {
@@ -55,7 +58,7 @@ describe('AuctionListCommand', () => {
 			])
 		);
 
-		const command = new AuctionListCommand(telegram, managerFactory);
+		const command = new AuctionListCommand(telegram, managerFactory, commandHelper);
 		command.execute({chat: {id: 10}})
 			.then((res) => {
 				telegram.sendMessage
@@ -69,23 +72,23 @@ describe('AuctionListCommand', () => {
 			});
 	});
 
-	it('Should respond with a message informing there are no active auction with called with empty auction list', (done)=>{
-		auctionManager.getActiveAuctions = sinon.stub().returns(Promise.resolve([]));
+	it('Should respond with a message informing there are no active auction with called with empty auction list', (done)=> {
+		auctionManager.getActiveAuctions = sinon.stub()
+			.returns(Promise.resolve([]));
 
-		const command = new AuctionListCommand(telegram, managerFactory);
+		const command = new AuctionListCommand(telegram, managerFactory, commandHelper);
 		command.execute({chat: {id: 10}})
 			.then((res) => {
-				telegram.sendMessage
-					.calledWith(
-						sinon.match.has('text', 'Sorry, no Auctions active now'))
+
+				commandHelper
+					.simpleResponse
+					.calledWith(10, 'Sorry, no Auctions active now')
 					.should.be.ok;
+
 				done();
 			})
 			.catch((err) => {
 				done(err);
 			});
-
 	});
-
-
 });

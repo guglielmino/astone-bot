@@ -2,6 +2,7 @@
 
 import {Enum} from 'enumify';
 
+
 export class BidResponse extends Enum {};
 
 BidResponse.initEnum([
@@ -122,10 +123,13 @@ export default class AuctionManager {
 				}
 			})
 			.then((auction) => {
-				if (auction) {
-					return Promise.resolve({status: BidResponse.Success, auction: auction});
+				if (auction ) {
+					if(!auction.closed)
+						return Promise.resolve({status: SubscribeResponse.Success, auction: auction});
+					else
+						return Promise.resolve({status: SubscribeResponse.AuctionNotActive, auction: auction});
 				} else {
-					return Promise.resolve({status: BidResponse.MultipleAuctionSubscribe});
+					return Promise.resolve({status: SubscribeResponse.MultipleAuctionSubscribe});
 				}
 			})
 			.catch((err) => {

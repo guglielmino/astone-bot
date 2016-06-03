@@ -1,4 +1,5 @@
 import {CronJob} from 'cron';
+import * as auctionConsts from './auction-consts';
 
 const ageMessages = {
 	65: (auction) => `No one offer more than € ${auction.price} ?`,
@@ -10,10 +11,12 @@ const ageMessages = {
 }
 export default class AuctionTimer {
 
-	constructor(telegram, i18n, auctionManager) {
+	constructor(telegram, i18n, auctionManager, eventEmitter) {
 		this._telegram = telegram;
 		this._i18n = i18n;
 		this._auctionManager = auctionManager;
+		this._eventEmitter = eventEmitter;
+		
 		this._job = new CronJob({
 			cronTime: '* * * * * *',
 			onTick: this._timerFunc.bind(this),
@@ -34,11 +37,12 @@ export default class AuctionTimer {
 			.getRunningAuctionsBidAge(now, 60)
 			.then((res) => {
 				res.forEach((auction) => {
-					
+
 					this._handleAgeMessage(auction);
-					if(this._maxAge == auction.bidAge) {
-						this._auctionManager
-							.closeAuction(auction._id);
+
+					// Last message is triggered when the Action should be closed
+					if (this._maxAge == auction.bidAge) {
+						this._eventEmitter.emit(auctionConsts.EVENT_AUCTION_CLOSED, auction);
 					}
 				});
 			});
@@ -46,8 +50,6 @@ export default class AuctionTimer {
 
 	_handleAgeMessage(auction) {
 		if (auction.bidAge > 60) {
-
-			console.log(`Auction ${auction.title} - ${auction.bidAge}`);
 			this._sendMessageToSubscribers(auction, ageMessages[auction.bidAge](auction))
 		}
 	}

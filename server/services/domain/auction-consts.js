@@ -1,3 +1,3 @@
-/**
- * Created by fabrizio on 26/05/16.
- */
+// Auction events
+export const EVENT_AUCTION_CLOSED = 'auction-closed';
+

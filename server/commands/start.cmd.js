@@ -1,5 +1,5 @@
 'use strict';
-import BaseCommand from './base-cmd';
+
 import * as constants from './consts';
 
 const welcomeText = '*Welcome to AstaBot*\n\n\
@@ -8,11 +8,12 @@ there are some simple commands to interact with the bot\n\
 /list - show active auctions, You can start bid on these\n\
 ';
 
-export default class StartCommand extends BaseCommand {
+export default class StartCommand  {
 
-	constructor(telegram, userProvider) {
-		super(telegram);
-	  this._userProvider = userProvider;
+	constructor(telegram, managerFactory) {
+		this._telegram = telegram;
+	  this._userProvider = managerFactory.getUserManager();
+		this._helper = commandHelper;
 	}
 
 	execute(state, ...params) {

@@ -1,6 +1,7 @@
 import MongoClient from 'mongodb';
 import BidProvider from './bid-provider';
 import AuctionProvider from './auction-provider';
+import UserProvider from './user-provider';
 
 export default class StorageProvider {
 
@@ -24,6 +25,7 @@ export default class StorageProvider {
 
 				this._bidProvider = new BidProvider(this.db);
 				this._auctionProvider = new AuctionProvider(this.db);
+				this._userProvider = new UserProvider(this.db);
 
 				resolve(db);
 			});
@@ -36,6 +38,10 @@ export default class StorageProvider {
 
 	get auctionProvider() {
 		return this._auctionProvider;
+	}
+
+	get userProvider() {
+		return this._userProvider;
 	}
 
 }

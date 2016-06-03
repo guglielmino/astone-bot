@@ -3,12 +3,14 @@
 import chai from 'chai';
 import sinon from 'sinon';
 
+import CommandHelper from './command-helper';
 import StartAuctionCommand from './start-auction.cmd.js';
 
 describe('StartAuctionCommand', () => {
 	let telegram;
 	let auctionManager;
 	let managerFactory;
+	let commandHelper;
 
 	beforeEach(() => {
 	  telegram = {};
@@ -22,6 +24,8 @@ describe('StartAuctionCommand', () => {
 
 		telegram.sendMessage = sinon.stub();
 		telegram.answerCallbackQuery = sinon.stub();
+
+		commandHelper = sinon.stub(CommandHelper(telegram));
 	});
 	
 	it('Should respond with \'AUCTION SUBSCRIBED\' when subscription succeeds', () => {
@@ -32,7 +36,8 @@ describe('StartAuctionCommand', () => {
 		const command = new StartAuctionCommand(telegram, managerFactory);
 		command.execute({callback_query_id: 100, chat: {id: 10}}, 123)
 			.then((res) => {
-				telegram.answerCallbackQuery
+				telegram
+					.answerCallbackQuery
 					.calledWith(
 						100,
 						'AUCTION SUBCRIBED', false)
@@ -54,7 +59,8 @@ describe('StartAuctionCommand', () => {
 		const command = new StartAuctionCommand(telegram, managerFactory);
 		command.execute({callback_query_id: 100, chat: {id: 10}}, 123)
 			.then((res) => {
-				telegram.sendMessage
+				telegram
+					.sendMessage
 					.calledWith(sinon.has('text', 'Sorry, this auction isn\'t active You can\'t start bidding on it.'))
 						.should.be.ok;
 				done();

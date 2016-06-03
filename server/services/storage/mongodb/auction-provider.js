@@ -51,10 +51,21 @@ export default class AuctionProvider {
 
 	/**
 	 * Get all active auctions, active means with a startDate less or equal date
+	 * and not closed
 	 * @returns {Promise}
 	 */
 	getActiveAuctions(date) {
-		return this._findDocs({startDate: {$lte: date}});
+		const query = {
+			$and: [
+				{ startDate: {$lte: date}},
+				{ $or: [
+					{ closed: false},
+					{ closed: {$exists: false }}
+				]}
+			]
+		};
+
+		return this._findDocs(query);
 	}
 
 
@@ -63,7 +74,17 @@ export default class AuctionProvider {
 	 * @returns {Promise}
 	 */
 	getRunningAuctions() {
-		return this._findDocs({lastBid: {$exists: true}});
+
+		const query = {
+			$and: [
+				{lastBid: {$exists: true}},
+				{ $or: [
+					{ closed: false},
+					{ closed: {$exists: false }}
+				]}
+			]
+		};
+		return this._findDocs(query);
 	}
 
 	search(term) {
@@ -157,7 +178,7 @@ export default class AuctionProvider {
 						if (err) {
 							reject(err);
 						} else {
-							resolve(r.ok == 1);
+							resolve(r.result.ok == 1);
 						}
 					});
 			});

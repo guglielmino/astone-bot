@@ -1,12 +1,13 @@
 'use strict';
-import BaseCommand from './base-cmd';
+
 import * as constants from './consts';
 
-export default class StartAuctionCommand extends BaseCommand {
+export default class StartAuctionCommand  {
 
-	constructor(telegram, managerFactory) {
-		super(telegram);
+	constructor(telegram, managerFactory, commandHelper) {
+		this._telegram = telegram;
 		this._auctionManager = managerFactory.getAuctionManager();
+		this._helper = commandHelper;
 	}
 
 	execute(state, ...params) {
@@ -37,8 +38,10 @@ export default class StartAuctionCommand extends BaseCommand {
 					}
 				})
 				.catch((err) => {
-					return this.simpleResponse(state.chat.id,
+					 this._helper
+						.simpleResponse(state.chat.id,
 						'Sorry, we have some problems starting this Auction right now, please retry later.');
+					return Promise.resolve(null);
 				});
 		}
 	}
@@ -57,7 +60,8 @@ export default class StartAuctionCommand extends BaseCommand {
 					inline_keyboard: [
 						[{
 							text: `Bid € ${nextBid}`,
-							callback_data: this.encodeQueryCommand(constants.QCOMMAND_BID, nextBid)
+							callback_data: this._helper
+								.encodeQueryCommand(constants.QCOMMAND_BID, nextBid)
 						}]
 					]
 				}

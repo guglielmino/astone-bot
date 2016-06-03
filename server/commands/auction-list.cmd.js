@@ -1,12 +1,13 @@
 'use strict';
-import BaseCommand from './base-cmd';
+
 import * as constants from './consts';
 
-export default class AuctionListCommand extends BaseCommand {
+export default class AuctionListCommand  {
 
-	constructor(telegram, managerFactory) {
-		super(telegram);
+	constructor(telegram, managerFactory, commandHelper) {
+		this._telegram = telegram;
 		this._auctionManager = managerFactory.getAuctionManager();
+		this._helper = commandHelper;
 	}
 
 	execute(state, ...params) {
@@ -23,8 +24,9 @@ export default class AuctionListCommand extends BaseCommand {
 						let buttons = [];
 
 						buttons.push([{
-							text: `Start bidding on ${item.title}`, callback_data: 
-								this.encodeQueryCommand(constants.QCOMMAND_START_AUCTION, item._id.toString())
+							text: `Start bidding on ${item.title}`, callback_data:
+								this._helper
+									.encodeQueryCommand(constants.QCOMMAND_START_AUCTION, item._id.toString())
 						}]);
 							
 						this._telegram
@@ -42,11 +44,11 @@ export default class AuctionListCommand extends BaseCommand {
 					});
 				}
 				else {
-					return this.simpleResponse(state.chat.id, 'Sorry, no Auctions active now');
+					return this._helper.simpleResponse(state.chat.id, 'Sorry, no Auctions active now');
 				}
 			})
 			.catch((err) => {
-				return this.simpleResponse(state.chat.id, '*Ops!* We updating our BOT now, retry later. Sorry for the inconvenient :-(');
+				return this._helper.simpleResponse(state.chat.id, '*Ops!* We updating our BOT now, retry later. Sorry for the inconvenient :-(');
 			});
 	}
 }
