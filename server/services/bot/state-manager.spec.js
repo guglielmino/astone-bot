@@ -6,54 +6,124 @@ import sinon from 'sinon';
 chai.should();
 
 const expect = chai.expect;
-
-
 import StateManager from './state-manager';
+import bluebird from 'bluebird';
+import redis from 'redis-mock';
+
+bluebird.promisifyAll(redis.RedisClient.prototype);
+
+/*{
+	redis: {
+		host: '192.168.99.100',
+			port: 32770,
+			db: 0
+	}
+}
+const client = redis.createClient({
+	host: config.redis.host,
+	port: config.redis.port,
+	db: config.redis.db
+});*/
 
 describe('StateManager', () => {
 	let stateManager;
 
-	beforeEach(()=> {
-		stateManager = StateManager();
+	beforeEach((done)=> {
+
+		const client = redis.createClient();
+		stateManager = StateManager(client);
+
+		stateManager
+			.del('sample')
+			.then((res) => {
+				done();
+			});
 	});
 
-	it('Should get state prevously set for key \'sample\'', ()=> {
-		stateManager.setState('sample', { name: 1, last: true });
+	it('Should get state prevously set for key \'sample\'', (done)=> {
+		stateManager.setState('sample', {name: 1, last: true})
+			.then((res) => {
+				stateManager
+					.getState('sample')
+					.then((state) => {
+						state.should.to.haveOwnProperty('name');
+						state.should.to.haveOwnProperty('last');
+						done();
+					});
+			})
+			.catch((err) => {
+				done(err);
+			});
 
-		let state = stateManager.getState('sample');
-		state.should.to.haveOwnProperty('name');
-		state.should.to.haveOwnProperty('last');
 	});
 
-	it('Should return \'undefined\' when try to get inexistent key', ()=> {
-		let state = stateManager.getState('fakekey');
-		expect(state).to.be.undefined;
+	it('Should return \'null\' when try to get inexistent key', (done)=> {
+		stateManager.getState('fakekey')
+			.then((state) => {
+				expect(state).to.be.null;
+				done();
+			});
 	});
 
-	it('Should update state when called with with a new field and value', () => {
-		stateManager.setState('sample', { name: 5, last: false });
+	it('Should update state when called with a new field and value', (done) => {
+		stateManager
+			.setState('sample', {name: "Sample name", last: false})
+			.then((res) => {
+				return stateManager.updateState('sample', {newkey: "newvalue"});
+			})
+			.then((state) => {
+				state.should.to.haveOwnProperty('name');
+				state.should.to.haveOwnProperty('last');
+				state.should.to.haveOwnProperty('newkey');
+				done();
+			});
 
-		let state =stateManager.updateState('sample', { newkey: "newvalue" });
-		state.should.to.haveOwnProperty('name');
-		state.should.to.haveOwnProperty('last');
-		state.should.to.haveOwnProperty('newkey');
 	});
 
 	it('Should throw exception when update is called without an object', () => {
-		stateManager.setState('sample', { name: 5, last: false });
-		expect(()=>{
-			stateManager.updateState('sample',  "newvalue" )
-		}).to.throws("\'value\' must be an object")
-	});
-	
-	it('Should return \'true\' when exists method called for a valid key', () => {
-		stateManager.setState('exkey', { color: "Red", price: 100 });
-		let exist = stateManager.exists('exkey');
-		exist.should.be.true;
+		stateManager.setState('sample', {name: 5, last: false});
+		expect(()=> {
+			stateManager.updateState('sample', "newvalue")
+		}).to.throws("\'value\' must be an object");
+
 	});
 
-	it('Should return \'false\' when exists method called for not valid key', () => {
-		let exist = stateManager.exists('nokey');
-		exist.should.be.false;
+	it('Should return \'true\' when exists method called for a valid key', (done) => {
+		stateManager
+			.setState('exkey', {color: "Red", price: 100})
+			.then((res) => {
+				stateManager.exists('exkey')
+					.then((exist) => {
+						exist.should.be.true;
+						done();
+					});
+			});
+
+	});
+
+	it('Should return \'false\' when exists method called for not valid key', (done) => {
+		let exist = stateManager.exists('nokey')
+			.then((exist) => {
+				exist.should.be.false;
+				done();
+			});
+	});
+
+	it('Should delete partial state', (done) => {
+		stateManager
+			.setState('sample', {name: "my name", last: false})
+			.then((res) => {
+				return stateManager
+					.updateState('sample', {last: null});
+			})
+			.then((res) => {
+				return stateManager.getState('sample');
+			})
+			.then((state) => {
+				expect(state.last).to.be.null;
+				done();
+			})
+
+
 	});
 });

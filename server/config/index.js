@@ -19,6 +19,11 @@ const config = {
 		env: process.env.PAYPAL_ENV,
 		client_id: process.env.PAYPAL_CLIENT_ID,
 		client_secret: process.env.PAYPAL_CLIENT_SECRET
+	},
+	redis: {
+		host: process.env.REDIS_HOST || 'localhost',
+		port: process.env.REDIS_PORT || 6379,
+		db: process.env.REDIS_DB || 0
 	}
 };
 

@@ -1,29 +1,53 @@
-export default () => {
+const keyPrefix = 'state:';
 
-	let storage = {};
+export default (client) => {
 
-	return {
-		setState: (key, value) => {
-			storage[key] = value;
+	let self = {
+		setState: (chatId, value) => {
+			return client
+				.setAsync(`${keyPrefix}${chatId}`, JSON.stringify(value));
 		},
 
-		getState: (key) => {
-			return storage[key];
+		getState: (chatId) => {
+			return client
+				.getAsync(`${keyPrefix}${chatId}`)
+				.then((val) => {
+					return (val ? Promise.resolve(JSON.parse(val)) : null);
+				});
 		},
 
-		updateState: (key, value) => {
+		updateState: (chatId, value) => {
 			if (typeof value !== "object") {
 				throw Error("\'value\' must be an object");
 			}
 
-			let stored = storage[key];
-			storage[key] = Object.assign(stored, value);
+  		return self.getState(chatId)
+				.then((stored) => {
 
-			return storage[key];
+					return self
+						.setState(chatId, Object.assign(stored, value));
+				})
+				.then((res) => {
+					return self
+						.getState(chatId);
+				});
 		},
 
-		exists: (key) => {
-			return storage.hasOwnProperty(key)
+		exists: (chatId) => {
+			return client
+				.existsAsync(`${keyPrefix}${chatId}`)
+				.then((res) => {
+					return Promise.resolve(res > 0);
+				});
+		},
+
+
+		del: (chatId) => {
+			return client
+				.delAsync(`${keyPrefix}${chatId}`);
+
 		}
 	}
+
+	return self;
 }

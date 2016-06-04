@@ -9,24 +9,25 @@ export default class TelegramChatter {
 	}
 
 	processRequest(request) {
-		let lastupdateId = request.update_id + 1;
-
 		let message = request.message || request.callback_query.message;
-
 		const chatId = message.chat.id;
-		if (!this.stateManager.exists(chatId)) {
-			this.stateManager.setState(chatId, {chat: message.chat});
-		}
 
-		let state = this.stateManager.getState(chatId);
+		this.stateManager
+			.exists(chatId)
+			.then((exist) => {
+				if (!exist) {
+					this.stateManager.setState(chatId, {chat: message.chat})
+				}
+				return this.stateManager.getState(chatId);
+			})
+			.then((state) => {
+				console.log("STATE " + state);
+				if (message.text)
+					this._handleTextRequest(message.text, state);
 
-		if (message.text)
-			this._handleTextRequest(message.text, state);
-
-		if (request.callback_query)
-			this._handleQueryRequest(request.callback_query, state);
-
-		return lastupdateId;
+				if (request.callback_query)
+					this._handleQueryRequest(request.callback_query, state);
+			});
 	}
 
 
@@ -40,8 +41,11 @@ export default class TelegramChatter {
 		let command = this._getCommand(queryData.c, 'QueryResponse');
 		if (command) {
 			// TODO: Check if callback_query_id dependency can be handled in other ways
-			state = this.stateManager.updateState(state.chat.id, {callback_query_id: callback_query_id});
-			this._executeCommand(command, state, queryData.d);
+			this.stateManager.updateState(state.chat.id, {callback_query_id: callback_query_id})
+				.then((state) => {
+					this._executeCommand(command, state, queryData.d);
+				});
+
 		}
 	}
 
@@ -71,12 +75,12 @@ export default class TelegramChatter {
 			command.cmd.execute(state, data)
 				.then((res) => {
 					if (res) {
-						this.stateManager.updateState(state.chat.id, res);
+						this.stateManager
+							.updateState(state.chat.id, res);
 					}
 				});
 		}
 		catch (err) {
-			console.log(err.message);
 			logger.error(err.message);
 		}
 	}

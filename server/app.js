@@ -2,7 +2,8 @@
 
 import logger from './services/logger';
 import config from './config';
-import Promise from 'bluebird';
+import bluebird from 'bluebird';
+import redis from 'redis';
 import {EventEmitter} from 'events';
 
 import web from './web';
@@ -33,7 +34,8 @@ const paypal = new PayPal({
 });
 
 
-const request = Promise.promisify(require('request'));
+
+const request = bluebird.promisify(require('request'));
 const telegram = new Telegram(request, config.telegram.api_key);
 
 const storageProvider = new StorageProvider(config);
@@ -54,7 +56,13 @@ storageProvider
 	.then((db) => {
 		logger.debug("Db connected, configuring providers");
 
-		const stateManager = StateManager();
+		bluebird.promisifyAll(redis.RedisClient.prototype);
+		const redisClient = redis.createClient({
+			host: config.redis.host,
+			port: config.redis.port,
+			db: config.redis.db
+		});
+		const stateManager = StateManager(redisClient);
 		const chatter = new TelegramChatter(stateManager);
 
 		const managerFactory = ManagerFactory(storageProvider);
@@ -75,6 +83,7 @@ storageProvider
 						if (res.result) {
 							res.result.forEach((req) => {
 								lastupdateId = chatter.processRequest(req);
+								lastupdateId = req.update_id + 1;
 							});
 						}
 					})

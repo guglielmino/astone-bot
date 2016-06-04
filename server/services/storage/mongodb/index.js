@@ -1,5 +1,4 @@
 import MongoClient from 'mongodb';
-import BidProvider from './bid-provider';
 import AuctionProvider from './auction-provider';
 import UserProvider from './user-provider';
 
@@ -23,17 +22,12 @@ export default class StorageProvider {
 				this.db = db;
 				console.log('Connected correctly to server');
 
-				this._bidProvider = new BidProvider(this.db);
 				this._auctionProvider = new AuctionProvider(this.db);
 				this._userProvider = new UserProvider(this.db);
 
 				resolve(db);
 			});
 		});
-	}
-
-	get bidProvider() {
-		return this._bidProvider;
 	}
 
 	get auctionProvider() {
