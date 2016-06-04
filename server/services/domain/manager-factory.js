@@ -1,8 +1,10 @@
 import AuctionManager from './auction-manager';
+import UserManager from './user-manager';
 
 export default (storageProvider) => {
 
 	let _auctionManager;
+	let _userManager;
 
 	return {
 		getAuctionManager() {
@@ -13,7 +15,10 @@ export default (storageProvider) => {
 		},
 
 		getUserManager() {
-			return {};
+			if(!_userManager) {
+				_userManager = UserManager(storageProvider.userProvider);
+			}
+			return _userManager;
 		}
 	}
 

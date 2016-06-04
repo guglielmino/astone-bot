@@ -8,24 +8,24 @@ there are some simple commands to interact with the bot\n\
 /list - show active auctions, You can start bid on these\n\
 ';
 
-export default class StartCommand  {
+export default class StartCommand {
 
-	constructor(telegram, managerFactory) {
+	constructor(telegram, managerFactory, commandHelper) {
 		this._telegram = telegram;
-	  this._userProvider = managerFactory.getUserManager();
+		this._userProvider = managerFactory.getUserManager();
 		this._helper = commandHelper;
 	}
 
 	execute(state, ...params) {
 		this._userProvider
-			.save(state.chat);
+			.addUser(state.chat);
 
-		this.telegram.sendMessage({
-			chat_id: state.chat.id,
-			text: welcomeText,
-			parse_mode: 'Markdown',
-			
-		});
+		this._telegram
+			.sendMessage({
+				chat_id: state.chat.id,
+				text: welcomeText,
+				parse_mode: 'Markdown'
+			});
 
 		return Promise.resolve(null);
 	}

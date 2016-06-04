@@ -21,7 +21,6 @@ export default class TelegramChatter {
 				return this.stateManager.getState(chatId);
 			})
 			.then((state) => {
-				console.log("STATE " + state);
 				if (message.text)
 					this._handleTextRequest(message.text, state);
 
@@ -54,6 +53,7 @@ export default class TelegramChatter {
 		const cli = readText.startsWith('/') ? readText.split(' ') : [];
 
 		if (cli.length > 0) {
+			logger.debug("Interactive command " + cli[0]);
 			let command = this._getCommand(cli[0], 'Interactive')
 			if (command) {
 				this._executeCommand(command, state, cli.slice(1));
