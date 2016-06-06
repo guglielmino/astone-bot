@@ -1,6 +1,32 @@
 version: '2'
 services:
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+
   redis:
     image: redis
     ports:
       - "6379"
+
+  bot:
+    build: .
+    links:
+        - mongo
+        - redis
+    ports:
+        - "9001:9001"
+
+
+    environment:
+      BASE_URL: https://bidbot.localtunnel.me
+      USE_WEBHOOK: 'True'
+      BOT_KET: ${BOT_KEY}
+      PAYPAL_ENV: ${PAYPAL_ENV}
+      PAYPAL_CLIENT_ID: ${PAYPAL_CLIENT_ID}
+      PAYPAL_CLIENT_SECRET: ${PAYPAL_CLIENT_SECRET}
+      MONGO_HOST: ${MONGO_HOST}
+      MONGO_PORT: ${MONGO_PORT}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_POST: ${REDIS_PORT}

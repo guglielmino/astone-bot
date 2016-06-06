@@ -12,8 +12,8 @@ export default class PayPal {
 	constructor({env, client_id, client_secret, returnUrl, cancelUrl}) {
 		paypal.configure({
 			'mode': env, //sandbox or live
-			'client_id': 'EBWKjlELKMYqRNQ6sYvFo64FtaRLRR5BdHEESmha49TM',
-			'client_secret': 'EO422dn3gQLgDbuwqTjzrFgFtaRLRR5BdHEESmha49TM'
+			'client_id': client_id,
+			'client_secret': client_secret
 		});
 		this.returnUrl = returnUrl;
 		this.cancelUrl = cancelUrl;
