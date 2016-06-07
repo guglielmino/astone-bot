@@ -9,8 +9,8 @@ const config = {
 		port: process.env.NODE_PORT || 9001
 	},
 	telegram: {
-		api_key: process.env.BOT_KEY,
-		use_webhook : process.env.USE_WEBHOOK|| false
+		api_key: process.env.BOT_KEY || '00000',
+		use_webhook : process.env.USE_WEBHOOK || false
 	},
 	mongo: {
 		uri: 'mongodb://' + process.env.MONGO_HOST + ':' + process.env.MONGO_PORT +'/bid1bot'
@@ -26,5 +26,6 @@ const config = {
 		db: process.env.REDIS_DB || 0
 	}
 };
+
 
 export default Object.freeze(config);

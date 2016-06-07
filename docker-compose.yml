@@ -21,8 +21,8 @@ services:
 
     environment:
       BASE_URL: https://bidbot.localtunnel.me
-      USE_WEBHOOK: 'True'
-      BOT_KET: ${BOT_KEY}
+      #USE_WEBHOOK: ${USE_WEBHOOK}
+      BOT_KEY: ${BOT_KEY}
       PAYPAL_ENV: ${PAYPAL_ENV}
       PAYPAL_CLIENT_ID: ${PAYPAL_CLIENT_ID}
       PAYPAL_CLIENT_SECRET: ${PAYPAL_CLIENT_SECRET}

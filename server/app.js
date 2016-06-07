@@ -77,6 +77,7 @@ storageProvider
 		let lastupdateId = 0;
 
 		if (!config.telegram.use_webhook) {
+			logger.debug("Using polling updates");
 			sched.schedule(() => {
 				telegram.getUpdates(lastupdateId, 100, 1000)
 					.then((res) => {
@@ -86,15 +87,23 @@ storageProvider
 								lastupdateId = req.update_id + 1;
 							});
 						}
+						else {
+							logger.error(JSON.stringify(res));
+						}
 					})
 					.catch((error) => {
 						logger.error("getUpdates => " + error);
 					});
 			}, 1000);
 		}
-
+		else {
+			logger.debug("Using webook");
+		}
 	
 		web(managerFactory.getAuctionManager(), chatter, paypal, config);
+	})
+	.catch((err) =>{
+		logger.error("Can't connect to database " + err.message);
 	});
 
 

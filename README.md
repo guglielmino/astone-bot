@@ -12,3 +12,7 @@ It supports some simple commands to create an auction or to bid on a existing on
 * `/stop` End started Auction
 
 # Url on telegram
+
+
+# Install note
+
