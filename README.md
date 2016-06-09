@@ -1,18 +1,20 @@
-## Bid1Bot - The Bot for Bidding
+## Astone - The Bot for Bidding
 
 Bid1Bot is a Telegram Bot for online auctions.
 
 It supports some simple commands to create an auction or to bid on a existing one.
 
+(TO DO: Extend with animated gif of a sample auction)
+
 # Commands
 
-
-* `/list`  Get a list of active auctions
-* `/bid`  Bid on started auction
-* `/stop` End started Auction
+(TO DO)
 
 # Url on telegram
 
+(TO DO)
 
-# Install note
+# Install notes
+
+(TO DO)
 
