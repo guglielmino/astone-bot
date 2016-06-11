@@ -79,7 +79,7 @@ storageProvider
 		if (!config.telegram.use_webhook) {
 			logger.debug("Using polling updates");
 			sched.schedule(() => {
-				telegram.getUpdates(lastupdateId, 100, 1000)
+				telegram.getUpdates(lastupdateId, 100, 0)
 					.then((res) => {
 						if (res.result) {
 							res.result.forEach((req) => {
@@ -94,7 +94,7 @@ storageProvider
 					.catch((error) => {
 						logger.error("getUpdates => " + error);
 					});
-			}, 1000);
+			}, 2000);
 		}
 		else {
 			logger.debug("Using webook");
@@ -103,7 +103,7 @@ storageProvider
 		web(managerFactory.getAuctionManager(), chatter, paypal, config);
 	})
 	.catch((err) =>{
-		logger.error("Can't connect to database " + err.message);
+		logger.error("Startup error: " + err.message);
 	});
 
 

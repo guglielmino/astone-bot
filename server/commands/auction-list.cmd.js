@@ -12,8 +12,8 @@ export default class AuctionListCommand  {
 
 	execute(state, ...params) {
 		this._telegram
-			.sendChatAction(state.chat.id, 'typing');
-		
+			.sendChatAction(state.chat.id, 'typing'); 
+
 		const now = new Date();
 		return this._auctionManager
 			.getActiveAuctions(now)

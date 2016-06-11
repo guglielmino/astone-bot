@@ -18,8 +18,21 @@ export default class UserProvider {
 					reject(err);
 				}
 
+
 				col.insertOne(userData, (err, r) => {
 					if (err) {
+						if (err.code===11000){
+							col.updateOne({ username: userData.username },
+								{ $set: { id: userData.id } },
+								(err, r) => {
+									if(err){
+										reject(err);
+									}
+									else {
+										resolve(r.result.ok);
+									}
+								});
+						}
 						reject(err);
 					}
 					else {

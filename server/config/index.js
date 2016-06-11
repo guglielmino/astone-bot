@@ -13,7 +13,8 @@ const config = {
 		use_webhook : process.env.USE_WEBHOOK || false
 	},
 	mongo: {
-		uri: 'mongodb://' + process.env.MONGO_HOST + ':' + process.env.MONGO_PORT +'/bid1bot'
+		
+		uri: 'mongodb://' + process.env.MONGO_HOST + ':' + process.env.MONGO_PORT + process.env.MONGO_DB || '/astone'
 	},
 	paypal: {
 		env: process.env.PAYPAL_ENV,

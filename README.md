@@ -1,6 +1,6 @@
 ## Astone - The Bot for Bidding
 
-Bid1Bot is a Telegram Bot for online auctions.
+Astone is a Telegram Bot for online auctions.
 
 It supports some simple commands to create an auction or to bid on a existing one.
 

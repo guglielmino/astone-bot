@@ -30,3 +30,4 @@ services:
       MONGO_PORT: ${MONGO_PORT}
       REDIS_HOST: ${REDIS_HOST}
       REDIS_POST: ${REDIS_PORT}
+      CIPHER_PWD: ${CIPHER_PWD}

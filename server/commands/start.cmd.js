@@ -12,13 +12,13 @@ export default class StartCommand {
 
 	constructor(telegram, managerFactory, commandHelper) {
 		this._telegram = telegram;
-		this._userProvider = managerFactory.getUserManager();
+		this._userManager = managerFactory.getUserManager();
 		this._helper = commandHelper;
 	}
 
 	execute(state, ...params) {
-		this._userProvider
-			.addUser(state.chat);
+		this._userManager
+			.save(state.chat);
 
 		this._telegram
 			.sendMessage({

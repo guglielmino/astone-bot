@@ -3,7 +3,7 @@
 export default (userProvider) => {
 	
 	return {
-		addUser: (userData) => {
+		save: (userData) => {
 			userProvider.save(userData);	
 		}
 	}

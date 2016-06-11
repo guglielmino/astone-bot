@@ -71,18 +71,18 @@ export default class TelegramChatter {
 	 * @private
 	 */
 	_executeCommand(command, state, data) {
-		try {
-			command.cmd.execute(state, data)
-				.then((res) => {
-					if (res) {
-						this.stateManager
-							.updateState(state.chat.id, res);
-					}
-				});
-		}
-		catch (err) {
-			logger.error(err.message);
-		}
+
+		command.cmd.execute(state, data)
+			.then((res) => {
+				if (res) {
+					this.stateManager
+						.updateState(state.chat.id, res);
+				}
+			})
+			.catch((err) => {
+				logger.error("Execute command error: " + err.message);
+			});
+
 	}
 
 	_getCommand(key, type) {
