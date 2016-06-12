@@ -17,6 +17,7 @@ import i18n from 'i18n';
 
 import ManagerFactory from './services/domain/manager-factory';
 
+import AuctionChant from './services/domain/auction-chant';
 import AuctionTimer from './services/domain/auction-timer';
 import AuctionEvents from './services/domain/auction-events';
 
@@ -26,13 +27,12 @@ import PayPal from './services/payment/paypal';
 
 
 const paypal = new PayPal({
-	env: config.paypal.env,
-	client_id: config.paypal.client_id,
-	client_secret: config.paypal.client_secret,
-	returnUrl: urlConsts.API_PAYPAL_SUCCESS,
-	cancelUrl: urlConsts.API_PAYPAL_CANCEL
+  env: config.paypal.env,
+  client_id: config.paypal.client_id,
+  client_secret: config.paypal.client_secret,
+  returnUrl: urlConsts.API_PAYPAL_SUCCESS,
+  cancelUrl: urlConsts.API_PAYPAL_CANCEL
 });
-
 
 
 const request = bluebird.promisify(require('request'));
@@ -46,65 +46,68 @@ process.env.TZ = 'UTC';
 
 
 i18n.configure({
-	locales:['en', 'it'],
-	directory: __dirname + '/res/locales',
-	register: global
+  locales: ['en', 'it'],
+  directory: __dirname + '/res/locales',
+  register: global
 });
 
 storageProvider
-	.connect(config)
-	.then((db) => {
-		logger.debug("Db connected, configuring providers");
+  .connect(config)
+  .then((db) => {
+    logger.debug('Db connected, configuring providers');
 
-		bluebird.promisifyAll(redis.RedisClient.prototype);
-		const redisClient = redis.createClient({
-			host: config.redis.host,
-			port: config.redis.port,
-			db: config.redis.db
-		});
-		const stateManager = StateManager(redisClient);
-		const chatter = new TelegramChatter(stateManager);
+    bluebird.promisifyAll(redis.RedisClient.prototype);
+    const redisClient = redis.createClient({
+      host: config.redis.host,
+      port: config.redis.port,
+      db: config.redis.db
+    });
+    const stateManager = StateManager(redisClient);
+    const chatter = new TelegramChatter(stateManager);
 
-		const managerFactory = ManagerFactory(storageProvider);
-		const eventEmitter = new EventEmitter();
-		const auctionTimer = new AuctionTimer(telegram, managerFactory.getAuctionManager(), eventEmitter);
-		const closeAuctionUrl = config.base_url + urlConsts.PAGE_PAYPAL_GETPAYURL;
-		const auctionEvents = new AuctionEvents(telegram, i18n, managerFactory.getAuctionManager(), eventEmitter, closeAuctionUrl);
+    const managerFactory = ManagerFactory(storageProvider);
+    const eventEmitter = new EventEmitter();
+    const auctionChant = AuctionChant(telegram,
+      managerFactory.getAuctionManager());
+    const auctionTimer = new AuctionTimer(auctionChant, eventEmitter);
+    const closeAuctionUrl = config.base_url + urlConsts.PAGE_PAYPAL_GETPAYURL;
+    const auctionEvents = new AuctionEvents(telegram, i18n,
+      managerFactory.getAuctionManager(), eventEmitter, closeAuctionUrl);
 
-		auctionTimer.start();
-		commands(chatter, telegram, managerFactory);
+    auctionTimer.start();
+    commands(chatter, telegram, managerFactory);
 
-		let lastupdateId = 0;
+    let lastupdateId = 0;
 
-		if (!config.telegram.use_webhook) {
-			logger.debug("Using polling updates");
-			sched.schedule(() => {
-				telegram.getUpdates(lastupdateId, 100, 0)
-					.then((res) => {
-						if (res.result) {
-							res.result.forEach((req) => {
-								lastupdateId = chatter.processRequest(req);
-								lastupdateId = req.update_id + 1;
-							});
-						}
-						else {
-							logger.error(JSON.stringify(res));
-						}
-					})
-					.catch((error) => {
-						logger.error("getUpdates => " + error);
-					});
-			}, 2000);
-		}
-		else {
-			logger.debug("Using webook");
-		}
-	
-		web(managerFactory.getAuctionManager(), chatter, paypal, config);
-	})
-	.catch((err) =>{
-		logger.error("Startup error: " + err.message);
-	});
+    if (!config.telegram.use_webhook) {
+      logger.debug("Using polling updates");
+      sched.schedule(() => {
+        telegram.getUpdates(lastupdateId, 100, 0)
+          .then((res) => {
+            if (res.result) {
+              res.result.forEach((req) => {
+                lastupdateId = chatter.processRequest(req);
+                lastupdateId = req.update_id + 1;
+              });
+            }
+            else {
+              logger.error(JSON.stringify(res));
+            }
+          })
+          .catch((error) => {
+            logger.error("getUpdates => " + error);
+          });
+      }, 2000);
+    }
+    else {
+      logger.debug("Using webook");
+    }
+
+    web(managerFactory.getAuctionManager(), chatter, paypal, config);
+  })
+  .catch((err) => {
+    logger.error("Startup error: " + err.message);
+  });
 
 
 

@@ -32,7 +32,7 @@ describe('AuctionChant', () => {
 
     const telegram = {};
     telegram.sendMessage = sinon.stub();
-    auctionChant = AuctionChant(auctionManager, telegram);
+    auctionChant = AuctionChant(telegram, auctionManager);
 
     auctionChant
       .make()
@@ -74,7 +74,7 @@ describe('AuctionChant', () => {
 
       const telegram = {};
       telegram.sendMessage = sinon.stub();
-      auctionChant = AuctionChant(auctionManager, telegram);
+      auctionChant = AuctionChant(telegram, auctionManager);
 
       auctionChant
         .make()
@@ -116,7 +116,7 @@ describe('AuctionChant', () => {
 
       const telegram = {};
       telegram.sendMessage = sinon.stub();
-      auctionChant = AuctionChant(auctionManager, telegram);
+      auctionChant = AuctionChant(telegram, auctionManager);
 
       auctionChant
         .make()
@@ -158,7 +158,7 @@ describe('AuctionChant', () => {
 
       const telegram = {};
       telegram.sendMessage = sinon.stub();
-      auctionChant = AuctionChant(auctionManager, telegram);
+      auctionChant = AuctionChant(telegram, auctionManager);
 
       auctionChant
         .make()
@@ -200,7 +200,7 @@ describe('AuctionChant', () => {
 
       const telegram = {};
       telegram.sendMessage = sinon.stub();
-      auctionChant = AuctionChant(auctionManager, telegram);
+      auctionChant = AuctionChant(telegram, auctionManager);
 
       auctionChant
         .make()
@@ -243,7 +243,7 @@ describe('AuctionChant', () => {
 
       const telegram = {};
       telegram.sendMessage = sinon.stub();
-      auctionChant = AuctionChant(auctionManager, telegram);
+      auctionChant = AuctionChant(telegram, auctionManager);
 
       auctionChant
         .make()

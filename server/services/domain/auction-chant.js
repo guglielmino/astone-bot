@@ -1,6 +1,7 @@
 'use strict';
 
-export default (auctionManager, telegram) => {
+export default (telegram, auctionManager) => {
+
   const ageMessages = {
     65: (auction) => `No one offer more than € ${auction.price} ?`,
     70: (auction) => `Come on, don't be shy, make an offer`,
@@ -8,7 +9,10 @@ export default (auctionManager, telegram) => {
     95: (auction) => `*€ ${auction.price}* and two`,
     100: (auction) => `*€ ${auction.price}* and three`,
     103: (auction) => `*${auction.title}* sold for *€ ${auction.price}*  💰`
-  }
+  };
+
+  const ages = Object.keys(ageMessages);
+  const maxAge = Math.max.apply(null, ages);
 
   function _handleAgeMessage(auction) {
     if (auction.bidAge > 60) {
