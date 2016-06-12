@@ -7,7 +7,8 @@
     "build": "npm run test && npm run clean && npm run babel",
     "deploy": "",
     "start": "node server/babel.js",
-    "tunnel": "./node_modules/.bin/lt --port 9001 --subdomain bidbot"
+    "tunnel": "./node_modules/.bin/lt --port 9001 --subdomain bidbot",
+    "lint": "./node_modules/.bin/eslint --cache ."
   },
   "dependencies": {
     "async-polling": "^0.2.1",

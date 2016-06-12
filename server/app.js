@@ -67,7 +67,7 @@ storageProvider
 
 		const managerFactory = ManagerFactory(storageProvider);
 		const eventEmitter = new EventEmitter();
-		const auctionTimer = new AuctionTimer(telegram, i18n, managerFactory.getAuctionManager(), eventEmitter);
+		const auctionTimer = new AuctionTimer(telegram, managerFactory.getAuctionManager(), eventEmitter);
 		const closeAuctionUrl = config.base_url + urlConsts.PAGE_PAYPAL_GETPAYURL;
 		const auctionEvents = new AuctionEvents(telegram, i18n, managerFactory.getAuctionManager(), eventEmitter, closeAuctionUrl);
 

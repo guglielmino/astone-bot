@@ -12,80 +12,73 @@ chai.should();
 let expect = chai.expect;
 
 sinon.config = {
-	injectIntoThis: false,
-	injectInto: null,
-	useFakeTimers: true,
-	useFakeServer: true
+  injectIntoThis: false,
+  injectInto: null,
+  useFakeTimers: true,
+  useFakeServer: true
 };
 
 describe('AuctionTimer', () => {
-	let i18n;
-	let clock;
+  let clock;
 
-	beforeEach(() => {
-		var date = new Date();
-		clock = sinon.useFakeTimers(date.getDate());
+  beforeEach(() => {
+    const date = new Date();
+    clock = sinon.useFakeTimers(date.getDate());
+  });
 
-		i18n = {};
-		i18n.__ = (label) => {
-			return label;
-		};
-	});
+  afterEach(() => {
+    clock.restore();
+  });
 
-	afterEach(() => {
-		clock.restore();
-	});
+  it('Should call _timerFunc every seconds', () => {
+    let telegam = {};
+    const auctionManager = new AuctionManager({});
+    sinon.stub(auctionManager, 'getActiveAuctions').returns(Promise.resolve([]));
+    sinon.stub(auctionManager, 'getRunningAuctionsBidAge').returns(Promise.resolve([]));
 
-	;it('Should call _timerFunc every seconds', () => {
-		let telegam = {};
-		let auctionManager = new AuctionManager({});
-		sinon.stub(auctionManager, 'getActiveAuctions').returns(Promise.resolve([]));
-		sinon.stub(auctionManager, 'getRunningAuctionsBidAge').returns(Promise.resolve([]));
+    const auctionTimer = new AuctionTimer(telegam, auctionManager);
+    auctionTimer._timerFunc = sinon.stub();
 
-		let auctionTimer = new AuctionTimer(telegam, i18n, auctionManager);
-		auctionTimer._timerFunc = sinon.stub();
+    auctionTimer.start();
+    // Fake tick 1sec
+    clock.tick(1000);
 
-		auctionTimer.start();
-		// Fake tick 1sec
-		clock.tick(1000);
+    auctionTimer
+      ._timerFunc
+      .calledTwice.should.equal.true;
+  });
 
-		auctionTimer
-			._timerFunc
-			.calledTwice.should.equal.true;
-	});
+  it('Should close Auction when timer is 103sec from last bid', () => {
+    let telegam = {};
 
-	it('Should close Auction when timer is 103sec from last bid', () => {
-		let telegam = {};
-		
-		let auctionManager = {};
-		auctionManager.closeAuction = sinon.stub();
-		
-		auctionManager.getRunningAuctionsBidAge = sinon.stub().returns(Promise.resolve([{
-			_id: ObjectID("572cc825de91f5b2bc3c24d8"),
-			title: "aaa",
-			description: "Csdfdsfdssdori!",
-			image: "http://www.oldcomputers.net/pics/C64-left.jpg",
-			startDate: Date("2016-06-14T22:00:00.000Z"),
-			startingPrice: 10,
-			price: 10.2,
-			username: "guglielmino",
-			minSubscribers: 3,
-			subscribers: [
-				{ username: "alpha", chatId: 1234},
-				{ username: "beta", chatId: 5678 }
-			]
-		}]));
+    let auctionManager = {};
+    auctionManager.closeAuction = sinon.stub();
 
-		let clock = sinon.useFakeTimers();
-		let auctionTimer = new AuctionTimer(telegam, i18n, auctionManager);
+    auctionManager.getRunningAuctionsBidAge = sinon.stub().returns(Promise.resolve([{
+      _id: ObjectID("572cc825de91f5b2bc3c24d8"),
+      title: "aaa",
+      description: "Csdfdsfdssdori!",
+      image: "http://www.oldcomputers.net/pics/C64-left.jpg",
+      startDate: Date("2016-06-14T22:00:00.000Z"),
+      startingPrice: 10,
+      price: 10.2,
+      username: 'guglielmino',
+      minSubscribers: 3,
+      subscribers: [
+        { username: 'alpha', chatId: 1234 },
+        { username: 'beta', chatId: 5678 }
+      ]
+    }]));
 
-		auctionTimer.start();
-		// Fake tick 1sec
-		clock.tick(103000);
+    let clock = sinon.useFakeTimers();
+    let auctionTimer = new AuctionTimer(telegam, auctionManager);
 
-		auctionManager
-			.closeAuction
-			.calledOnce.should.be.ok;
-	});
-	
+    auctionTimer.start();
+    // Fake tick 1sec
+    clock.tick(103000);
+
+    auctionManager
+      .closeAuction
+      .calledOnce.should.be.ok;
+  });
 });

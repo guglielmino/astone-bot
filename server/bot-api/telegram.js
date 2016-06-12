@@ -47,7 +47,7 @@ class TelegramBot {
     return this.request(options)
       .then((res) => {
         let data = JSON.parse(res.body);
-        if(data.ok) {
+        if (data.ok) {
           return Promise.resolve(data);
         }
         else {
@@ -74,7 +74,7 @@ class TelegramBot {
     return this.request(options)
       .then((res) => {
         let data = JSON.parse(res.body);
-        if(data.ok) {
+        if (data.ok) {
           return Promise.resolve(data);
         }
         else {
@@ -105,7 +105,7 @@ class TelegramBot {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ url: hook_url })
+      body: JSON.stringify({url: hook_url})
     };
 
     return this.request(url)
@@ -125,15 +125,16 @@ class TelegramBot {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        callback_query_id: callback_query_id, 
-        text: text, 
-        show_alert: show_alert})
+        callback_query_id: callback_query_id,
+        text: text,
+        show_alert: show_alert
+      })
     };
 
     return this.request(options)
       .then((res) => {
         let data = JSON.parse(res.body);
-        if(data.ok) {
+        if (data.ok) {
           return Promise.resolve(data);
         }
         else {
