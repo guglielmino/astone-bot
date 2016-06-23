@@ -1,7 +1,8 @@
 'use strict';
 
+
 import logger from './services/logger';
-import config from './config';
+
 import bluebird from 'bluebird';
 import redis from 'redis';
 import {EventEmitter} from 'events';
@@ -25,6 +26,7 @@ import commands from './app.commands';
 import Telegram from './bot-api/telegram';
 import PayPal from './services/payment/paypal';
 
+import config from './config';
 
 const paypal = new PayPal({
   env: config.paypal.env,
@@ -106,7 +108,7 @@ storageProvider
     web(managerFactory.getAuctionManager(), chatter, paypal, config);
   })
   .catch((err) => {
-    logger.error("Startup error: " + err.message);
+    logger.error("Startup error: " + err.message + "\n" + err.stack);
   });
 
 

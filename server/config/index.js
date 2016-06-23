@@ -1,5 +1,9 @@
 'use strict';
 
+require('dotenv').config();
+
+const mongo_db_name = process.env.MONGO_DB || '/astone';
+
 const config = {
 	env: process.env.NODE_ENV || 'development',
 	base_url: process.env.BASE_URL || 'https://bidbot.localtunnel.me',
@@ -13,8 +17,7 @@ const config = {
 		use_webhook : process.env.USE_WEBHOOK || false
 	},
 	mongo: {
-		
-		uri: 'mongodb://' + process.env.MONGO_HOST + ':' + process.env.MONGO_PORT + process.env.MONGO_DB || '/astone'
+		uri: `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}${mongo_db_name}`
 	},
 	paypal: {
 		env: process.env.PAYPAL_ENV,
@@ -28,5 +31,6 @@ const config = {
 	}
 };
 
+console.log("CONFIG \n\n\n\n" + JSON.stringify(config));
 
 export default Object.freeze(config);

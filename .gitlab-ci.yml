@@ -1,7 +1,14 @@
 image: node:4.3.2
 
+variables:
+  REDIS_HOST: SECURE
+  REDIS_POST: SECURE
+
 test_only:
   script:
-
+    - echo "REDIS_HOST=$REDIS_HOST" >> .env
+    - echo "REDIS_POST=$REDIS_POST" >> .env
+    - cat .env
     - npm install
     - npm test
+
