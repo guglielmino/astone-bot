@@ -10,7 +10,8 @@ export default class Cipher {
 		crypted += cipher.final('hex');
 		return crypted;
 	}
-	
+  
+
 	decrypt(encrypted, password) {
 		var decipher = crypto.createDecipher(ALGORITHM, password)
 		var dec = decipher.update(encrypted,'hex','utf8')
