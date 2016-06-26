@@ -24,8 +24,6 @@ describe('i18n', ()=> {
 		let i18n = I18nBuild({locale: 'it', defaultCurrency: 'EUR', messageBundle: it});
 		const res = i18n`Hello ${name}`;
 
-		console.log("res " + res);
-
 		res.should.be.equal('Ciao Fabrizio');
 	});
 

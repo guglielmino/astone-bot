@@ -41,7 +41,6 @@ describe('AuctionManager', () => {
         done();
       })
       .catch((err) => {
-        console.log(err.message);
         done(err);
       });
   });

@@ -31,6 +31,4 @@ const config = {
 	}
 };
 
-console.log("CONFIG \n\n\n\n" + JSON.stringify(config));
-
 export default Object.freeze(config);

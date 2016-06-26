@@ -12,18 +12,6 @@ import redis from 'redis-mock';
 
 bluebird.promisifyAll(redis.RedisClient.prototype);
 
-/*{
-	redis: {
-		host: '192.168.99.100',
-			port: 32770,
-			db: 0
-	}
-}
-const client = redis.createClient({
-	host: config.redis.host,
-	port: config.redis.port,
-	db: config.redis.db
-});*/
 
 describe('StateManager', () => {
 	let stateManager;
@@ -41,7 +29,8 @@ describe('StateManager', () => {
 	});
 
 	it('Should get state prevously set for key \'sample\'', (done)=> {
-		stateManager.setState('sample', {name: 1, last: true})
+		stateManager
+      .setState('sample', {name: 1, last: true})
 			.then((res) => {
 				stateManager
 					.getState('sample')

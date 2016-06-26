@@ -3,12 +3,29 @@ image: node:4.3.2
 variables:
   REDIS_HOST: SECURE
   REDIS_POST: SECURE
+  MONGO_HOST: SECURE
+  MONGO_PORT: SECURE
+  BOT_KEY: SECURE
+  USE_WEBHOOK: SECURE
 
-test_only:
+stages:
+  test
+  build_image
+
+test:
   script:
     - echo "REDIS_HOST=$REDIS_HOST" >> .env
     - echo "REDIS_POST=$REDIS_POST" >> .env
+    - echo "MONGO_HOST=$MONGO_HOST" >> .env
+    - echo "MONGO_PORT=$MONGO_PORT" >> .env
+    - echo "BOT_KEY=$BOT_KEY" >> .env
+    - echo "USE_WEBHOOK=$USE_WEBHOOK" >> .env
     - cat .env
     - npm install
     - npm test
 
+build_image:
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN -e cigit@nowhere.org registry.gitlab.com
+    - docker build -t registry.gitlab.com/gumino-node-apps/astone-bot .
+    - docker push registry.gitlab.com/gumino-node-apps/astone-bot

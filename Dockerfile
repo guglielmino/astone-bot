@@ -5,6 +5,7 @@ WORKDIR /opt/bot
 
 COPY package.json /opt/bot
 COPY .babelrc /opt/bot
+COPY .env /opt/bot
 RUN npm install
 
 COPY ./server/ /opt/bot/server/

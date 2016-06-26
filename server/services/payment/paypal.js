@@ -44,9 +44,6 @@ export default class PayPal {
 			.createAsync(create_payment_json)
 			.then((payment) => {
 				return Promise.resolve(payment.links.find((x) => x.method === 'REDIRECT').href);
-			})
-			.catch((err) => {
-				return Promise.reject(err);
 			});
 	}
 
