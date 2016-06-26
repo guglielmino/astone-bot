@@ -9,8 +9,8 @@ variables:
   USE_WEBHOOK: SECURE
 
 stages:
-  test
-  build_image
+  - test
+  - build_image
 
 test:
   script:
