@@ -1,0 +1,20 @@
+version: '2'
+services:
+  mongo:
+    image: mongo
+    expose:
+      - "27017"
+
+  redis:
+    image: redis
+    expose:
+      - "6379"
+
+  bot:
+    image: registry.gitlab.com/gumino-node-apps/astone-bot
+    links:
+        - mongo
+        - redis
+    ports:
+        - "9005:9001"
+

@@ -29,10 +29,12 @@ describe('PayPal', ()=> {
 		paypal
 			.getPayRedirectUrl('A new Bicycle', 123, 'EUR')
 			.then((redirect_url) => {
+        console.log("URL " + redirect_url);
 				redirect_url.should.be.a('string');
 				done();
 			})
       .catch((err) => {
+        console.log("ERR " + err.stack);
         done(err);
       });
 	});
