@@ -29,6 +29,9 @@ export default class TelegramChatter {
       });
   }
 
+  addCommand(key, cmd, type = 'Interactive') {
+    this.commands[key.toLowerCase()] = {cmd: cmd, type: type};
+  }
 
   _handleQueryRequest(callback_query, state) {
     let queryData = new MsgEncoder().decode(callback_query.data);
@@ -62,6 +65,9 @@ export default class TelegramChatter {
         logger.debug("Unrecognized command => " + text);
       }
     }
+    else {
+      console.log("plain " + JSON.stringify(state) );
+    }
   }
 
   /**
@@ -93,10 +99,6 @@ export default class TelegramChatter {
       }
     }
     return res;
-  }
-
-  addCommand(key, cmd, type = 'Interactive') {
-    this.commands[key.toLowerCase()] = {cmd: cmd, type: type};
   }
 }
 

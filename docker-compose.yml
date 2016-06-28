@@ -17,17 +17,3 @@ services:
         - redis
     ports:
         - "9001:9001"
-
-
-    environment:
-      BASE_URL: https://bidbot.localtunnel.me
-      #USE_WEBHOOK: ${USE_WEBHOOK}
-      BOT_KEY: ${BOT_KEY}
-      PAYPAL_ENV: ${PAYPAL_ENV}
-      PAYPAL_CLIENT_ID: ${PAYPAL_CLIENT_ID}
-      PAYPAL_CLIENT_SECRET: ${PAYPAL_CLIENT_SECRET}
-      MONGO_HOST: ${MONGO_HOST}
-      MONGO_PORT: ${MONGO_PORT}
-      REDIS_HOST: ${REDIS_HOST}
-      REDIS_POST: ${REDIS_PORT}
-      CIPHER_PWD: ${CIPHER_PWD}

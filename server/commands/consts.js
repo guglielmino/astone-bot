@@ -6,3 +6,8 @@ export const QCOMMAND_BID = 'bid';
 export const COMMAND_LIST = '/list';
 export const COMMAND_START = '/start';
 export const COMMAND_BID = '/bid';
+export const COMMAND_NEW_AUCTION = '/newauction';
+
+
+// State constant
+export const WAIT_FOR_NAME = 'WAIT_FOR_NAME';

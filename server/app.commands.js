@@ -4,6 +4,7 @@ import BidCommand from './commands/bid.cmd';
 import AuctionListCommand from './commands/auction-list.cmd';
 import StartAuctionCommand from './commands/start-auction.cmd';
 import StartCommand from './commands/start.cmd';
+import NewAuctionCommand from './commands/new-auction.cmd';
 
 import * as constants from './commands/consts';
 
@@ -15,9 +16,11 @@ export default (chatManager, telegram, managerFactory) => {
 	const bidCmd = new BidCommand(telegram, managerFactory, commandHelper);
 	const listCmd = new AuctionListCommand(telegram, managerFactory, commandHelper);
   const startCmd = new StartCommand(telegram, managerFactory, commandHelper);
-	chatManager.addCommand(constants.COMMAND_BID, bidCmd);
+	const newAuctionCmd = new NewAuctionCommand(telegram, commandHelper);
+  chatManager.addCommand(constants.COMMAND_BID, bidCmd);
 	chatManager.addCommand(constants.COMMAND_LIST, listCmd);
   chatManager.addCommand(constants.COMMAND_START, startCmd);
+  chatManager.addCommand(constants.COMMAND_NEW_AUCTION, newAuctionCmd);
 	
 	// QueryResponse command (ie 'out-of-band' commands on callback button action)
 	const startAuctionCmd = new StartAuctionCommand(telegram, managerFactory, commandHelper);

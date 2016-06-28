@@ -34,7 +34,6 @@ describe('PayPal', ()=> {
 				done();
 			})
       .catch((err) => {
-        console.log("ERR " + err.stack);
         done(err);
       });
 	});

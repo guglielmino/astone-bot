@@ -2,7 +2,7 @@
 
 import * as constants from './consts';
 
-const welcomeText = '*Welcome to AstaBot*\n\n\
+const welcomeText = '*Welcome to AstoneBot*\n\n\
 this is an automated online auctions bot where You can buy or sell items.\n\
 there are some simple commands to interact with the bot\n\
 /list - show active auctions, You can start bid on these\n\
