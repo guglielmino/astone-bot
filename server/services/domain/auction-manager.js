@@ -162,5 +162,10 @@ export default class AuctionManager {
     return this._auctionProvider
       .closeAuction(auctionId);
   }
+
+  createAuction(owner, title) {
+    return this._auctionProvider
+      .save({ auction: { username: owner, title: title }});
+  }
 }
 

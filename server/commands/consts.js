@@ -10,4 +10,5 @@ export const COMMAND_NEW_AUCTION = '/newauction';
 
 
 // State constant
-export const WAIT_FOR_NAME = 'WAIT_FOR_NAME';
+export const STATE_WAIT_FOR_NAME = 'state_wait_for_name';
+export const STATE_WAIT_PRICE = 'state_wait_for_price';

@@ -9,6 +9,7 @@ export default class TelegramChatter {
   }
 
   processRequest(request) {
+    // TODO: Check if "request.callback_query.message" is needed
     let message = request.message || request.callback_query.message;
     const chatId = message.chat.id;
 
@@ -26,6 +27,8 @@ export default class TelegramChatter {
 
         if (request.callback_query)
           this._handleQueryRequest(request.callback_query, state);
+
+
       });
   }
 
@@ -57,7 +60,7 @@ export default class TelegramChatter {
 
     if (cli.length > 0) {
       logger.debug("Interactive command " + cli[0]);
-      let command = this._getCommand(cli[0], 'Interactive')
+      let command = this._getCommand(cli[0], 'Interactive');
       if (command) {
         this._executeCommand(command, state, cli.slice(1));
       }
@@ -65,8 +68,19 @@ export default class TelegramChatter {
         logger.debug("Unrecognized command => " + text);
       }
     }
+    else if (state.state) {
+      this._handleStateCommand(text, state);
+    }
+  }
+
+  _handleStateCommand(text, state) {
+    console.log("plain " + JSON.stringify(state) );
+    let command = this._getCommand(state.state, 'State');
+    if (command) {
+      this._executeCommand(command, state, text);
+    }
     else {
-      console.log("plain " + JSON.stringify(state) );
+      logger.debug("Unrecognized command => " + text);
     }
   }
 
@@ -92,8 +106,9 @@ export default class TelegramChatter {
 
   _getCommand(key, type) {
     let res = null;
-    if (this.commands.hasOwnProperty(key)) {
-      let command = this.commands[key];
+    const lowerKey = key.toLowerCase();
+    if (this.commands.hasOwnProperty(lowerKey)) {
+      let command = this.commands[lowerKey];
       if (command && command.type === type) {
         res = command;
       }

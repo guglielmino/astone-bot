@@ -22,7 +22,7 @@ export default class AuctionProvider {
 					if (err) {
 						reject(err);
 					} else {
-						resolve(r.insertedCount);
+						resolve(r.insertedId);
 					}
 				});
 			});
