@@ -2,7 +2,7 @@
 
 import * as constants from '../consts';
 
-export default class AuctionNameCommand {
+export default class AuctionPriceCommand {
 
   constructor(telegram, managerFactory, commandHelper) {
     this._telegram = telegram;
@@ -12,17 +12,28 @@ export default class AuctionNameCommand {
 
   execute(state, ...params) {
 
+    const price = parseFloat(params[0]);
+
+    if (!price || price <= 0) {
+      this._helper
+        .simpleResponse
+        .calledWith(state.chat.id,
+          'Start price must be greather than 0')
+      return Promise.resolve({state: constants.STATE_WAIT_FOR_PRICE, result: false});
+    }
+
     return this
       ._auctionManager
-      .createAuction(state.chat.username, params[0])
+      .updateAuction(state.auctionId, {startingPrice: price, price: price})
       .then((res) => {
         this._helper
           .simpleResponse(state.chat.id, 'Ok, send now the starting price');
-        return Promise.resolve({state: constants.STATE_WAIT_FOR_PRICE, auctionId: res});
+        return Promise.resolve({state: constants.STATE_WAIT_FOR_PICTURE, result: true});
       })
       .catch((err) => {
         return Promise.reject(err);
       });
+
   }
 
 }

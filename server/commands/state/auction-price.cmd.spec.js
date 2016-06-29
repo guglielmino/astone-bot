@@ -1,0 +1,85 @@
+'use strict';
+
+import chai from 'chai';
+import sinon from 'sinon';
+import * as constants from '../consts';
+import CommandHelper from '../command-helper';
+import {ObjectID} from 'mongodb';
+
+chai.should();
+const expect = chai.expect;
+
+import AuctionPriceCommand from './auction-price.cmd';
+
+describe('AuctionPriceCommand', () => {
+
+  let telegram;
+  let managerFactory;
+  let auctionManager;
+  let commandHelper;
+  let command;
+
+  beforeEach(() => {
+    telegram = {};
+    auctionManager = {
+      updateAuction: (data) => {
+        return Promise.resolve(true);
+      }
+    };
+
+    managerFactory = {
+      getAuctionManager: () => {
+        return auctionManager;
+      }
+    };
+
+    telegram.sendMessage = sinon.stub();
+    telegram.sendChatAction = sinon.stub();
+    commandHelper = sinon.stub(CommandHelper(telegram));
+    command = new AuctionPriceCommand(telegram, managerFactory, commandHelper);
+  });
+
+  it('Should respond with result false and maintain STATE_WAIT_FOR_PRICE when price is lower than 0', (done) => {
+    command
+      .execute({chat: {id: 10}, state: constants.STATE_WAIT_FOR_PRICE}, "-1")
+      .then((res) => {
+
+        res.state.should.be.equal(constants.STATE_WAIT_FOR_PRICE);
+        res.result.should.be.false;
+
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
+
+  it('Should respond with result false and maintain STATE_WAIT_FOR_PRICE when price isn\'t numeric', (done) => {
+    command
+      .execute({chat: {id: 10}, state: constants.STATE_WAIT_FOR_PRICE}, "-1")
+      .then((res) => {
+
+        res.state.should.be.equal(constants.STATE_WAIT_FOR_PRICE);
+        res.result.should.be.false;
+
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
+
+  it('Should respond with result true when price is number greather than 0', (done) => {
+
+    command
+      .execute({chat: {id: 10}, state: constants.STATE_WAIT_FOR_PRICE}, "10.7")
+      .then((res) => {
+        res.result.should.be.true;
+        res.state.should.be.equal(constants.STATE_WAIT_FOR_PICTURE);
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
+});

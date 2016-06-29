@@ -74,13 +74,9 @@ export default class TelegramChatter {
   }
 
   _handleStateCommand(text, state) {
-    console.log("plain " + JSON.stringify(state) );
     let command = this._getCommand(state.state, 'State');
     if (command) {
       this._executeCommand(command, state, text);
-    }
-    else {
-      logger.debug("Unrecognized command => " + text);
     }
   }
 

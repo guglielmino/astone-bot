@@ -42,7 +42,7 @@ describe('AuctionNameCommand', () => {
     command
       .execute({chat: {id: 10}, state: constants.STATE_WAIT_FOR_NAME}, "Auction title")
       .then((res) => {
-        res.state.should.be.equal(constants.STATE_WAIT_PRICE);
+        res.state.should.be.equal(constants.STATE_WAIT_FOR_PRICE);
         res.auctionId.should.not.be.null;
 
         done();

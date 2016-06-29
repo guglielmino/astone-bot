@@ -7,7 +7,7 @@ import StartCommand from './commands/start.cmd';
 import NewAuctionCommand from './commands/new-auction.cmd';
 
 import AuctionNameCommand from './commands/state/auction-name.cmd';
-
+import AuctionPriceCommand from './commands/state/auction-price.cmd';
 
 import * as constants from './commands/consts';
 
@@ -32,6 +32,7 @@ export default (chatManager, telegram, managerFactory) => {
 
   // State command (ie. executed on state specific values)
   const nameCommand = new AuctionNameCommand(telegram, managerFactory, commandHelper);
+  const priceCommand = new AuctionPriceCommand(telegram, managerFactory, commandHelper);
   chatManager.addCommand(constants.STATE_WAIT_FOR_NAME, nameCommand, 'State');
 
 };

@@ -62,6 +62,12 @@ export default class BidCommand {
 			return Promise.resolve(null);
 		}
 
+    if(!state.chat.username) {
+      this._helper
+        .simpleResponse(state.chat.id, 'Sorry, we have a problem with Your user, we can\'t accept Your offer');
+      return Promise.resolve(null);
+    }
+
 		if (params.length > 0) {
 			const bidValue = parseFloat(params[0]);
 			if (bidValue > 0.0) {
