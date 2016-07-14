@@ -1,6 +1,7 @@
 import MsgEncoder from '../utilities/msg-encoder';
 import logger from '../logger';
 
+// TODO: To be refactored to
 export default class TelegramChatter {
 
   constructor(stateManager) {
@@ -22,18 +23,26 @@ export default class TelegramChatter {
         return this.stateManager.getState(chatId);
       })
       .then((state) => {
+        if(message.photo)
+          this._handlePhotoRequest(message.photo, state);
+
         if (message.text)
           this._handleTextRequest(message.text, state);
 
         if (request.callback_query)
           this._handleQueryRequest(request.callback_query, state);
-
-
       });
   }
 
   addCommand(key, cmd, type = 'Interactive') {
     this.commands[key.toLowerCase()] = {cmd: cmd, type: type};
+  }
+
+  _handlePhotoRequest(photo, state) {
+    let command = this._getCommand(state.state, 'State');
+    if (command) {
+      this._executeCommand(command, state, photo);
+    }
   }
 
   _handleQueryRequest(callback_query, state) {

@@ -8,6 +8,7 @@ import NewAuctionCommand from './commands/new-auction.cmd';
 
 import AuctionNameCommand from './commands/state/auction-name.cmd';
 import AuctionPriceCommand from './commands/state/auction-price.cmd';
+import AuctionPictureCommand from './commands/state/auction-picture.cmd';
 
 import * as constants from './commands/consts';
 
@@ -33,6 +34,11 @@ export default (chatManager, telegram, managerFactory) => {
   // State command (ie. executed on state specific values)
   const nameCommand = new AuctionNameCommand(telegram, managerFactory, commandHelper);
   const priceCommand = new AuctionPriceCommand(telegram, managerFactory, commandHelper);
+  const pictureCommand = new AuctionPictureCommand(telegram, managerFactory, commandHelper);
   chatManager.addCommand(constants.STATE_WAIT_FOR_NAME, nameCommand, 'State');
+  chatManager.addCommand(constants.STATE_WAIT_FOR_PRICE, priceCommand, 'State');
+  chatManager.addCommand(constants.STATE_WAIT_FOR_PICTURE, pictureCommand, 'State');
+
+
 
 };

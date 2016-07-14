@@ -1,6 +1,5 @@
 'use strict';
 
-
 import logger from './services/logger';
 
 import bluebird from 'bluebird';

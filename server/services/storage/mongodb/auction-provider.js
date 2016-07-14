@@ -8,6 +8,7 @@ export default class AuctionProvider {
 		this.db = db;
 		this.db.collection(COLLECTION_NAME, (err, col) => {
 			col.createIndex({description: 'text'});
+      col.createIndex({ title: 1 }, { w: 1, unique: true });
 		});
 	}
 
@@ -184,6 +185,29 @@ export default class AuctionProvider {
 			});
 		});
 	}
+
+  updateAuction(auctionId, data) {
+    return new Promise((resolve, reject) => {
+      this.db.collection(COLLECTION_NAME, (err, col) => {
+        if (err) {
+          reject(err);
+        }
+        // TODO: handle bid history
+        col.updateOne({_id: ObjectID(auctionId)},
+          {
+            $set: data
+          },
+          (err, r) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(r.result.ok === 1);
+            }
+
+          });
+      });
+    });
+  }
 
 	/**
 	 * Helper for quering for documents

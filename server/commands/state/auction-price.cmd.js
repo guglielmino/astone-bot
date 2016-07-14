@@ -27,7 +27,7 @@ export default class AuctionPriceCommand {
       .updateAuction(state.auctionId, {startingPrice: price, price: price})
       .then((res) => {
         this._helper
-          .simpleResponse(state.chat.id, 'Ok, send now the starting price');
+          .simpleResponse(state.chat.id, 'Ok, send me a picture of the object You want to sell');
         return Promise.resolve({state: constants.STATE_WAIT_FOR_PICTURE, result: true});
       })
       .catch((err) => {
