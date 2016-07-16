@@ -1,0 +1,40 @@
+{
+  "update_id": 919711039,
+  "message": {
+    "message_id": 206,
+    "from": {
+      "id": 19915021,
+      "first_name": "Fabrizio",
+      "last_name": "Guglielmino",
+      "username": "guglielmino"
+    },
+    "chat": {
+      "id": 19915021,
+      "first_name": "Fabrizio",
+      "last_name": "Guglielmino",
+      "username": "guglielmino",
+      "type": "private"
+    },
+    "date": 1468588800,
+    "photo": [
+      {
+        "file_id": "AgADAgAD06cxGw3hLwGb_9jqy3vP7rM1cQ0ABNh-NRlQBdiBNCcAAgI",
+        "file_size": 1649,
+        "width": 90,
+        "height": 64
+      },
+      {
+        "file_id": "AgADAgAD06cxGw3hLwGb_9jqy3vP7rM1cQ0ABP7f6Nl3TVFINScAAgI",
+        "file_size": 17505,
+        "width": 320,
+        "height": 227
+      },
+      {
+        "file_id": "AgADAgAD06cxGw3hLwGb_9jqy3vP7rM1cQ0ABDuDUw5OajAdNicAAgI",
+        "file_size": 24166,
+        "width": 452,
+        "height": 320
+      }
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "update_id": 919711042,
+  "callback_query": {
+  "id": "85534364382903463",
+    "from": {
+    "id": 19915021,
+      "first_name": "Fabrizio",
+      "last_name": "Guglielmino",
+      "username": "guglielmino"
+  },
+  "message": {
+    "message_id": 208,
+      "from": {
+      "id": 224122997,
+        "first_name": "AstoneStageBot",
+        "username": "AstoneStageBot"
+    },
+    "chat": {
+      "id": 19915021,
+        "first_name": "Fabrizio",
+        "last_name": "Guglielmino",
+        "username": "guglielmino",
+        "type": "private"
+    },
+    "date": 1468588973,
+      "text": "last bid was € 54.00, now 55.00, now 55.00, will ya give me € 55.00 ?",
+      "entities": [
+      {
+        "type": "bold",
+        "offset": 13,
+        "length": 7
+      },
+      {
+        "type": "bold",
+        "offset": 60,
+        "length": 7
+      }
+    ]
+  },
+  "data": "gqFjo2JpZKFkpTU1LjAw"
+}
+}

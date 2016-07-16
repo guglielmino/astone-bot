@@ -1,18 +1,19 @@
-import MsgEncoder from '../utilities/msg-encoder';
+'use strict';
+
 import logger from '../logger';
 
-// TODO: To be refactored to
 export default class TelegramChatter {
 
-  constructor(stateManager) {
+  constructor(stateManager, telegramRequestParser) {
     this.stateManager = stateManager;
+    this.telegramRequestParser = telegramRequestParser;
     this.commands = {};
   }
 
   processRequest(request) {
-    // TODO: Check if "request.callback_query.message" is needed
-    let message = request.message || request.callback_query.message;
-    const chatId = message.chat.id;
+    const chatId = this.telegramRequestParser
+      .getMessage(request)
+      .chat.id;
 
     this.stateManager
       .exists(chatId)
@@ -23,70 +24,25 @@ export default class TelegramChatter {
         return this.stateManager.getState(chatId);
       })
       .then((state) => {
-        if(message.photo)
-          this._handlePhotoRequest(message.photo, state);
+        const commandId = this.telegramRequestParser
+          .getCommandId(request);
 
-        if (message.text)
-          this._handleTextRequest(message.text, state);
+        if(commandId) {
+          if (commandId.type === 'State') {
+            commandId.commandKey = state.state;
+          }
 
-        if (request.callback_query)
-          this._handleQueryRequest(request.callback_query, state);
+          let command = this._getCommand(commandId.commandKey, commandId.type);
+          if (command) {
+            state.callback_query_id = commandId.callback_query_id;
+            this._executeCommand(command, state, commandId.params);
+          }
+        }
       });
   }
 
   addCommand(key, cmd, type = 'Interactive') {
     this.commands[key.toLowerCase()] = {cmd: cmd, type: type};
-  }
-
-  _handlePhotoRequest(photo, state) {
-    let command = this._getCommand(state.state, 'State');
-    if (command) {
-      this._executeCommand(command, state, photo);
-    }
-  }
-
-  _handleQueryRequest(callback_query, state) {
-    let queryData = new MsgEncoder().decode(callback_query.data);
-
-    let callback_query_id = callback_query.id;
-
-    logger.debug(`command ${queryData.c} - data ${queryData.d}`);
-
-    let command = this._getCommand(queryData.c, 'QueryResponse');
-    if (command) {
-      // TODO: Check if callback_query_id dependency can be handled in other ways
-      this.stateManager.updateState(state.chat.id, {callback_query_id: callback_query_id})
-        .then((state) => {
-          this._executeCommand(command, state, queryData.d);
-        });
-
-    }
-  }
-
-  _handleTextRequest(text, state) {
-    const readText = text.toLowerCase();
-    const cli = readText.startsWith('/') ? readText.split(' ') : [];
-
-    if (cli.length > 0) {
-      logger.debug("Interactive command " + cli[0]);
-      let command = this._getCommand(cli[0], 'Interactive');
-      if (command) {
-        this._executeCommand(command, state, cli.slice(1));
-      }
-      else {
-        logger.debug("Unrecognized command => " + text);
-      }
-    }
-    else if (state.state) {
-      this._handleStateCommand(text, state);
-    }
-  }
-
-  _handleStateCommand(text, state) {
-    let command = this._getCommand(state.state, 'State');
-    if (command) {
-      this._executeCommand(command, state, text);
-    }
   }
 
   /**
