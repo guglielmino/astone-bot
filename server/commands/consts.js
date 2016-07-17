@@ -7,6 +7,7 @@ export const COMMAND_LIST = '/list';
 export const COMMAND_START = '/start';
 export const COMMAND_BID = '/bid';
 export const COMMAND_NEW_AUCTION = '/newauction';
+export const COMMAND_HELP = '/help';
 
 
 // State constant
