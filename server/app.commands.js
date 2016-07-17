@@ -1,10 +1,12 @@
 import CommandHelper from './commands/command-helper';
 
-import BidCommand from './commands/bid.cmd';
-import AuctionListCommand from './commands/auction-list.cmd';
-import StartAuctionCommand from './commands/start-auction.cmd';
-import StartCommand from './commands/start.cmd';
-import NewAuctionCommand from './commands/new-auction.cmd';
+
+import AuctionListCommand from './commands/interactive/auction-list.cmd';
+import StartCommand from './commands/interactive/start.cmd';
+import NewAuctionCommand from './commands/interactive/new-auction.cmd';
+
+import BidCommand from './commands/callbackquery/bid.cmd';
+import StartAuctionCommand from './commands/callbackquery/start-auction.cmd';
 
 import AuctionNameCommand from './commands/state/auction-name.cmd';
 import AuctionPriceCommand from './commands/state/auction-price.cmd';

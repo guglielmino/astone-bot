@@ -3,8 +3,8 @@
 import chai from 'chai';
 import sinon from 'sinon';
 import {ObjectID} from 'mongodb';
-import CommandHelper from './command-helper';
-import * as constants from './consts';
+import CommandHelper from '../command-helper';
+import * as constants from '../consts';
 
 chai.should();
 const expect = chai.expect;

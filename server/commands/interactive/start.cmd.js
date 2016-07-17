@@ -1,6 +1,6 @@
 'use strict';
 
-import * as constants from './consts';
+import * as constants from '../consts';
 
 const welcomeText = '*Welcome to AstoneBot*\n\n\
 this is an automated online auctions bot where You can buy or sell items.\n\

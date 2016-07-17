@@ -2,9 +2,9 @@
 
 import chai from 'chai';
 import sinon from 'sinon';
-import {BidResponse} from '../services/domain/auction-manager';
+import {BidResponse} from '../../services/domain/auction-manager';
 import {ObjectID} from 'mongodb';
-import CommandHelper from './command-helper';
+import CommandHelper from '../command-helper';
 
 chai.should();
 const expect = chai.expect;

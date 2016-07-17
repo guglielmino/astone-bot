@@ -1,6 +1,6 @@
 'use strict';
 
-import * as constants from './consts';
+import * as constants from '../consts';
 
 export default class BidCommand {
 
