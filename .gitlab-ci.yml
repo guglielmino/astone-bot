@@ -10,6 +10,8 @@ variables:
 
 
 all:
+  only:
+    - master
   script:
     - echo "REDIS_HOST=$REDIS_HOST" >> .env
     - echo "REDIS_POST=$REDIS_POST" >> .env
@@ -17,9 +19,11 @@ all:
     - echo "MONGO_PORT=$MONGO_PORT" >> .env
     - echo "BOT_KEY=$BOT_KEY" >> .env
     - echo "USE_WEBHOOK=$USE_WEBHOOK" >> .env
+    - echo "AWS_SECRET_ACCESS_KEY" >> .env
+    - echo "AWS_ACCESS_KEY_ID" >> .env
     - cat .env
     - npm install
     - npm test
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN -e cigit@nowhere.org registry.gitlab.com
-    - docker build -t registry.gitlab.com/gumino-node-apps/astone-bot .
+    - docker build -t registry.gitlab.com/gumino-node-apps/astone-bot:$CI_BUILD_TAG .
     - docker push registry.gitlab.com/gumino-node-apps/astone-bot

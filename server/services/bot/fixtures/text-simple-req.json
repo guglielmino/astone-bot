@@ -1,0 +1,21 @@
+{
+  "update_id": 919711038,
+  "message": {
+    "message_id": 205,
+    "from": {
+      "id": 19915021,
+      "first_name": "Fabrizio",
+      "last_name": "Guglielmino",
+      "username": "guglielmino"
+    },
+    "chat": {
+      "id": 19915021,
+      "first_name": "Fabrizio",
+      "last_name": "Guglielmino",
+      "username": "guglielmino",
+      "type": "private"
+    },
+    "date": 1468588734,
+    "text": "prova"
+  }
+}

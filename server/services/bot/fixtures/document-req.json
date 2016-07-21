@@ -1,0 +1,32 @@
+{
+  "update_id": 919711044,
+  "message": {
+    "message_id": 212,
+    "from": {
+      "id": 19915021,
+      "first_name": "Fabrizio",
+      "last_name": "Guglielmino",
+      "username": "guglielmino"
+    },
+    "chat": {
+      "id": 19915021,
+      "first_name": "Fabrizio",
+      "last_name": "Guglielmino",
+      "username": "guglielmino",
+      "type": "private"
+    },
+    "date": 1468589169,
+    "document": {
+      "file_name": "git_cheat_sheet.pdf",
+      "mime_type": "application/pdf",
+      "thumb": {
+        "file_id": "AAQCABNlSHENAAQ-1JkbxEC83hAMAAIC",
+        "file_size": 6111,
+        "width": 100,
+        "height": 100
+      },
+      "file_id": "BQADAgADFQADDeEvAZbZwVoHdqQAAQI",
+      "file_size": 705870
+    }
+  }
+}

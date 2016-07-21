@@ -1,105 +1,103 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>N-Air a E-commerce category Flat Bootstrap Responsive Website Template | Single :: w3layouts</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta name="keywords"
-          content=Telegram, Bot"/>
+  <title>Astone | the first Aucions BOT in the world </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="keywords" content=Telegram, Bot"/>
 
-    <meta charset utf="8">
-    <!--fonts-->
-    <link href='//fonts.googleapis.com/css?family=Fredoka+One' rel='stylesheet' type='text/css'>
+  <meta property="og:title" content="{{ auction.title }}"/>
+  <meta property="og:description" content="{{ auction.description }}"/>
 
-    <!--fonts-->
-    <!--bootstrap-->
-    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <!--coustom css-->
-    <link href="css/style.css" rel="stylesheet" type="text/css"/>
+  <meta charset utf="8">
+  <!--fonts-->
+  <link href='//fonts.googleapis.com/css?family=Fredoka+One' rel='stylesheet' type='text/css'>
 
-    <!--default-js
-    <script src="js/jquery-2.1.4.min.js"></script>
-    -->
-    <!--bootstrap-js-->
-    <script src="js/bootstrap.min.js"></script>
-    <!--script-->
+  <!--fonts-->
+  <!--bootstrap-->
+  <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <!--coustom css-->
+  <link href="/css/style.css" rel="stylesheet" type="text/css"/>
+
+  <!--default-js
+  <script src="js/jquery-2.1.4.min.js"></script>
+  -->
+  <!--bootstrap-js-->
+  <script src="/js/bootstrap.min.js"></script>
+  <!--script-->
 
 </head>
 <body>
 <div class="header">
-    <div class="container">
-        <div class="header-top">
-            <div class="logo">
-                <a href="https://telegram.me/AstoneBot">Astone</a>
-            </div>
-            <div class="clearfix"></div>
-        </div>
+  <div class="container">
+    <div class="header-top">
+      <div class="logo">
+        <a href="https://telegram.me/AstoneBot">Astone</a>
+      </div>
+      <div class="clearfix"></div>
 
-        <!--header-bottom-->
+      <div class="header-botom">
+        <div class="content white">
+          <p> The first Auction BOT in the world</p>
+          <div class="clearfix"></div>
+        </div>
+        <!--/.content--->
+      </div>
     </div>
+    <!--header-bottom-->
+  </div>
 </div>
 
 <div class="showcase-grid">
-    <div class="container">
-        <div class="col-md-8 showcase">
-            <div class="flexslider">
-                <div class="thumb-image"><img src="images/show.jpg" data-imagezoom="true"
-                                              class="img-responsive"></div>
-                <div class="clearfix"></div>
-            </div>
-        </div>
-        <div class="col-md-4 showcase">
-            <div class="showcase-rt-top">
-                <div class="pull-left shoe-name">
-                    <h3>Nike Air Max 2015</h3>
-                    <p>Men's running shoes</p>
-                    <h4>Start price &#36;190</h4>
-                </div>
-
-                <div class="clearfix"></div>
-            </div>
-            <hr class="featurette-divider">
-
-            <div class="showcase-last">
-                <h3>product details</h3>
-                <p>
-                    Internal bootie wraps your foot for a sock-like fit
-                    Unique eyestays work with the Flywire cables to create an even better glove-like fit
-                    Waffle outsole for durability and multi-surface traction</li>
-                    Sculpted Cushlon midsole combines plush cushioning and springy resilience for impact
-                    protection
-
-                    Midsole flex grooves for greater forefoot flexibility
-                </p>
-            </div>
-        </div>
+  <div class="container">
+    <div class="col-md-8 showcase">
+      <div class="flexslider">
+        <div class="thumb-image"><img src="{{ auction.image }}" data-imagezoom="true"
+                                      class="img-responsive"></div>
         <div class="clearfix"></div>
+      </div>
     </div>
+    <div class="col-md-4 showcase">
+      <div class="showcase-rt-top">
+        <div class="pull-left shoe-name">
+          <h3>{{ auction.title }}</h3>
+          <p>Start on {{ auction.startDate.toLocaleDateString('it-IT', {
+            day : 'numeric',
+            month : 'numeric',
+            year : 'numeric'
+            }) }}</p>
+          <h4>Start price {{ auction.startingPrice.toLocaleString('EUR',
+            { style: 'currency',
+            currency: "EUR",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2 }); }}</h4>
+        </div>
+
+        <div class="clearfix"></div>
+      </div>
+      <hr class="featurette-divider">
+
+      <div class="showcase-last">
+        <h3>product details {{ auction.title }}</h3>
+        <p>
+          {{ auction.description }}
+        </p>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+  </div>
 </div>
 
 
 <div class="footer-grid">
+  <div class="container">
+    <div class="clearfix"></div>
+  </div>
+  <div class="copy-rt">
     <div class="container">
-
-        <div class="col-md-12 re-ft-grd">
-
-            <ul class="social">
-                <li><a href="#" class="fb">facebook</a></li>
-                <li><a href="#" class="twt">twitter</a></li>
-                <li><a href="#" class="gpls">g+ plus</a></li>
-                <div class="clearfix"></div>
-            </ul>
-        </div>
-
-        <div class="clearfix"></div>
+      <p>&copy; 2016 <a href="#">Astone</a> All Rights Reserved. </p>
     </div>
-    <div class="copy-rt">
-        <div class="container">
-            <p>&copy; 2016 AstoneBot All Rights Reserved. </p>
-        </div>
-    </div>
+  </div>
 </div>
 </body>
 </html>
-    

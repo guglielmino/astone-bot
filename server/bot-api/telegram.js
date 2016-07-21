@@ -145,6 +145,21 @@ class TelegramBot {
         Promise.reject(err);
       })
   }
+
+  getFile(file_id) {
+    const url = `https://api.telegram.org/bot${this.apiKey}/getFile?file_id=${file_id}`;
+
+    return this.request(url)
+      .then((res) => {
+        let data = JSON.parse(res.body);
+        if(data.ok) {
+          data.result.file_url = `https://api.telegram.org/file/bot${this.apiKey}/${data.result.file_path}`;
+          return Promise.resolve(data.result);
+        }else{
+          return Promise.reject(data);
+        }
+      });
+  }
 }
 
 module.exports = TelegramBot;

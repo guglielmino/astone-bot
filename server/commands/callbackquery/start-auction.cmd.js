@@ -1,6 +1,6 @@
 'use strict';
 
-import * as constants from './consts';
+import * as constants from '../consts';
 
 export default class StartAuctionCommand  {
 
@@ -11,7 +11,7 @@ export default class StartAuctionCommand  {
 	}
 
 	execute(state, ...params) {
-	
+
 		if (params && params.length > 0) {
 			const auctionId = params[0];
 			return this._auctionManager

@@ -17,7 +17,6 @@ export default class PayPal {
 		});
 		this.returnUrl = returnUrl;
 		this.cancelUrl = cancelUrl;
-
 	}
 
 	getPayRedirectUrl(itemDescription, amount, currency) {

@@ -55,10 +55,13 @@ export default class AuctionManager {
       .getRunningAuctions()
       .then((res) => {
 
+
+
         const getDiffSeconds = (date, itemDate) => {
           const diff = (date - itemDate);
           return Math.round(Math.floor(diff / 1000));
         };
+
 
         return Promise.resolve(res
           .map((x) => {
@@ -161,6 +164,16 @@ export default class AuctionManager {
   closeAuction(auctionId) {
     return this._auctionProvider
       .closeAuction(auctionId);
+  }
+
+  createAuction(owner, title) {
+    return this._auctionProvider
+      .save({ username: owner, title: title });
+  }
+
+  updateAuction(auctionId, updateObj) {
+    return this._auctionProvider
+      .updateAuction(auctionId, updateObj);
   }
 }
 

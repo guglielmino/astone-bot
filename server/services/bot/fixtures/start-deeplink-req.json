@@ -1,0 +1,28 @@
+{
+  "update_id": 919711111,
+  "message": {
+    "message_id": 352,
+    "from": {
+      "id": 19915021,
+      "first_name": "Fabrizio",
+      "last_name": "Guglielmino",
+      "username": "guglielmino"
+    },
+    "chat": {
+      "id": 19915021,
+      "first_name": "Fabrizio",
+      "last_name": "Guglielmino",
+      "username": "guglielmino",
+      "type": "private"
+    },
+    "date": 1468938818,
+    "text": "/start auc%3A1234",
+    "entities": [
+      {
+        "type": "bot_command",
+        "offset": 0,
+        "length": 6
+      }
+    ]
+  }
+}

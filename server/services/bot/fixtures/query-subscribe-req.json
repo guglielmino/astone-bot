@@ -1,0 +1,42 @@
+{
+  "update_id": 919711040,
+  "callback_query": {
+    "id": "85534365181249768",
+    "from": {
+      "id": 19915021,
+      "first_name": "Fabrizio",
+      "last_name": "Guglielmino",
+      "username": "guglielmino"
+    },
+    "message": {
+      "message_id": 204,
+      "from": {
+        "id": 224122997,
+        "first_name": "AstoneStageBot",
+        "username": "AstoneStageBot"
+      },
+      "chat": {
+        "id": 19915021,
+        "first_name": "Fabrizio",
+        "last_name": "Guglielmino",
+        "username": "guglielmino",
+        "type": "private"
+      },
+      "date": 1468588715,
+      "text": "MTB Nuova (price € 54)\nhttp://www.ciclicioffi.it/wp-content/uploads/2015/11/mtb.jpg\nMTB Specialized Pitch Pro 2011, tenuta bene, piccoli segni di usura dovuti all'uso, vero affare",
+      "entities": [
+        {
+          "type": "bold",
+          "offset": 0,
+          "length": 22
+        },
+        {
+          "type": "url",
+          "offset": 23,
+          "length": 60
+        }
+      ]
+    },
+    "data": "gqFjonNhoWS4NTcyYzZiMzViM2YzMGEwNzUyYTVmNWYx"
+  }
+}

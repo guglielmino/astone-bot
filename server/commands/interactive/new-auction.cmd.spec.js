@@ -3,8 +3,8 @@
 import chai from 'chai';
 import sinon from 'sinon';
 import {ObjectID} from 'mongodb';
-import CommandHelper from './command-helper';
-import * as constants from './consts';
+import CommandHelper from '../command-helper';
+import * as constants from '../consts';
 
 chai.should();
 const expect = chai.expect;
@@ -50,7 +50,7 @@ describe('NewAuctionCommand', () => {
   it('Should set state in \'WAITING_FOR_NAME\' when called', (done) => {
     command.execute({chat: {id: 10}}, [10])
       .then((res) => {
-        res.state.should.be.equal(constants.WAIT_FOR_NAME);
+        res.state.should.be.equal(constants.STATE_WAIT_FOR_NAME);
         done();
       })
       .catch((err) => {

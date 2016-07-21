@@ -1,12 +1,6 @@
 'use strict';
 
-import * as constants from './consts';
-
-const welcomeText = '*Welcome to AstoneBot*\n\n\
-this is an automated online auctions bot where You can buy or sell items.\n\
-there are some simple commands to interact with the bot\n\
-/list - show active auctions, You can start bid on these\n\
-';
+import fs from 'fs';
 
 export default class StartCommand {
 
@@ -14,6 +8,8 @@ export default class StartCommand {
 		this._telegram = telegram;
 		this._userManager = managerFactory.getUserManager();
 		this._helper = commandHelper;
+
+    this.welcomeText = fs.readFileSync(__dirname + '/../../res/messages/start.md').toString();
 	}
 
 	execute(state, ...params) {
@@ -23,7 +19,7 @@ export default class StartCommand {
 		this._telegram
 			.sendMessage({
 				chat_id: state.chat.id,
-				text: welcomeText,
+				text: this.welcomeText,
 				parse_mode: 'Markdown'
 			});
 

@@ -1,6 +1,6 @@
 'use strict';
 
-import * as constants from './consts';
+import * as constants from '../consts';
 
 export default class BidCommand {
 
@@ -61,6 +61,12 @@ export default class BidCommand {
 				.simpleResponse(state.chat.id, 'Before bidding You must choose an active auction');
 			return Promise.resolve(null);
 		}
+
+    if(!state.chat.username) {
+      this._helper
+        .simpleResponse(state.chat.id, 'Sorry, we have a problem with Your user, we can\'t accept Your offer');
+      return Promise.resolve(null);
+    }
 
 		if (params.length > 0) {
 			const bidValue = parseFloat(params[0]);

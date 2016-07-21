@@ -1,0 +1,24 @@
+{
+  "update_id": 919711043,
+  "message": {
+    "message_id": 211,
+    "from": {
+      "id": 19915021,
+      "first_name": "Fabrizio",
+      "last_name": "Guglielmino",
+      "username": "guglielmino"
+    },
+    "chat": {
+      "id": 19915021,
+      "first_name": "Fabrizio",
+      "last_name": "Guglielmino",
+      "username": "guglielmino",
+      "type": "private"
+    },
+    "date": 1468589041,
+    "location": {
+      "latitude": 45.091781,
+      "longitude": 7.66145
+    }
+  }
+}

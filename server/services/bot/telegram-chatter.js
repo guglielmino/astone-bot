@@ -1,73 +1,45 @@
-import MsgEncoder from '../utilities/msg-encoder';
+'use strict';
+
 import logger from '../logger';
 
 export default class TelegramChatter {
 
-  constructor(stateManager) {
+  constructor(stateManager, telegramRequestParser) {
     this.stateManager = stateManager;
+    this.telegramRequestParser = telegramRequestParser;
     this.commands = {};
   }
 
   processRequest(request) {
-    let message = request.message || request.callback_query.message;
-    const chatId = message.chat.id;
+    const message = this.telegramRequestParser
+      .getMessage(request);
 
-    this.stateManager
-      .exists(chatId)
-      .then((exist) => {
-        if (!exist) {
-          this.stateManager.setState(chatId, {chat: message.chat})
-        }
-        return this.stateManager.getState(chatId);
-      })
-      .then((state) => {
-        if (message.text)
-          this._handleTextRequest(message.text, state);
+    if(message) {
+      this.stateManager
+        .exists(message.chat.id)
+        .then((exist) => {
+          if (!exist) {
+            this.stateManager.setState(message.chat.id, {chat: message.chat})
+          }
+          return this.stateManager.getState(message.chat.id);
+        })
+        .then((state) => {
+          const commandId = this.telegramRequestParser
+            .getCommandId(request);
 
-        if (request.callback_query)
-          this._handleQueryRequest(request.callback_query, state);
-      });
+          if (commandId) {
+            let command = this._getCommand(commandId.commandKey || state.state, commandId.type);
+            if (command) {
+              state.callback_query_id = commandId.callback_query_id;
+              this._executeCommand(command, state, commandId.params);
+            }
+          }
+        });
+    }
   }
 
   addCommand(key, cmd, type = 'Interactive') {
     this.commands[key.toLowerCase()] = {cmd: cmd, type: type};
-  }
-
-  _handleQueryRequest(callback_query, state) {
-    let queryData = new MsgEncoder().decode(callback_query.data);
-
-    let callback_query_id = callback_query.id;
-
-    logger.debug(`command ${queryData.c} - data ${queryData.d}`);
-
-    let command = this._getCommand(queryData.c, 'QueryResponse');
-    if (command) {
-      // TODO: Check if callback_query_id dependency can be handled in other ways
-      this.stateManager.updateState(state.chat.id, {callback_query_id: callback_query_id})
-        .then((state) => {
-          this._executeCommand(command, state, queryData.d);
-        });
-
-    }
-  }
-
-  _handleTextRequest(text, state) {
-    const readText = text.toLowerCase();
-    const cli = readText.startsWith('/') ? readText.split(' ') : [];
-
-    if (cli.length > 0) {
-      logger.debug("Interactive command " + cli[0]);
-      let command = this._getCommand(cli[0], 'Interactive')
-      if (command) {
-        this._executeCommand(command, state, cli.slice(1));
-      }
-      else {
-        logger.debug("Unrecognized command => " + text);
-      }
-    }
-    else {
-      console.log("plain " + JSON.stringify(state) );
-    }
   }
 
   /**
@@ -92,8 +64,9 @@ export default class TelegramChatter {
 
   _getCommand(key, type) {
     let res = null;
-    if (this.commands.hasOwnProperty(key)) {
-      let command = this.commands[key];
+    const lowerKey = key.toLowerCase();
+    if (this.commands.hasOwnProperty(lowerKey)) {
+      let command = this.commands[lowerKey];
       if (command && command.type === type) {
         res = command;
       }

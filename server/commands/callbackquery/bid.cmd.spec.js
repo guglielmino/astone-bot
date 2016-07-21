@@ -2,9 +2,9 @@
 
 import chai from 'chai';
 import sinon from 'sinon';
-import {BidResponse} from '../services/domain/auction-manager';
+import {BidResponse} from '../../services/domain/auction-manager';
 import {ObjectID} from 'mongodb';
-import CommandHelper from './command-helper';
+import CommandHelper from '../command-helper';
 
 chai.should();
 const expect = chai.expect;
@@ -52,7 +52,7 @@ describe('BidCommand', () => {
 
 		let command = new BidCommand(telegram, managerFactory, commandHelper);
 
-		command.execute({auctionId: "aabbcc", chat: {id: 10}}, [10])
+		command.execute({auctionId: "aabbcc", chat: {id: 10, username: "guglielmino"}}, [10])
 			.then((res) => {
 				commandHelper.simpleResponse
 					.calledWith(10, `This auction is closed and can't accept new bids`)
@@ -70,7 +70,7 @@ describe('BidCommand', () => {
 
 		let command = new BidCommand(telegram, managerFactory, commandHelper);
 
-		command.execute({auctionId: "aabbcc", chat: {id: 10}}, [10])
+		command.execute({auctionId: "aabbcc", chat: {id: 10, username: "guglielmino"}}, [10])
 			.then((res) => {
 				commandHelper.simpleResponse
 					.calledWith(10, 'Can\'t bid on this Auction because is inactive')
@@ -156,5 +156,42 @@ describe('BidCommand', () => {
 				done(err);
 			});
 	});
+
+  it('Should respond with and error when username is null', (done) => {
+
+    var startDate = new Date();
+    startDate.setDate(startDate.getDate() - 1);
+    auctionManager.bid = sinon.stub().returns(Promise.resolve({
+      status: BidResponse.InsufficientSubscribers,
+      auction: {
+        _id: ObjectID("572cc825de91f5b2bc3c24d8"),
+        title: "Commodore 64",
+        description: "A beautiful Commodore 64!",
+        image: "http://www.oldcomputers.net/pics/C64-left.jpg",
+        startDate: startDate,
+        startingPrice: 10,
+        price: 11,
+        username: "guglielmino",
+        subscribers: [
+          {username: "guglielmino", chatId: 123},
+          {username: "tizio", chatId: 234},
+          {username: "caio", chatId: 567}
+        ]
+      }
+    }));
+
+    let command = new BidCommand(telegram, managerFactory, commandHelper);
+
+    command.execute({auctionId: "aabbcc", chat: {id: 123, username: null}}, [10])
+      .then((res) => {
+        commandHelper.simpleResponse
+          .calledWith(123, 'Sorry, we have a problem with Your user, we can\'t accept Your offer')
+          .should.be.ok;
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
 
 });

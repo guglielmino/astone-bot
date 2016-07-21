@@ -1,3 +1,5 @@
+'use strict';
+
 const keyPrefix = 'state:';
 
 export default (client) => {

@@ -1,6 +1,5 @@
 'use strict';
 
-
 import logger from './services/logger';
 
 import bluebird from 'bluebird';
@@ -13,6 +12,7 @@ import * as urlConsts from './web/url-consts';
 import StorageProvider from './services/storage/mongodb';
 import RepeatingScheduler from './services/scheduler/RepeatingScheduler';
 import StateManager from './services/bot/state-manager';
+import TelegramReqParser from './services/bot/telegram-req-parser';
 import TelegramChatter from './services/bot/telegram-chatter';
 import i18n from 'i18n';
 
@@ -58,6 +58,8 @@ storageProvider
   .then((db) => {
     logger.debug('Db connected, configuring providers');
 
+
+
     bluebird.promisifyAll(redis.RedisClient.prototype);
     const redisClient = redis.createClient({
       host: config.redis.host,
@@ -65,7 +67,8 @@ storageProvider
       db: config.redis.db
     });
     const stateManager = StateManager(redisClient);
-    const chatter = new TelegramChatter(stateManager);
+    const telegramReqParser = TelegramReqParser();
+    const chatter = new TelegramChatter(stateManager, telegramReqParser);
 
     const managerFactory = ManagerFactory(storageProvider);
     const eventEmitter = new EventEmitter();
@@ -104,6 +107,10 @@ storageProvider
     else {
       logger.debug("Using webook");
     }
+
+    telegram.getMe().then(info => {
+      logger.info(`${info.result.username} ready to answer!!`);
+    });
 
     web(managerFactory.getAuctionManager(), chatter, paypal, config);
   })

@@ -3,7 +3,7 @@
 import chai from 'chai';
 import sinon from 'sinon';
 
-import CommandHelper from './command-helper';
+import CommandHelper from '../command-helper';
 import StartAuctionCommand from './start-auction.cmd.js';
 
 describe('StartAuctionCommand', () => {
@@ -27,7 +27,7 @@ describe('StartAuctionCommand', () => {
 
 		commandHelper = sinon.stub(CommandHelper(telegram));
 	});
-	
+
 	it('Should respond with \'AUCTION SUBSCRIBED\' when subscription succeeds', () => {
 		auctionManager.subscribe = sinon.stub()
 			.returns(Promise.resolve({ status: {name: 'Success'}}));
@@ -69,6 +69,6 @@ describe('StartAuctionCommand', () => {
 				done(err);
 			});
 	});
-	
+
 
 });

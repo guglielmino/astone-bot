@@ -16,7 +16,9 @@ export default (telegram, auctionManager) => {
 
   function _handleAgeMessage(auction) {
     if (auction.bidAge > 60) {
-      _sendMessageToSubscribers(auction, ageMessages[auction.bidAge](auction));
+      if(ageMessages[auction.bidAge]) {
+        _sendMessageToSubscribers(auction, ageMessages[auction.bidAge](auction));
+      }
     }
   }
 
