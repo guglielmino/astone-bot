@@ -58,6 +58,8 @@ storageProvider
   .then((db) => {
     logger.debug('Db connected, configuring providers');
 
+
+
     bluebird.promisifyAll(redis.RedisClient.prototype);
     const redisClient = redis.createClient({
       host: config.redis.host,
@@ -105,6 +107,10 @@ storageProvider
     else {
       logger.debug("Using webook");
     }
+
+    telegram.getMe().then(info => {
+      logger.info(`${info.result.username} ready to answer!!`);
+    });
 
     web(managerFactory.getAuctionManager(), chatter, paypal, config);
   })

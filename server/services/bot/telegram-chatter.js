@@ -11,34 +11,31 @@ export default class TelegramChatter {
   }
 
   processRequest(request) {
-    const chatId = this.telegramRequestParser
-      .getMessage(request)
-      .chat.id;
+    const message = this.telegramRequestParser
+      .getMessage(request);
 
-    this.stateManager
-      .exists(chatId)
-      .then((exist) => {
-        if (!exist) {
-          this.stateManager.setState(chatId, {chat: message.chat})
-        }
-        return this.stateManager.getState(chatId);
-      })
-      .then((state) => {
-        const commandId = this.telegramRequestParser
-          .getCommandId(request);
-
-        if(commandId) {
-          if (commandId.type === 'State') {
-            commandId.commandKey = state.state;
+    if(message) {
+      this.stateManager
+        .exists(message.chat.id)
+        .then((exist) => {
+          if (!exist) {
+            this.stateManager.setState(message.chat.id, {chat: message.chat})
           }
+          return this.stateManager.getState(message.chat.id);
+        })
+        .then((state) => {
+          const commandId = this.telegramRequestParser
+            .getCommandId(request);
 
-          let command = this._getCommand(commandId.commandKey, commandId.type);
-          if (command) {
-            state.callback_query_id = commandId.callback_query_id;
-            this._executeCommand(command, state, commandId.params);
+          if (commandId) {
+            let command = this._getCommand(commandId.commandKey || state.state, commandId.type);
+            if (command) {
+              state.callback_query_id = commandId.callback_query_id;
+              this._executeCommand(command, state, commandId.params);
+            }
           }
-        }
-      });
+        });
+    }
   }
 
   addCommand(key, cmd, type = 'Interactive') {

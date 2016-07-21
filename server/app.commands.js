@@ -10,8 +10,12 @@ import BidCommand from './commands/callbackquery/bid.cmd';
 import StartAuctionCommand from './commands/callbackquery/start-auction.cmd';
 
 import AuctionNameCommand from './commands/state/auction-name.cmd';
+import AuctionDescriptionCommand from './commands/state/auction-description.cmd';
 import AuctionPriceCommand from './commands/state/auction-price.cmd';
 import AuctionPictureCommand from './commands/state/auction-picture.cmd';
+import AuctionMinSubscribersCommand from './commands/state/auction-min-sub.cmd';
+
+import StorageS3 from '../../services/storage/aws/s3';
 
 import * as constants from './commands/consts';
 
@@ -38,12 +42,13 @@ export default (chatManager, telegram, managerFactory) => {
 
   // State command (ie. executed on state specific values)
   const nameCommand = new AuctionNameCommand(telegram, managerFactory, commandHelper);
+  const descCommand =  new AuctionDescriptionCommand(telegram, managerFactory, commandHelper);
   const priceCommand = new AuctionPriceCommand(telegram, managerFactory, commandHelper);
-  const pictureCommand = new AuctionPictureCommand(telegram, managerFactory, commandHelper);
+  const pictureCommand = new AuctionPictureCommand(telegram, managerFactory, commandHelper, StorageS3());
+  const minSubCommand = new AuctionMinSubscribersCommand(telegram, managerFactory, commandHelper);
   chatManager.addCommand(constants.STATE_WAIT_FOR_NAME, nameCommand, 'State');
+  chatManager.addCommand(constants.STATE_WAIT_FOR_DESC, descCommand, 'State');
   chatManager.addCommand(constants.STATE_WAIT_FOR_PRICE, priceCommand, 'State');
   chatManager.addCommand(constants.STATE_WAIT_FOR_PICTURE, pictureCommand, 'State');
-
-
-
+  chatManager.addCommand(constants.STATE_WAIT_FOR_MIN_SUB, minSubCommand, 'State');
 };

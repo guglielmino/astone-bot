@@ -57,7 +57,7 @@ export default () => {
      * @returns {*}
      */
     getMessage: (request) => {
-      return request.message || request.callback_query.message;
+      return (request.message || request.edited_message) || request.callback_query.message;
     },
 
 		/**
@@ -82,7 +82,7 @@ export default () => {
       return ret;
     }
 
-  }
+  };
 
   return self;
 }

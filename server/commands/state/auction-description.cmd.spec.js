@@ -9,9 +9,9 @@ import {ObjectID} from 'mongodb';
 chai.should();
 const expect = chai.expect;
 
-import AuctionMinSubscribersCommand from './auction-min-sub.cmd';
+import AuctionDescriptionCommand from './auction-description.cmd';
 
-describe('AuctionMinSubscribersCommand', () => {
+describe('AuctionDescriptionCommand', () => {
   let telegram;
   let managerFactory;
   let auctionManager;
@@ -35,16 +35,15 @@ describe('AuctionMinSubscribersCommand', () => {
     telegram.sendMessage = sinon.stub();
     telegram.sendChatAction = sinon.stub();
     commandHelper = sinon.stub(CommandHelper(telegram));
-    command = new AuctionMinSubscribersCommand(telegram, managerFactory, commandHelper);
+    command = new AuctionDescriptionCommand(telegram, managerFactory, commandHelper);
   });
 
-  it('Should set state to null if min subscriber is greater or equal 0', (done) => {
+  it('Should set state to STATE_WAIT_FOR_PRICE when no description is passed', (done) => {
     command
-      .execute({chat: {id: 10}, state: constants.STATE_WAIT_FOR_MIN_SUB}, 6)
+      .execute({chat: {id: 10}, state: constants.STATE_WAIT_FOR_DESC}, "")
       .then((res) => {
-        expect(res.state)
-          .to.be.null;
-        res.result.should.be.true;
+        res.state.should.be.equal(constants.STATE_WAIT_FOR_DESC);
+        res.result.should.be.false;
         done();
       })
       .catch((err) => {
@@ -52,13 +51,12 @@ describe('AuctionMinSubscribersCommand', () => {
       });
   });
 
-  it('Should still STATE_WAIT_FOR_MIN_SUB if min subscriber is lower than 0', (done) => {
+  it('Should set state to STATE_WAIT_FOR_PRICE when description is set', (done) => {
     command
-      .execute({chat: {id: 10}, state: constants.STATE_WAIT_FOR_MIN_SUB}, -3)
+      .execute({chat: {id: 10}, state: constants.STATE_WAIT_FOR_DESC}, -3)
       .then((res) => {
-        res.state.should.be.equal(constants.STATE_WAIT_FOR_MIN_SUB);
-        res.result.should.be.false;
-
+        res.state.should.be.equal(constants.STATE_WAIT_FOR_PRICE);
+        res.result.should.be.true;
         done();
       })
       .catch((err) => {

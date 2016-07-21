@@ -12,6 +12,7 @@ export const COMMAND_HELP = '/help';
 
 // State constant
 export const STATE_WAIT_FOR_NAME = 'state_wait_for_name';
+export const STATE_WAIT_FOR_DESC = 'state_wait_for_desc';
 export const STATE_WAIT_FOR_PRICE = 'state_wait_for_price';
 export const STATE_WAIT_FOR_PICTURE = 'state_wait_for_picture';
 export const STATE_WAIT_FOR_MIN_SUB = 'state_wait_for_min_sub';
