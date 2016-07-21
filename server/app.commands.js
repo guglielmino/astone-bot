@@ -15,7 +15,7 @@ import AuctionPriceCommand from './commands/state/auction-price.cmd';
 import AuctionPictureCommand from './commands/state/auction-picture.cmd';
 import AuctionMinSubscribersCommand from './commands/state/auction-min-sub.cmd';
 
-import StorageS3 from '../../services/storage/aws/s3';
+import StorageS3 from './services/storage/aws/s3';
 
 import * as constants from './commands/consts';
 
