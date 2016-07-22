@@ -21,8 +21,8 @@ all:
     - echo "MONGO_PORT=$MONGO_PORT" >> .env
     - echo "BOT_KEY=$BOT_KEY" >> .env
     - echo "USE_WEBHOOK=$USE_WEBHOOK" >> .env
-    - echo "AWS_SECRET_ACCESS_KEY" >> .env
-    - echo "AWS_ACCESS_KEY_ID" >> .env
+    - echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> .env
+    - echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> .env
     - cat .env
     - npm install
     - npm test

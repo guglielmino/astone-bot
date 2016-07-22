@@ -11,7 +11,6 @@ chai.should();
 let expect = chai.expect;
 
 describe('PayPal', ()=> {
-
 	let paypal;
 
 	beforeEach(() => {
