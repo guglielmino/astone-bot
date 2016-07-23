@@ -12,14 +12,14 @@ export default class AuctionNameCommand {
 
   execute(state, ...params) {
 
-    if(state.auctionId) {
+    if(state.auctionId && state.single) {
       return this
         ._auctionManager
         .updateAuction(state.auctionId, {title: params[0]})
         .then(res => {
           this._helper
             .simpleResponse(state.chat.id, 'Ok, name changed');
-          return Promise.resolve({state: null, result: true});
+          return Promise.resolve({state: null, result: true, single: false});
         })
         .catch((err) => {
           return Promise.reject(err);
@@ -31,7 +31,7 @@ export default class AuctionNameCommand {
         .then((res) => {
           this._helper
             .simpleResponse(state.chat.id, 'Ok, give me now a description of the item to sell');
-          return Promise.resolve({state: constants.STATE_WAIT_FOR_DESC, auctionId: res});
+          return Promise.resolve({state: constants.STATE_WAIT_FOR_DESC, auctionId: res, single: false});
         })
         .catch((err) => {
           return Promise.reject(err);

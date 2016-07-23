@@ -30,7 +30,7 @@ export default class AuctionDescriptionCommand {
         this._helper
           .simpleResponse(state.chat.id, state.single ? 'Ok, description changed' : 'Now You need to set a starting price');
 
-        return Promise.resolve({state: nextState, result: true});
+        return Promise.resolve({state: nextState, result: true, single: false});
       })
       .catch((err) => {
         return Promise.reject(err);

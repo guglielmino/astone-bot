@@ -82,4 +82,19 @@ describe('AuctionPriceCommand', () => {
         done(err);
       });
   });
+
+  it('Should set status to null when state.single is true', (done) => {
+
+    command
+      .execute({chat: {id: 10}, state: constants.STATE_WAIT_FOR_PRICE, single: true}, "10.7")
+      .then((res) => {
+        res.result.should.be.true;
+        expect(res.state).to.be.null;
+        res.single.should.be.false;
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
 });

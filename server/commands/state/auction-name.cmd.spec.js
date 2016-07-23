@@ -55,13 +55,14 @@ describe('AuctionNameCommand', () => {
       });
   });
 
-  it('Should set state to null when succeed and was passed an auctionId', (done) => {
+  it('Should set state to null when succeed and was passed an auctionId and single is true', (done) => {
     command
-      .execute({chat: {id: 10}, state: constants.STATE_WAIT_FOR_NAME, auctionId: 12344}, "Auction title")
+      .execute({chat: {id: 10}, state: constants.STATE_WAIT_FOR_NAME, auctionId: 12344, single: true}, "Auction title")
       .then((res) => {
         expect(res.state)
           .to.be.null;
         res.result.should.be.true;
+        res.single.should.be.false;
         done();
       })
       .catch((err) => {

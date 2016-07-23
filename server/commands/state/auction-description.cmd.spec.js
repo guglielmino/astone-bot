@@ -57,6 +57,7 @@ describe('AuctionDescriptionCommand', () => {
       .then((res) => {
         res.state.should.be.equal(constants.STATE_WAIT_FOR_PRICE);
         res.result.should.be.true;
+        res.single.should.be.false;
         done();
       })
       .catch((err) => {
@@ -71,6 +72,7 @@ describe('AuctionDescriptionCommand', () => {
         expect(res.state)
           .to.be.null;
         res.result.should.be.true;
+
         done();
       })
       .catch((err) => {
