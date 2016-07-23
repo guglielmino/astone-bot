@@ -53,7 +53,11 @@ export default class AuctionManager {
    * @param username
    */
   getAuctionsByOwner(username) {
-
+    return this._auctionProvider
+      .getAuctionsByOwner(username)
+      .then(auctions => {
+        return auctions.filter(a => !a.lastBid);
+      });
   }
 
   /**

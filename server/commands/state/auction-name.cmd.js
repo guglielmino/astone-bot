@@ -12,17 +12,31 @@ export default class AuctionNameCommand {
 
   execute(state, ...params) {
 
-    return this
-      ._auctionManager
-      .createAuction(state.chat.username, params[0])
-      .then((res) => {
-        this._helper
-          .simpleResponse(state.chat.id, 'Ok, give me now a description of the item');
-        return Promise.resolve({state: constants.STATE_WAIT_FOR_DESC, auctionId: res});
-      })
-      .catch((err) => {
-        return Promise.reject(err);
-      });
+    if(state.auctionId) {
+      return this
+        ._auctionManager
+        .updateAuction(state.auctionId, {title: params[0]})
+        .then(res => {
+          this._helper
+            .simpleResponse(state.chat.id, 'Ok, name changed');
+          return Promise.resolve({state: null, result: true});
+        })
+        .catch((err) => {
+          return Promise.reject(err);
+        });
+    }else {
+      return this
+        ._auctionManager
+        .createAuction(state.chat.username, params[0])
+        .then((res) => {
+          this._helper
+            .simpleResponse(state.chat.id, 'Ok, give me now a description of the item to sell');
+          return Promise.resolve({state: constants.STATE_WAIT_FOR_DESC, auctionId: res});
+        })
+        .catch((err) => {
+          return Promise.reject(err);
+        });
+    }
   }
 
 }

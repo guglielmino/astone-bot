@@ -71,6 +71,25 @@ export default class AuctionProvider {
     return this._findDocs(query);
   }
 
+	/**
+   * Get auctions owned by a username
+   * @param username
+   */
+  getAuctionsByOwner(username) {
+    const query = {
+      $and: [
+        { username: username },
+        {
+          $or: [
+            {closed: false},
+            {closed: {$exists: false}}
+          ]
+        }
+      ]
+    };
+
+    return this._findDocs(query);
+  }
 
   /**
    * Returns all the Auctions with at least a bid

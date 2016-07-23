@@ -319,5 +319,49 @@ describe('AuctionManager', () => {
       });
   });
 
+  it('Should return a list of Acution editable by the user', (done) => {
+    let auctionProvider = {};
+
+
+    auctionProvider.getAuctionsByOwner = sinon.stub().returns(Promise.resolve([
+      {
+        _id: ObjectID("572cc825de91f5b2bc3c24d8"),
+        title: "title1",
+        description: "description1",
+        image: "http://www.nowhere.og/img2.jpg",
+        startDate: new Date(),
+        startingPrice: 10,
+        price: 10.2,
+        subscribers: [{username: "fake1", chatId: 123}],
+        username: "auctionusr",
+        lastBid: new Date()
+      },
+      {
+        _id: ObjectID("572cc825de91f5b2bc3c18a4"),
+        title: "title2",
+        description: "description2",
+        image: "http://www.nowhere.og/img2.jpg",
+        startDate: new Date(),
+        startingPrice: 10,
+        price: 10.2,
+        subscribers: [{username: "fake2", chatId: 5678}],
+        username: "auctionusr"
+      }]));
+
+    const auctionManager = new AuctionManager(auctionProvider);
+
+    auctionManager.getAuctionsByOwner('auctionusr')
+      .then((res) => {
+        res.length.should.be.equal(1);
+        expect(res[0].lastBid)
+          .to.be.empty;
+
+        done();
+      })
+      .catch((err) => {
+        console.log(err);
+        done(err);
+      });
+  });
 
 });

@@ -21,7 +21,7 @@ export default class StartAuctionCommand  {
 					switch(res.status.name){
 						case 'Success':
 							this._telegram
-								.answerCallbackQuery(state.callback_query_id, 'AUCTION SUBCRIBED', false);
+								.answerCallbackQuery(state.callback_query_id, 'AUCTION SUBSCRIBED', false);
 
 							this._makeTelegramAnswer(state, res.auction);
 

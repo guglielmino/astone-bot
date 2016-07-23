@@ -37,10 +37,8 @@ export default class AuctionListCommand {
                   inline_keyboard: buttons
                 }
               });
-
-            Promise.resolve(null);
-
           });
+          return Promise.resolve(null);
         }
         else {
           return this._helper.simpleResponse(state.chat.id, 'Sorry, no Auctions active now');

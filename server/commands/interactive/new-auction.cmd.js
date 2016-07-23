@@ -1,3 +1,5 @@
+'use strict';
+
 import * as constants from '../consts';
 
 export default class NewAuctionCommand {
