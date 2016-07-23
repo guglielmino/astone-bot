@@ -24,6 +24,7 @@ describe('PayPal', ()=> {
 	});
 
 	it('Should authorize a payment in sandbox', (done) => {
+
 		paypal
 			.getPayRedirectUrl('A new Bicycle', 123, 'EUR')
 			.then((redirect_url) => {

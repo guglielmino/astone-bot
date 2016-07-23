@@ -37,9 +37,23 @@ export default class AuctionManager {
     this._auctionProvider = auctionProvider;
   }
 
+	/**
+   * Get all auctions not closed and with a start date lower than 'date'
+   * parameter
+   * @param date
+   * @returns {*|Promise}
+   */
   getActiveAuctions(date) {
     return this._auctionProvider
       .getActiveAuctions(date);
+  }
+
+	/**
+   * Get all auction for a specific owner
+   * @param username
+   */
+  getAuctionsByOwner(username) {
+
   }
 
   /**
@@ -73,6 +87,13 @@ export default class AuctionManager {
       });
   }
 
+	/**
+   * Make a bid on a auction
+   * @param auctionId
+   * @param user
+   * @param value
+   * @returns {Promise.<T>}
+	 */
   bid(auctionId, user, value = null) {
 
     return this._auctionProvider
@@ -117,6 +138,13 @@ export default class AuctionManager {
 
   }
 
+	/**
+   * Subscribe an auction by a user, following bid commands
+   * will be addressed to this auction
+   * @param auctionId
+   * @param user
+   * @returns {Promise.<TResult>}
+   */
   subscribe(auctionId, user) {
     return this._auctionProvider
       .getAuctionsBySubscriber(user)
@@ -146,6 +174,12 @@ export default class AuctionManager {
       });
   }
 
+	/**
+   * Unsubscribe a subscribed auction
+   * @param auctionId
+   * @param user
+   * @returns {Promise.<TResult>|*}
+   */
   unsubscribe(auctionId, user) {
     return this._auctionProvider
       .getAuctionById(auctionId)
