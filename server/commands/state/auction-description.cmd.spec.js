@@ -53,9 +53,23 @@ describe('AuctionDescriptionCommand', () => {
 
   it('Should set state to STATE_WAIT_FOR_PRICE when description is set', (done) => {
     command
-      .execute({chat: {id: 10}, state: constants.STATE_WAIT_FOR_DESC}, -3)
+      .execute({chat: {id: 10}, state: constants.STATE_WAIT_FOR_DESC}, "A description")
       .then((res) => {
         res.state.should.be.equal(constants.STATE_WAIT_FOR_PRICE);
+        res.result.should.be.true;
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
+
+  it('Should set state to null when description is set and state.single is true', (done) => {
+    command
+      .execute({chat: {id: 10}, state: constants.STATE_WAIT_FOR_DESC, single: true},  "A description")
+      .then((res) => {
+        expect(res.state)
+          .to.be.null;
         res.result.should.be.true;
         done();
       })

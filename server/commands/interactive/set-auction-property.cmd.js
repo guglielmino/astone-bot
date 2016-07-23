@@ -2,12 +2,14 @@
 
 import * as constants from '../consts';
 
-export default class SetTitleCommand {
+export default class SetAuctionPropertyCommand {
 
-  constructor(telegram, managerFactory, commandHelper) {
+  constructor(telegram, managerFactory, commandHelper, propertyInfo) {
     this._telegram = telegram;
     this._auctionManager = managerFactory.getAuctionManager();
     this._helper = commandHelper;
+
+    this._propertyInfo = propertyInfo;
   }
 
   execute(state, ...params) {
@@ -20,14 +22,14 @@ export default class SetTitleCommand {
           res.forEach((item) => {
             buttons.push([{
               text: `${item.title}`, callback_data: this._helper
-                .encodeQueryCommand(constants.QCOMMAND_SET_TITLE, item._id.toString())
+                .encodeQueryCommand(this._propertyInfo.queryCommand, item._id.toString())
             }]);
           });
 
           this._telegram
             .sendMessage({
               chat_id: state.chat.id,
-              text: `Choose an auction to change the title`,
+              text: this._propertyInfo.answerText,
               parse_mode: 'Markdown',
               reply_markup: {
                 inline_keyboard: buttons

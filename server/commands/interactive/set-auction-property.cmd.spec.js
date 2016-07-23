@@ -9,9 +9,9 @@ import * as constants from '../consts';
 chai.should();
 const expect = chai.expect;
 
-import SetTitleCommand from './set-title.cmd';
+import SetTitleCommand from './set-auction-property.cmd';
 
-describe('SetTitleCommand', () => {
+describe('SetAuctionPropertyCommand', () => {
 
   let telegram;
   let managerFactory;
@@ -31,10 +31,11 @@ describe('SetTitleCommand', () => {
 
     telegram.sendMessage = sinon.stub();
     commandHelper = sinon.stub(CommandHelper(telegram));
-    command = new SetTitleCommand(telegram, managerFactory, commandHelper);
+    command = new SetTitleCommand(telegram, managerFactory, commandHelper, {
+      queryCommand: constants.QCOMMAND_SET_DESCR, answerText: 'Choose an auction to change the description'});
   });
 
-  it('Should respons with a message and a list of buttons for each auction returned by the manager', (done) => {
+  it('Should respond with a list of buttons for each auction returned by the manager and right text', (done) => {
     auctionManager.getAuctionsByOwner = sinon.stub()
       .returns(Promise.resolve([
         {
@@ -53,8 +54,8 @@ describe('SetTitleCommand', () => {
 
         telegram.sendMessage
           .calledWith(
-            sinon.match(value =>{ 
-              return value.reply_markup.inline_keyboard.length === 1;
+            sinon.match(value =>{
+              return value.reply_markup.inline_keyboard.length === 1 && value.text === 'Choose an auction to change the description';
             }))
           .should.be.ok;
 

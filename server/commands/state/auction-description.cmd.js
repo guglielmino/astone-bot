@@ -21,13 +21,16 @@ export default class AuctionDescriptionCommand {
           'Give a description of the item You want to sell')
       return Promise.resolve({state: constants.STATE_WAIT_FOR_DESC, result: false});
     }
+
+    let nextState = (state.single ? null : constants.STATE_WAIT_FOR_PRICE);
     return this
       ._auctionManager
       .updateAuction(state.auctionId, {description: description})
       .then((res) => {
         this._helper
-          .simpleResponse(state.chat.id, 'Now You need to set a starting price');
-        return Promise.resolve({state: constants.STATE_WAIT_FOR_PRICE, result: true});
+          .simpleResponse(state.chat.id, state.single ? 'Ok, description changed' : 'Now You need to set a starting price');
+
+        return Promise.resolve({state: nextState, result: true});
       })
       .catch((err) => {
         return Promise.reject(err);
