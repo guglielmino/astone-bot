@@ -26,8 +26,8 @@ export default class AuctionMinSubscribersCommand {
       .updateAuction(state.auctionId, {minSubscribers: minParticipants})
       .then(res => {
         this._helper
-          .simpleResponse(state.chat.id, 'Very well, Your Auction will be evaluated by our review Team, You will be contacted when ready.');
-        return Promise.resolve({state: null, result: true});
+          .simpleResponse(state.chat.id,  state.single ? 'Ok, number of participants changed' : 'Very well, Your Auction will be evaluated by our review Team, You will be contacted when ready.');
+        return Promise.resolve({state: null, result: true, single: false });
       })
       .catch((err) => {
         return Promise.reject(err);

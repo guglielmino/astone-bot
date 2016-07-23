@@ -45,6 +45,7 @@ describe('AuctionMinSubscribersCommand', () => {
         expect(res.state)
           .to.be.null;
         res.result.should.be.true;
+        res.single.should.be.false;
         done();
       })
       .catch((err) => {
