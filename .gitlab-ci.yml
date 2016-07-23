@@ -13,7 +13,7 @@ variables:
 
 all:
   only:
-    - /^release.*$/
+    - master
   script:
     - echo "REDIS_HOST=$REDIS_HOST" >> .env
     - echo "REDIS_POST=$REDIS_POST" >> .env
