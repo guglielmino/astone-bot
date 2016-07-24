@@ -32,7 +32,7 @@ describe('AuctionListCommand', () => {
 		commandHelper = sinon.stub(CommandHelper(telegram));
 	});
 
-	it('Should respond with a message for the active auction', (done) => {
+	it('Should respond with a message for the active auctions', (done) => {
 
 		var startDate = new Date();
 		startDate.setDate(startDate.getDate() - 1);
@@ -60,9 +60,10 @@ describe('AuctionListCommand', () => {
 		const command = new AuctionListCommand(telegram, managerFactory, commandHelper);
 		command.execute({chat: {id: 10}})
 			.then((res) => {
+
 				telegram.sendMessage
 					.calledWith(
-						sinon.match.has('text', '*Commodore 64 (price € 11)*\nhttp://www.oldcomputers.net/pics/C64-left.jpg\nA beautiful Commodore 64!'))
+						sinon.match.has('text', '*Commodore 64 (price € 11)*\nA beautiful Commodore 64!'))
 					.should.be.ok;
 				done();
 			})
