@@ -14,7 +14,7 @@ export default class BidCommand {
 
 				const currentPrice = auction.price.toFixed(2);
 				const nextBid = parseFloat(auction.price + parseFloat(auction.bidStep || 1.00)).toFixed(2);
-				const bidRespMessage = `*€ ${currentPrice}* bid, now ${nextBid}, now ${nextBid}, will ya give me *€ ${nextBid}* ?`;
+				const bidRespMessage = `@${auction.bestBidder.username} offered * € ${currentPrice}*, who wants to bid for *€ ${nextBid}* ?`;
 
 				this._telegram
 					.answerCallbackQuery(state.callback_query_id, 'Bid accepted!', false);

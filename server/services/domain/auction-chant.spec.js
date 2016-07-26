@@ -237,7 +237,11 @@ describe('AuctionChant', () => {
             subscribers: [
               { username: 'alpha', chatId: 1234 },
               { username: 'beta', chatId: 5678 }
-            ]
+            ],
+            bestBidder: {
+              username: 'alpha',
+              userId: 5678
+            }
           }
         ]));
 
@@ -256,7 +260,7 @@ describe('AuctionChant', () => {
 
           telegram.sendMessage
             .calledWith(
-              sinon.match.has('text', '*A test auction* sold for *€ 10*  💰')
+              sinon.match.has('text', `*A test auction* sold for *€ 10* to @alpha  💰`)
             )
             .should.be.true;
 
