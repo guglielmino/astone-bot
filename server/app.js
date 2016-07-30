@@ -18,9 +18,11 @@ import i18n from 'i18n';
 
 import ManagerFactory from './services/domain/manager-factory';
 
+import AuctionAges from './services/domain/auction-ages';
 import AuctionChant from './services/domain/auction-chant';
 import AuctionTimer from './services/domain/auction-timer';
 import AuctionEvents from './services/domain/auction-events';
+
 
 import commands from './app.commands';
 import Telegram from './bot-api/telegram';
@@ -58,26 +60,29 @@ storageProvider
   .then((db) => {
     logger.debug('Db connected, configuring providers');
 
-
-
     bluebird.promisifyAll(redis.RedisClient.prototype);
     const redisClient = redis.createClient({
       host: config.redis.host,
       port: config.redis.port,
       db: config.redis.db
     });
+
     const stateManager = StateManager(redisClient);
     const telegramReqParser = TelegramReqParser();
     const chatter = new TelegramChatter(stateManager, telegramReqParser);
 
     const managerFactory = ManagerFactory(storageProvider);
-    const eventEmitter = new EventEmitter();
+
+    const auctionAges = AuctionAges();
     const auctionChant = AuctionChant(telegram,
-      managerFactory.getAuctionManager());
-    const auctionTimer = new AuctionTimer(auctionChant, eventEmitter);
+      managerFactory.getAuctionManager(), auctionAges);
+
+    const auctionTimer = new AuctionTimer(auctionChant);
+    auctionTimer.schedule(() => auctionChant.make(new Date()));
+
     const closeAuctionUrl = config.base_url + urlConsts.PAGE_PAYPAL_GETPAYURL;
     const auctionEvents = new AuctionEvents(telegram, i18n,
-      managerFactory.getAuctionManager(), eventEmitter, closeAuctionUrl);
+      managerFactory.getAuctionManager(), closeAuctionUrl);
 
     auctionTimer.start();
     commands(chatter, telegram, managerFactory);

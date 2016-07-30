@@ -1,0 +1,63 @@
+[
+  {
+    "_id": {
+      "$oid": "572c7066b3f30a0752a5f86d"
+    },
+    "title": "Commodore 64",
+    "description": "Commodore 64 originale come nuovo, ancora con imballie manuali, per veri amatori!",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/3/34/Commodore-64-Computer.png",
+    "startDate": "ISODate(2016-05-10T00:00:00.000Z)",
+    "startingPrice": 1,
+    "price": 28,
+    "username": "guglielmino",
+    "minSubscribers": 0,
+    "subscribers": [
+      {
+        "username": "giobindi",
+        "chatId": 11351141
+      },
+      {
+        "username": "guglielmino",
+        "chatId": 19915021
+      }
+    ],
+    "bestBidder": {
+      "username": "guglielmino",
+      "chatId": 19915021
+    },
+    "lastBid": {
+      "$date": "2016-07-17T06:43:35.827Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "888c7066b3f10b0752a5f123"
+    },
+    "title": "VIC 20",
+    "description": "Commodore VIC 20 bellissimo",
+    "image": "http://www.oldcomputers.net/pics/vic20.jpg",
+    "startDate": "ISODate(2016-05-10T00:00:00.000Z)",
+    "startingPrice": 25,
+    "price": 90,
+    "username": "guglielmino",
+    "minSubscribers": 0,
+    "subscribers": [
+      {
+        "username": "giobindi",
+        "chatId": 11351141
+      },
+      {
+        "username": "guglielmino",
+        "chatId": 19915021
+      }
+    ],
+    "bestBidder": {
+      "username": "guglielmino",
+      "chatId": 19915021
+    },
+    "lastBid": {
+      "$date": "2016-07-17T06:10:00.007Z"
+    }
+  }
+]
+

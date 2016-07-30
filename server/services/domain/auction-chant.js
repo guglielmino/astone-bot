@@ -1,23 +1,13 @@
 'use strict';
 
-export default (telegram, auctionManager) => {
-
-  const ageMessages = {
-    65: (auction) => `No one offer more than € ${auction.price} ?`,
-    70: (auction) => `Come on, don't be shy, make an offer`,
-    90: (auction) => `*€ ${auction.price}* and one`,
-    95: (auction) => `*€ ${auction.price}* and two`,
-    100: (auction) => `*€ ${auction.price}* and three`,
-    103: (auction) => `*${auction.title}* sold for *€ ${auction.price}* to @${auction.bestBidder.username}  💰`
-  };
-
-  const ages = Object.keys(ageMessages);
-  const maxAge = Math.max.apply(null, ages);
+export default (telegram, auctionManager, auctionAges) => {
+  const AGE_TRIGGER = 60;
 
   function _handleAgeMessage(auction) {
-    if (auction.bidAge > 60) {
-      if(ageMessages[auction.bidAge]) {
-        _sendMessageToSubscribers(auction, ageMessages[auction.bidAge](auction));
+    if (auction.bidAge > AGE_TRIGGER) {
+      let ageMessage = auctionAges.getMessage(auction);
+      if (ageMessage) {
+        _sendMessageToSubscribers(auction, ageMessage.message);
       }
     }
   }
@@ -33,10 +23,9 @@ export default (telegram, auctionManager) => {
   }
 
   return {
-    make: () => {
-      const now = new Date();
+    make: (now) => {
       return auctionManager
-        .getRunningAuctionsBidAge(now, 60)
+        .getRunningAuctionsBidAge(now, AGE_TRIGGER)
         .then((res) => {
           res.forEach((auction) => {
             _handleAgeMessage(auction);
