@@ -31,14 +31,21 @@ export default class AuctionListCommand {
             this._telegram
               .sendMessage({
                 chat_id: state.chat.id,
-                text: `*${item.title} (price € ${item.price})*\n${item.image}\n${item.description}`,
-                parse_mode: 'Markdown',
-                reply_markup: {
-                  inline_keyboard: buttons
-                }
+                text: `*${item.title} (price € ${item.price})*\n${item.description}`,
+                parse_mode: 'Markdown'
+              })
+              .then(res => {
+                this._telegram.sendPhoto({
+                  chat_id: state.chat.id,
+                  photo: item.file_id,
+                  reply_markup: {
+                    inline_keyboard: buttons
+                  }
+
+                });
               });
           });
-          return Promise.resolve(null);
+          Promise.resolve(null);
         }
         else {
           return this._helper.simpleResponse(state.chat.id, 'Sorry, no Auctions active now');

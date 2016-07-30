@@ -18,7 +18,7 @@ services:
     ports:
         - "9001:9001"
 
-  data:
-    image: tianon/true
-    volume: /var/data
+#  data:
+#    image: tianon/true
+#    volume: /var/data
 

@@ -82,7 +82,7 @@ describe('BidCommand', () => {
 			});
 	});
 
-	it('Should send a message to all subscriber of Acution when bid accepted', (done) => {
+	it('Should send a message to all subscriber of Auction when bid accepted', (done) => {
 
 		var startDate = new Date();
 		startDate.setDate(startDate.getDate() - 1);
@@ -102,7 +102,11 @@ describe('BidCommand', () => {
 						{username: "guglielmino", chatId: 123},
 						{username: "tizio", chatId: 234},
 						{username: "caio", chatId: 567}
-					]
+					],
+          bestBidder: {
+					  username: "caio",
+            chatId: 567
+          }
 				}
 			}));
 
