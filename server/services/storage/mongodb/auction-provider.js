@@ -71,14 +71,14 @@ export default class AuctionProvider {
     return this._findDocs(query);
   }
 
-	/**
+  /**
    * Get auctions owned by a username
    * @param username
    */
   getAuctionsByOwner(username) {
     const query = {
       $and: [
-        { username: username },
+        {username: username},
         {
           $or: [
             {closed: false},
@@ -197,7 +197,12 @@ export default class AuctionProvider {
         }
 
         col.updateOne({_id: ObjectID(auctionId)},
-          {$set: {closed: true}},
+          {
+            $set: {closed: true, state: 'WAIT_FOR_PAYMENT'},
+            $currentDate: {
+              closeDate: true
+            }
+          },
           (err, r) => {
             if (err) {
               reject(err);

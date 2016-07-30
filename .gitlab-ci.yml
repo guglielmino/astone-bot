@@ -9,11 +9,11 @@ variables:
   USE_WEBHOOK: SECURE
   AWS_SECRET_ACCESS_KEY: SECURE
   AWS_ACCESS_KEY_ID: SECURE
-
+  BASE_URL: SECURE
 
 all:
   only:
-    - /^release.*$/
+    - master
   script:
     - echo "REDIS_HOST=$REDIS_HOST" >> .env
     - echo "REDIS_POST=$REDIS_POST" >> .env
@@ -23,6 +23,7 @@ all:
     - echo "USE_WEBHOOK=$USE_WEBHOOK" >> .env
     - echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> .env
     - echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> .env
+    - echo "BASE_URL=$BASE_URL" >> .env
     - cat .env
     - npm install
     - npm test

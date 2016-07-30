@@ -2,9 +2,10 @@ import {CronJob} from 'cron';
 
 export default class AuctionTimer {
 
-  constructor(auctionChant, eventEmitter) {
+  constructor(auctionChant) {
     this._auctionChant = auctionChant;
-    this._eventEmitter = eventEmitter;
+
+    this._timedFunctions = [];
 
     this._job = new CronJob({
       cronTime: '* * * * * *',
@@ -14,13 +15,18 @@ export default class AuctionTimer {
     });
   }
 
+  schedule(func) {
+    this._timedFunctions
+      .push(func);
+  }
+
   start() {
     this._job.start();
   }
 
   _timerFunc() {
-    this
-      ._auctionChant
-      .make();
+    this._timedFunctions.forEach(func => {
+      func();
+    });
   }
 }

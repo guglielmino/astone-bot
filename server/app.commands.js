@@ -31,7 +31,7 @@ export default (chatManager, telegram, managerFactory) => {
 }
 
 /**
- * Istantiate and add interactive commands (ie starting with /) to chat manager
+ * Istantiate and schedule interactive commands (ie starting with /) to chat manager
  */
 function InteractiveCommands(chatManager, telegram, managerFactory, commandHelper) {
   const listCmd = new AuctionListCommand(telegram, managerFactory, commandHelper);
@@ -76,7 +76,7 @@ function InteractiveCommands(chatManager, telegram, managerFactory, commandHelpe
 }
 
 /**
- * Instantiate ad add QueryCallback Commands (ie 'out-of-band') to chatManager
+ * Instantiate ad schedule QueryCallback Commands (ie 'out-of-band') to chatManager
  */
 function QueryCommandsCommands(chatManager, telegram, managerFactory, commandHelper) {
   const bidCmd = new BidCommand(telegram, managerFactory, commandHelper);
@@ -112,7 +112,7 @@ function QueryCommandsCommands(chatManager, telegram, managerFactory, commandHel
 }
 
 /**
- * Instantiate and add state commands (ie. commands triggered by state) to chatManager
+ * Instantiate and schedule state commands (ie. commands triggered by state) to chatManager
  */
 function StateCommands(chatManager, telegram, managerFactory, commandHelper) {
   const nameCommand = new AuctionNameCommand(telegram, managerFactory, commandHelper);
