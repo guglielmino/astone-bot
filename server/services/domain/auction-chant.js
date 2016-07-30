@@ -4,12 +4,17 @@ export default (telegram, auctionManager, auctionAges) => {
   const AGE_TRIGGER = 60;
 
   function _handleAgeMessage(auction) {
+    let ret = false;
+
     if (auction.bidAge > AGE_TRIGGER) {
       let ageMessage = auctionAges.getMessage(auction);
       if (ageMessage) {
         _sendMessageToSubscribers(auction, ageMessage.message);
+        ret = ageMessage.isLast;
       }
     }
+
+    return ret;
   }
 
   function _sendMessageToSubscribers(auction, message) {
@@ -28,7 +33,10 @@ export default (telegram, auctionManager, auctionAges) => {
         .getRunningAuctionsBidAge(now, AGE_TRIGGER)
         .then((res) => {
           res.forEach((auction) => {
-            _handleAgeMessage(auction);
+            if (_handleAgeMessage(auction)) {
+              auctionManager
+                .closeAuction(auction._id);
+            }
           });
           return Promise.resolve(res.length);
         });

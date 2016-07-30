@@ -24,7 +24,5 @@
     "username": "guglielmino",
     "chatId": 19915021
   },
-  "lastBid": {
-    "$date": "2016-07-17T06:43:35.827Z"
-  }
+  "lastBid": "ISODate(2016-07-17T06:43:35.827Z)"
 }

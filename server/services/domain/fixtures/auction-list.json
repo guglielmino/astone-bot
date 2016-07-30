@@ -24,9 +24,6 @@
     "bestBidder": {
       "username": "guglielmino",
       "chatId": 19915021
-    },
-    "lastBid": {
-      "$date": "2016-07-17T06:43:35.827Z"
     }
   },
   {
@@ -55,9 +52,8 @@
       "username": "guglielmino",
       "chatId": 19915021
     },
-    "lastBid": {
-      "$date": "2016-07-17T06:10:00.007Z"
-    }
+    "lastBid": "ISODate(2016-07-17T06:10:00.007Z)",
+    "bidAge": 103
   }
 ]
 
