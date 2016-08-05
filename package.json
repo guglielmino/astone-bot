@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "description": "A bot for chat based auctions",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --compilers js:babel-register server/test/unit/**/*.spec.js",
-    "test:e2e": "./node_modules/.bin/mocha --compilers js:babel-register server/test/e2e/**/*.spec.js",
+    "test": "./node_modules/.bin/mocha --compilers js:babel-register 'server/test/unit/**/*.spec.js'",
+    "test:e2e": "./node_modules/.bin/mocha --compilers js:babel-register 'server/test/e2e/**/*.spec.js'",
     "build": "npm run test && npm run clean && npm run babel",
     "deploy": "",
     "start": "node server/babel.js",

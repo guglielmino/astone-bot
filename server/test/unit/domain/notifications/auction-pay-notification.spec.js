@@ -19,7 +19,7 @@ describe('AuctionPayNotification', () => {
 
     const auctionManager = {
       getClosedAndWaitingForPayment: sinon.stub().returns(
-        Promise.resolve(require('././closed-auctions.json'))
+        Promise.resolve(require('../fixtures/closed-auctions.json'))
       )
     };
 

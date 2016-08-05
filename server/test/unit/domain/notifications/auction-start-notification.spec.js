@@ -22,13 +22,13 @@ describe('AuctionStartNotification', () => {
     const userManager = {
       getAll: sinon.stub()
         .returns(
-          Promise.resolve(require('././users.json'))
+          Promise.resolve(require('../fixtures/users.json'))
         )
     };
 
     const auctionManager = {
       getStarting: sinon.stub().returns(
-        Promise.resolve(require('././starting-auctions.json'))
+        Promise.resolve(require('../fixtures/starting-auctions.json'))
       )
     };
 
