@@ -2,8 +2,8 @@ import {CronJob} from 'cron';
 
 export default class AuctionTimer {
 
-  constructor(auctionChant) {
-    this._auctionChant = auctionChant;
+  constructor() {
+    this._timerTicks = 0;
 
     this._timedFunctions = [];
 
@@ -25,8 +25,10 @@ export default class AuctionTimer {
   }
 
   _timerFunc() {
+    this._timerTicks++;
+
     this._timedFunctions.forEach(func => {
-      func();
+      func(this._timerTicks);
     });
   }
 }

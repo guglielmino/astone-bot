@@ -4,7 +4,6 @@ import logger from './services/logger';
 
 import bluebird from 'bluebird';
 import redis from 'redis';
-import {EventEmitter} from 'events';
 
 import web from './web';
 import * as urlConsts from './web/url-consts';
@@ -22,7 +21,8 @@ import AuctionAges from './services/domain/auction-ages';
 import AuctionChant from './services/domain/auction-chant';
 import AuctionTimer from './services/domain/auction-timer';
 import AuctionEvents from './services/domain/auction-events';
-
+import AuctionStartNotification from './services/domain/notifications/auction-start-notification';
+import AuctionPayNotification from './services/domain/notifications/auction-pay-notification';
 
 import commands from './app.commands';
 import Telegram from './bot-api/telegram';
@@ -42,7 +42,7 @@ const paypal = new PayPal({
 const request = bluebird.promisify(require('request'));
 const telegram = new Telegram(request, config.telegram.api_key);
 
-const storageProvider = new StorageProvider(config);
+const storageProvider = new StorageProvider();
 const sched = new RepeatingScheduler();
 
 // We want all dates in UTC
@@ -78,7 +78,21 @@ storageProvider
       managerFactory.getAuctionManager(), auctionAges);
 
     const auctionTimer = new AuctionTimer(auctionChant);
-    auctionTimer.schedule(() => auctionChant.make(new Date()));
+    auctionTimer.schedule(ticks => auctionChant.make(new Date()));
+
+    const auctionStartNotification = AuctionStartNotification(telegram, managerFactory);
+    auctionTimer.schedule(ticks => {
+      if (ticks % 60 === 0) {
+        auctionStartNotification.sendNotification(new Date(), 5);
+      }
+    });
+
+    const auctionPayNotification = AuctionPayNotification(telegram, managerFactory);
+    auctionTimer.schedule(ticks => {
+      if (ticks % 60 === 0) {
+        auctionPayNotification.sendNotification(new Date(), urlConsts.PAGE_PAYPAL_GETPAYURL, config.cipher_password);
+      }
+    });
 
     const closeAuctionUrl = config.base_url + urlConsts.PAGE_PAYPAL_GETPAYURL;
     const auctionEvents = new AuctionEvents(telegram, i18n,

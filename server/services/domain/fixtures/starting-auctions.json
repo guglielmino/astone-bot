@@ -1,0 +1,16 @@
+[
+  {
+    "_id": {
+      "$oid": "888c7066b3f10b0752a5f123"
+    },
+    "title": "VIC 20",
+    "description": "Commodore VIC 20 bellissimo",
+    "image": "http://www.oldcomputers.net/pics/vic20.jpg",
+    "startDate": "ISODate(2016-05-10T11:00:00.000Z)",
+    "startingPrice": 5,
+    "price": 5,
+    "username": "guglielmino",
+    "minSubscribers": 0
+  }
+]
+

@@ -1,0 +1,32 @@
+[
+  {
+    "_id": {
+      "$oid": "575289111559f61d1d37c3ee"
+    },
+    "id": 19915021,
+    "first_name": "Fabrizio",
+    "last_name": "Guglielmino",
+    "username": "guglielmino",
+    "type": "private"
+  },
+  {
+    "_id": {
+      "$oid": "5773da6ff0d92949738a7f7d"
+    },
+    "id": 11351141,
+    "first_name": "Giovanni",
+    "last_name": "Bindi",
+    "username": "giobindi",
+    "type": "private"
+  },
+  {
+    "_id": {
+      "$oid": "5773dfc5f0d92949738a7f7e"
+    },
+    "id": 129325383,
+    "first_name": "Gabriele",
+    "username": "ggauna",
+    "type": "private"
+  }
+]
+

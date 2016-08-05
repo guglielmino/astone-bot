@@ -1,11 +1,9 @@
 'use strict';
 
 import {Enum} from 'enumify';
+import * as consts from './auction-consts';
 
-
-export class BidResponse extends Enum {
-}
-;
+export class BidResponse extends Enum {};
 
 BidResponse.initEnum([
   'Success',
@@ -19,9 +17,7 @@ BidResponse.initEnum([
   'AuctionClosed'
 ]);
 
-export class SubscribeResponse extends Enum {
-}
-;
+export class SubscribeResponse extends Enum {};
 
 SubscribeResponse.initEnum([
   'Success',
@@ -86,6 +82,20 @@ export default class AuctionManager {
           .filter((x) => x.bidAge >= trigger)
         );
       });
+  }
+
+	/**
+   * Returns all closed auction in state WAIT_FOR_PAYMENT
+   * @param date
+   */
+  getClosedAndWaitingForPayment(date) {
+    return this._auctionProvider
+      .getClosedInState(date, consts.AUCTION_STATE_WAIT_FOR_PAYMENT);
+  }
+
+  getStarting(date, minutes) {
+    return this._auctionProvider
+      .getStarting(date, minutes);
   }
 
 	/**

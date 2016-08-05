@@ -64,11 +64,13 @@ export default class TelegramChatter {
 
   _getCommand(key, type) {
     let res = null;
-    const lowerKey = key.toLowerCase();
-    if (this.commands.hasOwnProperty(lowerKey)) {
-      let command = this.commands[lowerKey];
-      if (command && command.type === type) {
-        res = command;
+    if(key) {
+      const lowerKey = key.toLowerCase();
+      if (this.commands.hasOwnProperty(lowerKey)) {
+        let command = this.commands[lowerKey];
+        if (command && command.type === type) {
+          res = command;
+        }
       }
     }
     return res;
