@@ -6,8 +6,8 @@ import redis from 'redis-mock';
 
 chai.should();
 
-import TelegramChatter from './telegram-chatter';
-import StateManager from './state-manager';
+import TelegramChatter from '../../../../services/bot/telegram-chatter';
+import StateManager from '../../../../services/bot/state-manager';
 
 describe('TelegramChatter', () => {
   let chatter;
@@ -24,7 +24,7 @@ describe('TelegramChatter', () => {
       chatter.processRequest({});
     }).should.throw(TypeError);
   });
-  
+
 
   it('Should call updateState of stateManager when command.execute returns an object', () => {
     let command = { cmd: { } };

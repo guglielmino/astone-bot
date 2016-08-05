@@ -2,14 +2,14 @@
 
 import chai from 'chai';
 import sinon from 'sinon';
-import * as constants from '../consts';
-import CommandHelper from '../command-helper';
+import * as constants from '../../../../commands/consts';
+import CommandHelper from '../../../../commands/command-helper';
 import {ObjectID} from 'mongodb';
 
 chai.should();
 const expect = chai.expect;
 
-import AuctionPictureCommand from './auction-picture.cmd';
+import AuctionPictureCommand from '../../../../commands/state/auction-picture.cmd';
 
 describe('AuctionPictureCommand', () => {
   let telegram;

@@ -3,10 +3,10 @@
 import chai from 'chai';
 import sinon from 'sinon';
 
-import CommandHelper from '../command-helper';
-import AuctionPropertyCommand from './auction-property';
+import CommandHelper from '../../../../commands/command-helper';
+import AuctionPropertyCommand from '../../../../commands/callbackquery/auction-property';
 
-import * as constants from '../consts';
+import * as constants from '../../../../commands/consts';
 
 
 describe('AuctionPropertyCommand', () => {

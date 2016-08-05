@@ -2,7 +2,7 @@
 
 import chai from 'chai';
 import sinon from 'sinon';
-import AuctionStartNotification from './auction-start-notification';
+import AuctionStartNotification from '../../../../services/domain/notifications/auction-start-notification';
 
 import {ObjectID} from 'mongodb';
 
@@ -22,13 +22,13 @@ describe('AuctionStartNotification', () => {
     const userManager = {
       getAll: sinon.stub()
         .returns(
-          Promise.resolve(require('./../fixtures/users.json'))
+          Promise.resolve(require('././users.json'))
         )
     };
 
     const auctionManager = {
       getStarting: sinon.stub().returns(
-        Promise.resolve(require('./../fixtures/starting-auctions.json'))
+        Promise.resolve(require('././starting-auctions.json'))
       )
     };
 

@@ -3,8 +3,8 @@
 import chai from 'chai';
 import sinon from 'sinon';
 
-import CommandHelper from '../command-helper';
-import StartAuctionCommand from './start-auction.cmd.js';
+import CommandHelper from '../../../../commands/command-helper';
+import StartAuctionCommand from '../../../../commands/callbackquery/start-auction.cmd.js';
 
 describe('StartAuctionCommand', () => {
 	let telegram;

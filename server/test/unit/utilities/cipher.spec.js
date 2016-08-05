@@ -2,7 +2,7 @@
 
 import chai from 'chai';
 import sinon from 'sinon';
-import Cipher from './cipher';
+import Cipher from '../../../services/utilities/cipher';
 
 
 // Tell chai that we'll be using the "should" style assertions.
@@ -22,6 +22,6 @@ describe('Cipher', ()=> {
 
 		'plain text'.should.be.equal(decrypted);
 	});
-	
-	
+
+
 });

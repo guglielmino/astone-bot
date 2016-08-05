@@ -6,7 +6,7 @@ import sinon from 'sinon';
 chai.should();
 
 const expect = chai.expect;
-import StateManager from './state-manager';
+import StateManager from '../../../../services/bot/state-manager';
 import bluebird from 'bluebird';
 import redis from 'redis-mock';
 
