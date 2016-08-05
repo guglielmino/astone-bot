@@ -4,7 +4,7 @@ import fs from 'fs';
 import chai from 'chai';
 import sinon from 'sinon';
 
-import AuctionChant from './auction-chant';
+import AuctionChant from '../../../services/domain/auction-chant';
 
 
 // Tell chai that we'll be using the "should" style assertions.

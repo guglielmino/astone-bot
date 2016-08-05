@@ -3,13 +3,13 @@
 import chai from 'chai';
 import sinon from 'sinon';
 import {ObjectID} from 'mongodb';
-import CommandHelper from '../command-helper';
-import * as constants from '../consts';
+import CommandHelper from '../../../../commands/command-helper';
+import * as constants from '../../../../commands/consts';
 
 chai.should();
 const expect = chai.expect;
 
-import NewAuctionCommand from './new-auction.cmd';
+import NewAuctionCommand from '../../../../commands/interactive/new-auction.cmd';
 
 describe('NewAuctionCommand', () => {
   let telegram;

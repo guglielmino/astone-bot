@@ -3,7 +3,7 @@
 import fs from 'fs';
 import chai from 'chai';
 import sinon from 'sinon';
-import TelegramReqParser from './telegram-req-parser';
+import TelegramReqParser from '../../../../services/bot/telegram-req-parser';
 
 chai.should();
 const expect = chai.expect;

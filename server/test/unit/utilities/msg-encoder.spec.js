@@ -2,7 +2,7 @@
 
 import chai from 'chai';
 import sinon from 'sinon';
-import MsgEncoder from './msg-encoder';
+import MsgEncoder from '../../../services/utilities/msg-encoder';
 
 
 // Tell chai that we'll be using the "should" style assertions.
@@ -22,7 +22,7 @@ describe('MsgEncoder', ()=> {
 
 		result.should.be.a('string');
 	});
-	
+
 	it('Should decode an object previous encoded', () => {
 		let sampleObj = {name: "Fabrizio", age: 40};
 		let result = encoder.encode(sampleObj);

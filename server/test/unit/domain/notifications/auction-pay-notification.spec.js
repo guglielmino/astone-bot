@@ -2,7 +2,7 @@
 
 import chai from 'chai';
 import sinon from 'sinon';
-import AuctionPayNotification from './auction-pay-notification';
+import AuctionPayNotification from '../../../../services/domain/notifications/auction-pay-notification';
 
 // Tell chai that we'll be using the "should" style assertions.
 chai.should();
@@ -19,7 +19,7 @@ describe('AuctionPayNotification', () => {
 
     const auctionManager = {
       getClosedAndWaitingForPayment: sinon.stub().returns(
-        Promise.resolve(require('./../fixtures/closed-auctions.json'))
+        Promise.resolve(require('../fixtures/closed-auctions.json'))
       )
     };
 

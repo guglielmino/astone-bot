@@ -3,13 +3,13 @@
 import chai from 'chai';
 import sinon from 'sinon';
 import {ObjectID} from 'mongodb';
-import CommandHelper from '../command-helper';
-import * as constants from '../consts';
+import CommandHelper from '../../../../commands/command-helper';
+import * as constants from '../../../../commands/consts';
 
 chai.should();
 const expect = chai.expect;
 
-import SetTitleCommand from './set-auction-property.cmd';
+import SetTitleCommand from '../../../../commands/interactive/set-auction-property.cmd';
 
 describe('SetAuctionPropertyCommand', () => {
 

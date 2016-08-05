@@ -3,8 +3,8 @@
 import chai from 'chai';
 import sinon from 'sinon';
 import fs from 'fs';
-import AuctionManager from './auction-manager';
-import {BidResponse} from './auction-manager';
+import AuctionManager from '../../../services/domain/auction-manager';
+import {BidResponse} from '../../../services/domain/auction-manager';
 import {ObjectID} from 'mongodb';
 
 // Tell chai that we'll be using the "should" style assertions.

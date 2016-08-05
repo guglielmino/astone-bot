@@ -2,7 +2,7 @@
 
 import chai from 'chai';
 import sinon from 'sinon';
-import I18nBuild from './i18n';
+import I18nBuild from '../../../services/utilities/i18n';
 
 // Tell chai that we'll be using the "should" style assertions.
 chai.should();
@@ -14,7 +14,7 @@ describe('i18n', ()=> {
 		let en = {
 			"Hello {0}" : "Hello {0}"
 		};
-		
+
 		let it = {
 			"Hello {0}" : "Ciao {0}"
 		};
