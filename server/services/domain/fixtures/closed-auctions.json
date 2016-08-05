@@ -1,0 +1,62 @@
+[
+  {
+    "_id": {
+      "$oid": "572c7066b3f30a0752a5f86d"
+    },
+    "title": "Commodore 64",
+    "description": "Commodore 64 originale come nuovo, ancora con imballie manuali, per veri amatori!",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/3/34/Commodore-64-Computer.png",
+    "startDate": "ISODate(2016-05-10T00:00:00.000Z)",
+    "startingPrice": 1,
+    "price": 28,
+    "username": "guglielmino",
+    "minSubscribers": 0,
+    "subscribers": [
+      {
+        "username": "giobindi",
+        "chatId": 11351141
+      },
+      {
+        "username": "guglielmino",
+        "chatId": 19915021
+      }
+    ],
+    "bestBidder": {
+      "username": "guglielmino",
+      "chatId": 19915021
+    },
+    "lastBid": "ISODate(2016-07-17T06:43:35.827Z)",
+    "closed": true,
+    "state": "WAIT_FOR_PAYMENT"
+  },
+  {
+    "_id": {
+      "$oid": "572c6b35b3f30a0752a5f5f1"
+    },
+    "title": "MTB Nuova",
+    "description": "MTB Specialized Pitch Pro 2011, tenuta bene, piccoli segni di usura dovuti all'uso, vero affare",
+    "image": "http://www.ciclicioffi.it/wp-content/uploads/2015/11/mtb.jpg",
+    "startDate": "ISODate(\"2016-05-05T00:00:00.000Z\")",
+    "startingPrice": 5,
+    "username": "guglielmino",
+    "price": 60,
+    "minSubscribers": 0,
+    "subscribers": [
+      {
+        "username": null,
+        "chatId": 129325383
+      },
+      {
+        "username": "guglielmino",
+        "chatId": 19915021
+      }
+    ],
+    "bestBidder": {
+      "username": "guglielmino",
+      "chatId": 19915021
+    },
+    "lastBid": "ISODate(2016-07-17T06:43:35.827Z)",
+    "closed": true,
+    "state": "WAIT_FOR_PAYMENT"
+  }
+]

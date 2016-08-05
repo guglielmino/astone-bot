@@ -1,0 +1,25 @@
+{
+  "collections": {
+    "users": [
+      {
+        "id": 19915021,
+        "first_name": "Fabrizio",
+        "last_name": "Guglielmino",
+        "username": "guglielmino",
+        "type": "private"
+      },
+      {
+        "id": 11351141,
+        "first_name": "Giovanni",
+        "last_name": "Bindi",
+        "username": "giobindi",
+        "type": "private"
+      },
+      {
+        "id": 129325383,
+        "first_name": "Gabriele",
+        "type": "private"
+      }
+    ]
+  }
+}

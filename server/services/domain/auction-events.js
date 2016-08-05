@@ -3,15 +3,12 @@ import Cipher from '../utilities/cipher';
 
 export default class AuctionEvents {
 
-	constructor(telegram, i18n, auctionManager, eventEmitter, closeAuctionUrl, cipherPassword) {
+	constructor(telegram, i18n, auctionManager, closeAuctionUrl, cipherPassword) {
 		this._telegram = telegram;
 		this._i18n = i18n;
 		this._auctionManager = auctionManager;
-		this._eventEmitter = eventEmitter;
 		this._closeAuctionUrl = closeAuctionUrl;
 		this._cipherPassword = cipherPassword;
-
-		this._eventEmitter.on(auctionConsts.EVENT_AUCTION_CLOSED, this.onCloseAuction.bind(this));
 	}
 
 	onCloseAuction(auction) {
@@ -31,7 +28,7 @@ export default class AuctionEvents {
 							}
 						})
 						.catch((err) => {
-							logger.error(err.message);
+
 						});
 				}
 			});
