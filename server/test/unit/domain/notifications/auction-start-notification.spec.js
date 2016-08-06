@@ -49,7 +49,7 @@ describe('AuctionStartNotification', () => {
   it('Should call sendMessage for all 3 users', (done) => {
 
     auctionStartNotification
-      .sendNotification()
+      .sendNotification(new Date(), 'http://astone.gumino.com/pages/auction/')
       .then(sent => {
         telegram.sendMessage
           .calledThrice

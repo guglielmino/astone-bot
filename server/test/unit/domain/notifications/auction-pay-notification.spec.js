@@ -17,10 +17,12 @@ describe('AuctionPayNotification', () => {
     telegram = {};
     telegram.sendMessage = sinon.stub();
 
+
     const auctionManager = {
       getClosedAndWaitingForPayment: sinon.stub().returns(
         Promise.resolve(require('../fixtures/closed-auctions.json'))
-      )
+      ),
+      updateAuction: sinon.stub()
     };
 
     const managerFactory = {

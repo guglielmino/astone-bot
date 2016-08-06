@@ -3,7 +3,9 @@
 import {Enum} from 'enumify';
 import * as consts from './auction-consts';
 
-export class BidResponse extends Enum {};
+export class BidResponse extends Enum {
+}
+;
 
 BidResponse.initEnum([
   'Success',
@@ -17,7 +19,9 @@ BidResponse.initEnum([
   'AuctionClosed'
 ]);
 
-export class SubscribeResponse extends Enum {};
+export class SubscribeResponse extends Enum {
+}
+;
 
 SubscribeResponse.initEnum([
   'Success',
@@ -33,7 +37,7 @@ export default class AuctionManager {
     this._auctionProvider = auctionProvider;
   }
 
-	/**
+  /**
    * Get all auctions not closed and with a start date lower than 'date'
    * parameter
    * @param date
@@ -44,7 +48,7 @@ export default class AuctionManager {
       .getActiveAuctions(date);
   }
 
-	/**
+  /**
    * Get all auction for a specific owner
    * @param username
    */
@@ -84,7 +88,7 @@ export default class AuctionManager {
       });
   }
 
-	/**
+  /**
    * Returns all closed auction in state WAIT_FOR_PAYMENT
    * @param date
    */
@@ -98,13 +102,13 @@ export default class AuctionManager {
       .getStarting(date, minutes);
   }
 
-	/**
+  /**
    * Make a bid on a auction
    * @param auctionId
    * @param user
    * @param value
    * @returns {Promise.<T>}
-	 */
+   */
   bid(auctionId, user, value = null) {
 
     return this._auctionProvider
@@ -140,7 +144,10 @@ export default class AuctionManager {
             // NOTE: We doesn't get auction again so update values are set explicitly here
             auction.price = value;
             auction.bestBidder = user;
-            return Promise.resolve({status: (res ? BidResponse.Success : BidResponse.NotAccepted), auction: auction});
+            return Promise.resolve({
+              status: (res ? BidResponse.Success : BidResponse.NotAccepted),
+              auction: auction
+            });
           });
       })
       .catch((err) => {
@@ -149,7 +156,7 @@ export default class AuctionManager {
 
   }
 
-	/**
+  /**
    * Subscribe an auction by a user, following bid commands
    * will be addressed to this auction
    * @param auctionId
@@ -171,13 +178,13 @@ export default class AuctionManager {
       .then((auction) => {
         if (auction) {
           if (!auction.closed) {
-            return Promise.resolve({status: SubscribeResponse.Success, auction: auction});
+            return Promise.resolve({ status: SubscribeResponse.Success, auction: auction });
           }
           else {
-            return Promise.resolve({status: SubscribeResponse.AuctionNotActive, auction: auction});
+            return Promise.resolve({ status: SubscribeResponse.AuctionNotActive, auction: auction });
           }
         } else {
-          return Promise.resolve({status: SubscribeResponse.MultipleAuctionSubscribe});
+          return Promise.resolve({ status: SubscribeResponse.MultipleAuctionSubscribe });
         }
       })
       .catch((err) => {
@@ -185,7 +192,7 @@ export default class AuctionManager {
       });
   }
 
-	/**
+  /**
    * Unsubscribe a subscribed auction
    * @param auctionId
    * @param user
@@ -213,7 +220,7 @@ export default class AuctionManager {
 
   createAuction(owner, title) {
     return this._auctionProvider
-      .save({ username: owner, title: title });
+      .save({username: owner, title: title});
   }
 
   updateAuction(auctionId, updateObj) {

@@ -83,7 +83,7 @@ storageProvider
     const auctionStartNotification = AuctionStartNotification(telegram, managerFactory);
     auctionTimer.schedule(ticks => {
       if (ticks % 60 === 0) {
-        auctionStartNotification.sendNotification(new Date(), 5);
+        auctionStartNotification.sendNotification(new Date(), config.base_url + '/pages/auction/');
       }
     });
 
