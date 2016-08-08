@@ -10,6 +10,11 @@ variables:
   AWS_SECRET_ACCESS_KEY: SECURE
   AWS_ACCESS_KEY_ID: SECURE
   BASE_URL: SECURE
+  PAYPAL_ENV: SECURE
+  PAYPAL_CLIENT_ID: SECURE
+  PAYPAL_CLIENT_SECRET: SECURE
+
+
 
 all:
   only:
@@ -24,6 +29,9 @@ all:
     - echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> .env
     - echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> .env
     - echo "BASE_URL=$BASE_URL" >> .env
+    - echo "PAYPAL_ENV=$PAYPAL_ENV" >> .env
+    - echo "PAYPAL_CLIENT_ID=$PAYPAL_CLIENT_ID" >> .env
+    - echo "PAYPAL_CLIENT_SECRET=$PAYPAL_CLIENT_SECRET" >> .env
     - cat .env
     - npm install
     - npm test
