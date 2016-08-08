@@ -9,8 +9,8 @@ export default class AuctionProvider {
     this.db = db;
     this.findDocs = queryExecutor(db, COLLECTION_NAME);
     this.db.collection(COLLECTION_NAME, (err, col) => {
-      col.createIndex({description: 'text'});
-      col.createIndex({title: 1}, {w: 1, unique: true});
+      col.createIndex({ description: 'text' });
+      col.createIndex({ title: 1 }, { w: 1, unique: true });
     });
   }
 
@@ -21,7 +21,11 @@ export default class AuctionProvider {
           reject(err);
         }
 
-        col.insertOne(auctionData, (err, r) => {
+        let doc = Object.assign({
+          createdAt: new Date()
+        }, auctionData);
+
+        col.insertOne(doc, (err, r) => {
           if (err) {
             reject(err);
           } else {
@@ -74,18 +78,28 @@ export default class AuctionProvider {
   }
 
   /**
+   * Get auctions waiting for approvation
+   */
+  getNewAuctions() {
+    const query = {
+      startDate: { $exists: false }
+    };
+
+    return this.findDocs(query);
+  }
+
+  /**
    * Returns all the Auctions with at least a bid
    * @returns {Promise}
    */
   getRunningAuctions() {
-
     const query = {
       $and: [
-        {lastBid: {$exists: true}},
+        { lastBid: { $exists: true } },
         {
           $or: [
-            {closed: false},
-            {closed: {$exists: false}}
+            { closed: false },
+            { closed: { $exists: false } }
           ]
         }
       ]
@@ -102,9 +116,9 @@ export default class AuctionProvider {
   getClosedInState(date, state) {
     const query = {
       $and: [
-        {startDate: {$lte: date}},
-        {closed: true},
-        {state: state}
+        { startDate: { $lte: date } },
+        { closed: true },
+        { state: state }
       ]
     };
 
@@ -124,11 +138,11 @@ export default class AuctionProvider {
 
     const query = {
       $and: [
-        {startDate: {$gte: startRange, $lte: endRange}},
+        {startDate: { $gte: startRange, $lte: endRange } },
         {
           $or: [
-            {closed: false},
-            {closed: {$exists: false}}
+            { closed: false },
+            { closed: { $exists: false } }
           ]
         }
       ]
@@ -144,11 +158,11 @@ export default class AuctionProvider {
   getAuctionsByOwner(username) {
     const query = {
       $and: [
-        {username: username},
+        { username: username},
         {
           $or: [
-            {closed: false},
-            {closed: {$exists: false}}
+            { closed: false },
+            { closed: { $exists: false } }
           ]
         }
       ]
@@ -161,8 +175,8 @@ export default class AuctionProvider {
   search(term) {
     return new Promise((resolve, reject) => {
       this.db.collection(COLLECTION_NAME, (err, col) => {
-        col.find({$text: {$search: term}}, {score: {$meta: 'textScore'}})
-          .sort({score: {$meta: 'textScore'}})
+        col.find({ $text: { $search: term } }, { score: { $meta: 'textScore' } })
+          .sort({ score: { $meta: 'textScore' } })
           .toArray((err, docs) => {
             if (err) {
               reject(err);
@@ -181,7 +195,7 @@ export default class AuctionProvider {
           reject(err);
         }
 
-        col.updateOne({_id: ObjectID(auctionId)},
+        col.updateOne({ _id: ObjectID(auctionId) },
           {
             $set: {
               price: value, bestBidder: user

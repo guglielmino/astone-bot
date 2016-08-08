@@ -48,6 +48,12 @@ export default class AuctionManager {
       .getActiveAuctions(date);
   }
 
+  getNewAuctions() {
+    return this._auctionProvider
+      .getNewAuctions();
+  }
+
+
   /**
    * Get all auction for a specific owner
    * @param username

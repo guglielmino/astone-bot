@@ -3,13 +3,14 @@
   "version": "0.0.1",
   "description": "A bot for chat based auctions",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --compilers js:babel-register 'server/test/unit/**/*.spec.js'",
-    "test:e2e": "./node_modules/.bin/mocha --compilers js:babel-register 'server/test/e2e/**/*.spec.js'",
+    "test": "mocha --compilers js:babel-register 'server/test/unit/**/*.spec.js'",
+    "test:e2e": "mocha --compilers js:babel-register 'server/test/e2e/**/*.spec.js'",
     "build": "npm run test && npm run clean && npm run babel",
     "deploy": "",
     "start": "node server/babel.js",
-    "tunnel": "./node_modules/.bin/lt --port 9001 --subdomain bidbot",
-    "lint": "./node_modules/.bin/eslint --cache ."
+    "tunnel": "lt --port 9001 --subdomain bidbot",
+    "lint": "eslint --cache .",
+    "astone-cli": "babel-node server/astone-cli.js "
   },
   "dependencies": {
     "async-polling": "^0.2.1",
@@ -18,6 +19,7 @@
     "bl": "^1.1.2",
     "bluebird": "^3.3.4",
     "co-views": "^2.1.0",
+    "commander": "^2.9.0",
     "cron": "^1.1.0",
     "dotenv": "^2.0.0",
     "enumify": "^1.0.4",
