@@ -3,6 +3,7 @@
 import chai from 'chai';
 import sinon from 'sinon';
 import StorageProvider from './storage-provivider-test-extensions';
+import {ObjectID} from 'mongodb';
 
 // Tell chai that we'll be using the "should" style assertions.
 chai.should();
@@ -13,6 +14,7 @@ describe('AuctionProvider', () => {
 
   beforeEach((done) => {
     storageProvider = new StorageProvider();
+
     storageProvider
       .connect({
           mongo: {
@@ -69,6 +71,26 @@ describe('AuctionProvider', () => {
               done(err);
             });
         });
+  });
+
+  it('Should create an auction with specific owner data', (done) => {
+
+    storageProvider
+      .auctionProvider
+      .save({ owner: {username: 'guglielmino', chatId: '12344444'} , title: 'A sample auction' })
+      .then((res) => {
+        res.should.not.be.null;
+        return storageProvider
+          .auctionProvider
+          .getAuctionById(res);
+      })
+      .then(auction => {
+        auction.owner.username.should.be.equal("guglielmino");
+        done();
+      })
+      .catch(err => {
+        done(err);
+      });
   });
 
 });

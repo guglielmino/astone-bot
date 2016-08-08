@@ -225,8 +225,9 @@ export default class AuctionManager {
   }
 
   createAuction(owner, title) {
+
     return this._auctionProvider
-      .save({username: owner, title: title});
+      .save({ owner: owner, title: title });
   }
 
   updateAuction(auctionId, updateObj) {
