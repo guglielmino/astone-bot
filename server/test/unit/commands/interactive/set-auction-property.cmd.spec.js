@@ -45,7 +45,10 @@ describe('SetAuctionPropertyCommand', () => {
           image: "http://www.oldcomputers.net/pics/C64-left.jpg",
           startingPrice: 10,
           price: 11,
-          username: "guglielmino"
+          owner: {
+            username: "guglielmino",
+            chatId: 19915021
+          },
         }
       ]));
 

@@ -7,7 +7,10 @@
         "image": "http://www.oldcomputers.net/pics/vic20.jpg",
         "startingPrice": 5,
         "price": 5,
-        "username": "guglielmino",
+        "owner": {
+          "username": "guglielmino",
+          "chatId": 19915021
+        },
         "minSubscribers": 0
       },
       {
@@ -16,7 +19,10 @@
         "image": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Game-Boy-FL.jpg",
         "startingPrice": 20,
         "price": 20,
-        "username": "rossi",
+        "owner": {
+          "username": "rossi",
+          "chatId": 1929344
+        },
         "minSubscribers": 12
       },
       {
@@ -26,7 +32,10 @@
         "startDate": {"$date": "2016-12-16T11:00:00.000Z"},
         "startingPrice": 5,
         "price": 5,
-        "username": "jerry",
+        "owner": {
+          "username": "jerry",
+          "chatId": 2394949
+        },
         "minSubscribers": 0
       }
     ]

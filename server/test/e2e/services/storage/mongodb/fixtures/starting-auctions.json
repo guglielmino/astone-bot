@@ -8,7 +8,10 @@
         "startDate": {"$date": "2016-12-16T09:00:00.000Z"},
         "startingPrice": 5,
         "price": 5,
-        "username": "guglielmino",
+        "owner": {
+          "username": "guglielmino",
+          "chatId": 19915021
+        },
         "minSubscribers": 0
       },
       {
@@ -18,7 +21,10 @@
         "startDate": {"$date": "2016-12-16T09:05:10.000Z"},
         "startingPrice": 20,
         "price": 20,
-        "username": "rossi",
+        "owner": {
+          "username": "rossi",
+          "chatId": 29313722
+        },
         "minSubscribers": 12
       },
       {
@@ -28,7 +34,10 @@
         "startDate": {"$date": "2016-12-16T11:00:00.000Z"},
         "startingPrice": 5,
         "price": 5,
-        "username": "jerry",
+        "owner": {
+          "username": "jerry",
+          "chatId": 35673336
+        },
         "minSubscribers": 0
       }
     ]

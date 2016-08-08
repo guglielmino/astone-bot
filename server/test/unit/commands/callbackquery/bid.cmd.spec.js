@@ -97,7 +97,10 @@ describe('BidCommand', () => {
 					startDate: startDate,
 					startingPrice: 10,
 					price: 11,
-					username: "guglielmino",
+          owner: {
+            username: "guglielmino",
+            chatId: 19915021
+          },
 					subscribers: [
 						{username: "guglielmino", chatId: 123},
 						{username: "tizio", chatId: 234},
@@ -138,7 +141,10 @@ describe('BidCommand', () => {
 				startDate: startDate,
 				startingPrice: 10,
 				price: 11,
-				username: "guglielmino",
+        owner: {
+          username: "guglielmino",
+          chatId: 19915021
+        },
 				subscribers: [
 					{username: "guglielmino", chatId: 123},
 					{username: "tizio", chatId: 234},
@@ -175,7 +181,10 @@ describe('BidCommand', () => {
         startDate: startDate,
         startingPrice: 10,
         price: 11,
-        username: "guglielmino",
+        owner: {
+          username: "guglielmino",
+          chatId: 19915021
+        },
         subscribers: [
           {username: "guglielmino", chatId: 123},
           {username: "tizio", chatId: 234},

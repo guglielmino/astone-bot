@@ -27,7 +27,10 @@ describe('AuctionManager', () => {
       image: "http://www.oldcomputers.net/pics/C64-left.jpg",
       startDate: startDate,
       startingPrice: 10,
-      username: "guglielmino",
+      owner: {
+        username: "guglielmino",
+        chatId: 19915021
+      },
       minSubscribers: 0
 
     }));
@@ -58,7 +61,10 @@ describe('AuctionManager', () => {
       image: "http://www.oldcomputers.net/pics/C64-left.jpg",
       startDate: startDate,
       startingPrice: 10,
-      username: "guglielmino",
+      owner: {
+        username: "guglielmino",
+        chatId: 19915021
+      },
       bidStep: 2,
       minSubscribers: 0
     }));
@@ -91,7 +97,10 @@ describe('AuctionManager', () => {
       image: "http://www.oldcomputers.net/pics/C64-left.jpg",
       startDate: startDate,
       startingPrice: 10,
-      username: "guglielmino"
+      owner: {
+        username: "guglielmino",
+        chatId: 19915021
+      }
     }));
 
     const auctionManager = new AuctionManager(auctionProvider);
@@ -134,7 +143,10 @@ describe('AuctionManager', () => {
       startDate: Date("2016-06-14T22:00:00.000Z"),
       startingPrice: 10,
       price: 10.2,
-      username: "guglielmino"
+      owner: {
+        username: "guglielmino",
+        chatId: 19915021
+      }
     }));
 
 
@@ -161,7 +173,10 @@ describe('AuctionManager', () => {
       startDate: Date("2016-06-14T22:00:00.000Z"),
       startingPrice: 10,
       price: 10.2,
-      username: "guglielmino",
+      owner: {
+        username: "guglielmino",
+        chatId: 19915021
+      },
       minSubscribers: 3,
       subscribers: [
         {username: "alpha", chatId: 1234},
@@ -193,7 +208,10 @@ describe('AuctionManager', () => {
       startDate: Date("2016-06-14T22:00:00.000Z"),
       startingPrice: 10,
       price: 10.2,
-      username: "guglielmino",
+      owner: {
+        username: "guglielmino",
+        chatId: 19915021
+      },
       minSubscribers: 3,
       subscribers: [
         {username: "alpha", chatId: 1234},
@@ -227,7 +245,10 @@ describe('AuctionManager', () => {
       startDate: Date("2016-06-14T22:00:00.000Z"),
       startingPrice: 10,
       price: 10.2,
-      username: "guglielmino",
+      owner: {
+        username: "guglielmino",
+        chatId: 19915021
+      },
       subscribers: [{username: "mimmo", chatId: 12345}]
     }));
     const auctionManager = new AuctionManager(auctionProvider);
@@ -257,7 +278,10 @@ describe('AuctionManager', () => {
       startingPrice: 10,
       price: 10.2,
       subscribers: [{username: "mimmo", chatId: 1234}],
-      username: "guglielmino"
+      owner: {
+        username: "guglielmino",
+        chatId: 19915021
+      }
     }]));
     const auctionManager = new AuctionManager(auctionProvider);
 
@@ -289,7 +313,10 @@ describe('AuctionManager', () => {
       startingPrice: 10,
       price: 10.2,
       subscribers: [{username: "fake1", chatId: 123}],
-      username: "auctionusr",
+      owner: {
+        username: "auctionusr",
+        chatId: 19915021
+      },
       lastBid: oneMinutesAgo
     },
       {
@@ -301,7 +328,10 @@ describe('AuctionManager', () => {
         startingPrice: 10,
         price: 10.2,
         subscribers: [{username: "fake2", chatId: 5678}],
-        username: "auctionusr",
+        owner: {
+          username: "auctionusr",
+          chatId: 19915021
+        },
         lastBid: tenSeconsAgo
       }]));
     const auctionManager = new AuctionManager(auctionProvider);
@@ -333,7 +363,10 @@ describe('AuctionManager', () => {
         startingPrice: 10,
         price: 10.2,
         subscribers: [{username: "fake1", chatId: 123}],
-        username: "auctionusr",
+        owner: {
+          username: "auctionusr",
+          chatId: 19915021
+        },
         lastBid: new Date()
       },
       {
@@ -345,7 +378,10 @@ describe('AuctionManager', () => {
         startingPrice: 10,
         price: 10.2,
         subscribers: [{username: "fake2", chatId: 5678}],
-        username: "auctionusr"
+        owner: {
+          username: "auctionusr",
+          chatId: 19915021
+        }
       }]));
 
     const auctionManager = new AuctionManager(auctionProvider);
