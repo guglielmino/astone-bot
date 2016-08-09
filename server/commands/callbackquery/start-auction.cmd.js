@@ -15,7 +15,7 @@ export default class StartAuctionCommand  {
 		if (params && params.length > 0) {
 			const auctionId = params[0];
 			return this._auctionManager
-				.subscribe(auctionId, {username: state.chat.username, chatId: state.chat.id})
+				.subscribe(auctionId, { username: state.chat.username, chatId: state.chat.id })
 				.then((res) => {
 
 					switch(res.status.name){

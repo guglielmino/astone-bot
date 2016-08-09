@@ -1,0 +1,12 @@
+{
+  "_id": "572c7066b3f30a0752a5f86d",
+  "title": "Commodore 64",
+  "description": "Commodore 64 originale come nuovo, ancora con imballie manuali, per veri amatori!",
+  "image": "https://upload.wikimedia.org/wikipedia/commons/3/34/Commodore-64-Computer.png",
+  "startingPrice": 1,
+  "price": 1,
+  "owner": {
+    "username": "guglielmino",
+    "chatId": 19915021
+  }
+}
