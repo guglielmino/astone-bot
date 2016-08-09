@@ -46,7 +46,10 @@ describe('AuctionListCommand', () => {
 					startDate: startDate,
 					startingPrice: 10,
 					price: 11,
-					username: "guglielmino",
+          owner: {
+            username: "guglielmino",
+            chatId: 19915021
+          },
 					subscribers: [
 						{username: "guglielmino"},
 						{username: "tizio"},

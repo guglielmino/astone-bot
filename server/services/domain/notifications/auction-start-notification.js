@@ -8,7 +8,7 @@ export default (telegram, managerFactory) => {
       .getStarting(date, minutes);
   }
 
-  function notify(auction, minutes) {
+  function notify(auction, auctionBaseUrl) {
     managerFactory
       .getUserManager()
       .getAll()
@@ -17,7 +17,7 @@ export default (telegram, managerFactory) => {
           telegram
             .sendMessage({
               chat_id: user.id,
-              text: `Auction *${auction.title}* is starting in ${minutes} minutes`,
+              text: `Auction *${auction.title}* is starting, ${auctionBaseUrl}/${auction._id}`,
               parse_mode: 'Markdown'
             });
         });
@@ -28,12 +28,12 @@ export default (telegram, managerFactory) => {
   }
 
   return {
-    sendNotification: (date, minutes) => {
+    sendNotification: (date, auctionBaseUrl) => {
       return new Promise((resolve, reject) => {
-        getStartingAuctions(date, minutes)
+        getStartingAuctions(date, 0)
           .then(auctions => {
             auctions.forEach(auction => {
-              notify(auction, minutes);
+              notify(auction, auctionBaseUrl);
             });
 
             resolve(auctions.length);

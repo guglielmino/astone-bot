@@ -61,7 +61,7 @@ describe('StartAuctionCommand', () => {
 			.then((res) => {
 				telegram
 					.sendMessage
-					.calledWith(sinon.has('text', 'Sorry, this auction isn\'t active You can\'t start bidding on it.'))
+					.calledWith(sinon.match.has('text', 'Sorry, this auction isn\'t active You can\'t start bidding on it.'))
 						.should.be.ok;
 				done();
 			})

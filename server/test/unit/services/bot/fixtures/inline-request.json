@@ -1,0 +1,14 @@
+{
+  "update_id": 919711399,
+  "inline_query": {
+    "id": "85534365417785933",
+    "from": {
+      "id": 19915021,
+      "first_name": "Fabrizio",
+      "last_name": "Guglielmino",
+      "username": "guglielmino"
+    },
+    "query": "TEST",
+    "offset": ""
+  }
+}

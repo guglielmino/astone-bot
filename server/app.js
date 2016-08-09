@@ -83,14 +83,14 @@ storageProvider
     const auctionStartNotification = AuctionStartNotification(telegram, managerFactory);
     auctionTimer.schedule(ticks => {
       if (ticks % 60 === 0) {
-        auctionStartNotification.sendNotification(new Date(), 5);
+        auctionStartNotification.sendNotification(new Date(), `${config.base_url}/pages/auction/`);
       }
     });
 
     const auctionPayNotification = AuctionPayNotification(telegram, managerFactory);
     auctionTimer.schedule(ticks => {
       if (ticks % 60 === 0) {
-        auctionPayNotification.sendNotification(new Date(), urlConsts.PAGE_PAYPAL_GETPAYURL, config.cipher_password);
+        auctionPayNotification.sendNotification(new Date(), `${config.base_url}/${urlConsts.PAGE_PAYPAL_GETPAYURL}`, config.cipher_password);
       }
     });
 

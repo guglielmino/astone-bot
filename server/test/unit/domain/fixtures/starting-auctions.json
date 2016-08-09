@@ -9,7 +9,10 @@
     "startDate": "ISODate(2016-05-10T11:00:00.000Z)",
     "startingPrice": 5,
     "price": 5,
-    "username": "guglielmino",
+    "owner": {
+      "username": "guglielmino",
+      "chatId": 19915021
+    },
     "minSubscribers": 0
   }
 ]

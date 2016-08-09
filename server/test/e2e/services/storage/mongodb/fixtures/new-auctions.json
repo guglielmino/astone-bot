@@ -5,7 +5,6 @@
         "title": "VIC 20",
         "description": "Commodore VIC 20 bellissimo",
         "image": "http://www.oldcomputers.net/pics/vic20.jpg",
-        "startDate": {"$date": "2016-12-16T09:00:00.000Z"},
         "startingPrice": 5,
         "price": 5,
         "owner": {
@@ -18,12 +17,11 @@
         "title": "GameBoy",
         "description": "Nintendo GameBoy originale come nuovo, completo di cartuccia tetris, base d'asta 20 euro (6 di sped + 14 per l'oggetto)",
         "image": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Game-Boy-FL.jpg",
-        "startDate": {"$date": "2016-12-16T09:05:10.000Z"},
         "startingPrice": 20,
         "price": 20,
         "owner": {
           "username": "rossi",
-          "chatId": 29313722
+          "chatId": 1929344
         },
         "minSubscribers": 12
       },
@@ -36,7 +34,7 @@
         "price": 5,
         "owner": {
           "username": "jerry",
-          "chatId": 35673336
+          "chatId": 2394949
         },
         "minSubscribers": 0
       }

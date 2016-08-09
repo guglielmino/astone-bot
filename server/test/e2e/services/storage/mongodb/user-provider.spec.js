@@ -22,7 +22,7 @@ describe('UsersProvider', () => {
       .then((db) => {
         storageProvider
           .readFixture('all-users.json',
-            err => {
+            (err, r) => {
               done(err);
             });
       });
@@ -46,7 +46,7 @@ describe('UsersProvider', () => {
       })
       .catch(err => {
         done(err);
-      })
+      });
   });
 
 });
