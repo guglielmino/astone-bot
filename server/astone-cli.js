@@ -1,13 +1,19 @@
 'use strict';
 
 import program from 'commander';
+import bluebird from 'bluebird';
 
+import Telegram from './bot-api/telegram';
 import config from './config';
 import StorageProvider from './services/storage/mongodb';
 import ManagerFactory from './services/domain/manager-factory';
+import AuctionApprover from './services/domain/auction-approver';
+
+
+const request = bluebird.promisify(require('request'));
+const telegram = new Telegram(request, config.telegram.api_key);
 
 function connect() {
-
   return new Promise((resolve, reject) => {
     const storageProvider = new StorageProvider();
     storageProvider
@@ -23,7 +29,9 @@ function connect() {
   });
 }
 
+
 const funcs = {};
+
 
 funcs.list = function () {
   connect()
@@ -49,11 +57,9 @@ funcs.list = function () {
 };
 
 
-funcs.approve = function (value, date) {
-  console.log("approve " + value + " - " + date);
-
+funcs.approve = function (auctionId, date) {
   let startDate = null;
-  if(date) {
+  if (date) {
     startDate = new Date(date);
   }
   else {
@@ -63,19 +69,16 @@ funcs.approve = function (value, date) {
 
   connect()
     .then(obj => {
+
       let managerFactory = obj.manager;
-      managerFactory
-        .getAuctionManager()
-        .updateAuction(value, {startDate: startDate})
+      const approver = AuctionApprover(telegram, managerFactory.getAuctionManager());
+
+      approver
+        .approve(auctionId, date)
         .then(res => {
-          if(res) {
-            console.log("Auctions startDate set to " + startDate);
-          }
-        });
-      obj.db.close();
-    })
-    .catch(err => {
-      console.log(err);
+          obj.db.close();
+        })
+        .catch(err => console.log);
     });
 };
 

@@ -281,7 +281,6 @@ export default class AuctionProvider {
         if (err) {
           reject(err);
         }
-
         col.updateOne({_id: ObjectID(auctionId)},
           {
             $set: data
@@ -292,7 +291,6 @@ export default class AuctionProvider {
             } else {
               resolve(r.result.ok === 1);
             }
-
           });
       });
     });
