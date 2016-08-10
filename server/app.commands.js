@@ -1,6 +1,5 @@
 import CommandHelper from './commands/command-helper';
 
-
 import AuctionListCommand from './commands/interactive/auction-list.cmd';
 import StartCommand from './commands/interactive/start.cmd';
 import NewAuctionCommand from './commands/interactive/new-auction.cmd';
@@ -20,12 +19,13 @@ import AuctionMinSubscribersCommand from './commands/state/auction-min-sub.cmd';
 import StorageS3 from './services/storage/aws/s3';
 
 import * as constants from './commands/consts';
+import * as urlConsts from './web/url-consts';
 
-export default (chatManager, telegram, managerFactory) => {
+export default (chatManager, telegram, managerFactory, config) => {
 
   const commandHelper = CommandHelper(telegram);
 
-  InteractiveCommands(chatManager, telegram, managerFactory, commandHelper);
+  InteractiveCommands(chatManager, telegram, managerFactory, commandHelper, config);
   QueryCommandsCommands(chatManager, telegram, managerFactory, commandHelper);
   StateCommands(chatManager, telegram, managerFactory, commandHelper);
 }
@@ -33,8 +33,9 @@ export default (chatManager, telegram, managerFactory) => {
 /**
  * Istantiate and schedule interactive commands (ie starting with /) to chat manager
  */
-function InteractiveCommands(chatManager, telegram, managerFactory, commandHelper) {
-  const listCmd = new AuctionListCommand(telegram, managerFactory, commandHelper);
+function InteractiveCommands(chatManager, telegram, managerFactory, commandHelper, config) {
+  const auctionPageUrl = urlConsts.PAGE_AUCTION_DETAILS.substring(0, urlConsts.PAGE_AUCTION_DETAILS.lastIndexOf('/'));
+  const listCmd = new AuctionListCommand(telegram, managerFactory, commandHelper, `${config.base_url}${auctionPageUrl}`);
   const startCmd = new StartCommand(telegram, managerFactory, commandHelper);
   const helpCommand = new HelpCommand(telegram, managerFactory, commandHelper);
   const newAuctionCmd = new NewAuctionCommand(telegram, commandHelper);

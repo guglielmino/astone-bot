@@ -62,11 +62,7 @@
       <div class="showcase-rt-top">
         <div class="pull-left shoe-name">
           <h3>{{ auction.title }}</h3>
-          <p>Start on {{ auction.startDate.toLocaleDateString('it-IT', {
-            day : 'numeric',
-            month : 'numeric',
-            year : 'numeric'
-            }) }}</p>
+          <p>Starts on {{ auction.startDate.toLocaleString() }}</p>
           <h4>Start price {{ auction.startingPrice.toLocaleString('EUR',
             { style: 'currency',
             currency: "EUR",
@@ -79,7 +75,7 @@
       <hr class="featurette-divider">
 
       <div class="showcase-last">
-        <h3>product details {{ auction.title }}</h3>
+        <h3>product details</h3>
         <p>
           {{ auction.description }}
         </p>

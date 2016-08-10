@@ -99,7 +99,7 @@ storageProvider
       managerFactory.getAuctionManager(), closeAuctionUrl);
 
     auctionTimer.start();
-    commands(chatter, telegram, managerFactory);
+    commands(chatter, telegram, managerFactory, config);
 
     let lastupdateId = 0;
 

@@ -4,10 +4,11 @@ import * as constants from '../consts';
 
 export default class AuctionListCommand {
 
-  constructor(telegram, managerFactory, commandHelper) {
+  constructor(telegram, managerFactory, commandHelper, auctionPageUrl) {
     this._telegram = telegram;
     this._auctionManager = managerFactory.getAuctionManager();
     this._helper = commandHelper;
+    this._auctionPageUrl = auctionPageUrl;
   }
 
   execute(state, ...params) {
@@ -28,21 +29,26 @@ export default class AuctionListCommand {
                 .encodeQueryCommand(constants.QCOMMAND_START_AUCTION, item._id.toString())
             }]);
 
-            this._telegram
-              .sendMessage({
-                chat_id: state.chat.id,
-                text: `*${item.title} (price € ${item.price})*\n${item.description}`,
-                parse_mode: 'Markdown'
-              })
-              .then(res => {
-                this._telegram.sendPhoto({
-                  chat_id: state.chat.id,
-                  photo: item.file_id,
-                  reply_markup: {
-                    inline_keyboard: buttons
-                  }
-                });
-              });
+            const title = `${item.title} - current price € ${item.price} -\n`;
+            const auctionUrl = `${this._auctionPageUrl}/${item._id}`;
+            let leftSpace = 200 - title.length - auctionUrl.length;
+            if (item.description.length > leftSpace) {
+              item.description = item.description.substring(0, leftSpace - '...\n'.length);
+              item.description += '...\n';
+            } else {
+              item.description += '\n';
+            }
+
+            let auctionDesc = item.description.substring(0, leftSpace);
+
+            this._telegram.sendPhoto({
+              chat_id: state.chat.id,
+              photo: item.file_id,
+              caption: `${title}${auctionDesc}${auctionUrl}`,
+              reply_markup: {
+                inline_keyboard: buttons
+              }
+            });
           });
           Promise.resolve(null);
         }

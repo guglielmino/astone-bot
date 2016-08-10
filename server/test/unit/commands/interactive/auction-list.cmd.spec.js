@@ -28,6 +28,7 @@ describe('AuctionListCommand', () => {
 		};
 
 		telegram.sendMessage = sinon.stub();
+    telegram.sendPhoto = sinon.stub();
 		telegram.sendChatAction = sinon.stub();
 		commandHelper = sinon.stub(CommandHelper(telegram));
 	});
@@ -43,6 +44,7 @@ describe('AuctionListCommand', () => {
 					title: "Commodore 64",
 					description: "A beautiful Commodore 64!",
 					image: "http://www.oldcomputers.net/pics/C64-left.jpg",
+          file_id: "123",
 					startDate: startDate,
 					startingPrice: 10,
 					price: 11,
@@ -60,13 +62,13 @@ describe('AuctionListCommand', () => {
 			])
 		);
 
-		const command = new AuctionListCommand(telegram, managerFactory, commandHelper);
+		const command = new AuctionListCommand(telegram, managerFactory, commandHelper, 'http://sampleurl.org');
 		command.execute({chat: {id: 10}})
 			.then((res) => {
 
-				telegram.sendMessage
+				telegram.sendPhoto
 					.calledWith(
-						sinon.match.has('text', '*Commodore 64 (price € 11)*\nA beautiful Commodore 64!'))
+						sinon.match.has('photo', '123'))
 					.should.be.ok;
 				done();
 			})
@@ -79,7 +81,7 @@ describe('AuctionListCommand', () => {
 		auctionManager.getActiveAuctions = sinon.stub()
 			.returns(Promise.resolve([]));
 
-		const command = new AuctionListCommand(telegram, managerFactory, commandHelper);
+		const command = new AuctionListCommand(telegram, managerFactory, commandHelper, 'http://sampleurl.org');
 		command.execute({chat: {id: 10}})
 			.then((res) => {
 
