@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - server/test/unit/domain/auction-manager.spec.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>server/test/unit/domain/auction-manager.spec.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">65.54</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">403</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">46.89</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">3.72</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">&#039;use strict&#039;;
+
+import chai from &#039;chai&#039;;
+import sinon from &#039;sinon&#039;;
+import fs from &#039;fs&#039;;
+import AuctionManager from &#039;../../../services/domain/auction-manager&#039;;
+import {BidResponse} from &#039;../../../services/domain/auction-manager&#039;;
+import {ObjectID} from &#039;mongodb&#039;;
+
+// Tell chai that we&#039;ll be using the &quot;should&quot; style assertions.
+chai.should();
+let expect = chai.expect;
+
+
+describe(&#039;AuctionManager&#039;, () =&gt; {
+
+  it(&#039;Should succeed when bid on a existent Auction with a value greater than current price&#039;, (done) =&gt; {
+    let auctionProvider = {};
+
+    var startDate = new Date();
+    startDate.setDate(startDate.getDate() - 1);
+
+    auctionProvider.getAuctionById = sinon.stub().returns(Promise.resolve({
+      _id: ObjectID(&quot;572cc825de91f5b2bc3c24d8&quot;),
+      title: &quot;Commodore 64&quot;,
+      description: &quot;A beautiful Commodore 64!&quot;,
+      image: &quot;http://www.oldcomputers.net/pics/C64-left.jpg&quot;,
+      startDate: startDate,
+      startingPrice: 10,
+      owner: {
+        username: &quot;guglielmino&quot;,
+        chatId: 19915021
+      },
+      minSubscribers: 0
+
+    }));
+
+    auctionProvider.addBid = sinon.stub().returns(Promise.resolve(true));
+
+    const auctionManager = new AuctionManager(auctionProvider);
+    auctionManager.bid(ObjectID(&quot;572cc825de91f5b2bc3c24d8&quot;), {username: &#039;guglielmino&#039;}, 10.2)
+      .then((res) =&gt; {
+        res.status.should.be.equal(BidResponse.Success);
+        done();
+      })
+      .catch((err) =&gt; {
+        done(err);
+      });
+  });
+
+  it(&#039;Should bid with default auction increment when bid without a value&#039;, (done) =&gt; {
+    let auctionProvider = {};
+
+    var startDate = new Date();
+    startDate.setDate(startDate.getDate() - 1);
+
+    auctionProvider.getAuctionById = sinon.stub().returns(Promise.resolve({
+      _id: ObjectID(&quot;572cc825de91f5b2bc3c24d8&quot;),
+      title: &quot;Commodore 64&quot;,
+      description: &quot;A beautiful Commodore 64!&quot;,
+      image: &quot;http://www.oldcomputers.net/pics/C64-left.jpg&quot;,
+      startDate: startDate,
+      startingPrice: 10,
+      owner: {
+        username: &quot;guglielmino&quot;,
+        chatId: 19915021
+      },
+      bidStep: 2,
+      minSubscribers: 0
+    }));
+
+    auctionProvider.addBid = sinon.stub().returns(Promise.resolve(true));
+
+    const auctionManager = new AuctionManager(auctionProvider);
+    auctionManager.bid(ObjectID(&quot;572cc825de91f5b2bc3c2123&quot;), {username: &#039;guglielmino&#039;})
+      .then((res) =&gt; {
+        res.status.should.be.equal(BidResponse.Success);
+        res.auction.price.should.be.equal(12);
+        done();
+      })
+      .catch((err) =&gt; {
+        console.log(err.message);
+        done(err);
+      });
+  });
+
+  it(&#039;Should fail when bid called on not already started Auction&#039;, (done) =&gt; {
+    let auctionProvider = {};
+
+    var startDate = new Date();
+    startDate.setDate(startDate.getDate() + 1);
+
+    auctionProvider.getAuctionById = auctionProvider.getAuctionById = sinon.stub().returns(Promise.resolve({
+      _id: ObjectID(&quot;572cc825de91f5b2bc3c24d8&quot;),
+      title: &quot;Commodore 64&quot;,
+      description: &quot;A beautiful Commodore 64!&quot;,
+      image: &quot;http://www.oldcomputers.net/pics/C64-left.jpg&quot;,
+      startDate: startDate,
+      startingPrice: 10,
+      owner: {
+        username: &quot;guglielmino&quot;,
+        chatId: 19915021
+      }
+    }));
+
+    const auctionManager = new AuctionManager(auctionProvider);
+    auctionManager.bid(ObjectID(&quot;572cc825de91f5b2bc3c24d8&quot;), {username: &#039;guglielmino&#039;}, 10.2)
+      .then((res) =&gt; {
+        res.status.should.be.equal(BidResponse.AuctionNotActive);
+        done();
+      })
+      .catch((err) =&gt; {
+        console.log(err);
+        done(err);
+      });
+  });
+
+  it(&#039;Should fail when bid called on a inexistent Auction&#039;, (done) =&gt; {
+    let auctionProvider = {};
+
+    auctionProvider.getAuctionById = sinon.stub().returns(Promise.resolve({}));
+
+    const auctionManager = new AuctionManager(auctionProvider);
+    auctionManager.bid(ObjectID(&quot;572cc825de91f5b2bc3c24d8&quot;), {username: &#039;guglielmino&#039;}, 10.2)
+      .then((res) =&gt; {
+        res.status.name.should.be.equal(&#039;AuctionNotExist&#039;);
+        done();
+      })
+      .catch((err) =&gt; {
+        console.log(err);
+        done(err);
+      });
+  });
+
+  it(&#039;Should fail when bid called a value less than current Auction\&#039;s value&#039;, (done) =&gt; {
+    let auctionProvider = {};
+
+    auctionProvider.getAuctionById = sinon.stub().returns(Promise.resolve({
+      _id: ObjectID(&quot;572cc825de91f5b2bc3c24d8&quot;),
+      title: &quot;aaa&quot;,
+      description: &quot;Csdfdsfdssdori!&quot;,
+      image: &quot;http://www.oldcomputers.net/pics/C64-left.jpg&quot;,
+      startDate: Date(&quot;2016-06-14T22:00:00.000Z&quot;),
+      startingPrice: 10,
+      price: 10.2,
+      owner: {
+        username: &quot;guglielmino&quot;,
+        chatId: 19915021
+      }
+    }));
+
+
+    const auctionManager = new AuctionManager(auctionProvider);
+    auctionManager.bid(ObjectID(&quot;572cc825de91f5b2bc3c24d8&quot;), {username: &#039;guglielmino&#039;}, 10)
+      .then((res) =&gt; {
+        res.status.name.should.be.equal(&#039;ValueToLow&#039;);
+        done();
+      })
+      .catch((err) =&gt; {
+        console.log(err.message);
+        done(err);
+      });
+  });
+
+  it(&#039;Should fail when bid on a Auction with less than 3 subscribers&#039;, (done) =&gt; {
+    let auctionProvider = {};
+
+    auctionProvider.getAuctionById = sinon.stub().returns(Promise.resolve({
+      _id: ObjectID(&quot;572cc825de91f5b2bc3c24d8&quot;),
+      title: &quot;aaa&quot;,
+      description: &quot;Csdfdsfdssdori!&quot;,
+      image: &quot;http://www.oldcomputers.net/pics/C64-left.jpg&quot;,
+      startDate: Date(&quot;2016-06-14T22:00:00.000Z&quot;),
+      startingPrice: 10,
+      price: 10.2,
+      owner: {
+        username: &quot;guglielmino&quot;,
+        chatId: 19915021
+      },
+      minSubscribers: 3,
+      subscribers: [
+        {username: &quot;alpha&quot;, chatId: 1234},
+        {username: &quot;beta&quot;, chatId: 5678}
+      ]
+    }));
+
+    const auctionManager = new AuctionManager(auctionProvider);
+    auctionManager.bid(ObjectID(&quot;572cc825de91f5b2bc3c24d8&quot;), {username: &#039;guglielmino&#039;}, 100)
+      .then((res) =&gt; {
+        res.status.name.should.be.equal(&#039;InsufficientSubscribers&#039;);
+        done();
+      })
+      .catch((err) =&gt; {
+        console.log(err.message);
+        done(err);
+      })
+
+  });
+
+  it(&#039;Should fail when bid on a closed Auction&#039;, (done) =&gt; {
+    let auctionProvider = {};
+
+    auctionProvider.getAuctionById = sinon.stub().returns(Promise.resolve({
+      _id: ObjectID(&quot;572cc825de91f5b2bc3c24d8&quot;),
+      title: &quot;aaa&quot;,
+      description: &quot;Csdfdsfdssdori!&quot;,
+      image: &quot;http://www.oldcomputers.net/pics/C64-left.jpg&quot;,
+      startDate: Date(&quot;2016-06-14T22:00:00.000Z&quot;),
+      startingPrice: 10,
+      price: 10.2,
+      owner: {
+        username: &quot;guglielmino&quot;,
+        chatId: 19915021
+      },
+      minSubscribers: 3,
+      subscribers: [
+        {username: &quot;alpha&quot;, chatId: 1234},
+        {username: &quot;beta&quot;, chatId: 5678}
+      ],
+      closed: true
+
+    }));
+
+    const auctionManager = new AuctionManager(auctionProvider);
+    auctionManager.bid(ObjectID(&quot;572cc825de91f5b2bc3c24d8&quot;), {username: &#039;guglielmino&#039;}, 100)
+      .then((res) =&gt; {
+        res.status.name.should.be.equal(&#039;AuctionClosed&#039;);
+        done();
+      })
+      .catch((err) =&gt; {
+        console.log(err.message);
+        done(err);
+      })
+  });
+
+  it(&#039;Should subscribe user to Auction when called&#039;, (done)=&gt; {
+    let auctionProvider = {};
+
+    auctionProvider.getAuctionsBySubscriber = sinon.stub().returns(Promise.resolve([]));
+    auctionProvider.addSubscriberToAuction = sinon.stub().returns(Promise.resolve({
+      _id: ObjectID(&quot;572cc825de91f5b2bc3c24d8&quot;),
+      title: &quot;aaa&quot;,
+      description: &quot;Csdfdsfdssdori!&quot;,
+      image: &quot;http://www.oldcomputers.net/pics/C64-left.jpg&quot;,
+      startDate: Date(&quot;2016-06-14T22:00:00.000Z&quot;),
+      startingPrice: 10,
+      price: 10.2,
+      owner: {
+        username: &quot;guglielmino&quot;,
+        chatId: 19915021
+      },
+      subscribers: [{username: &quot;mimmo&quot;, chatId: 12345}]
+    }));
+    const auctionManager = new AuctionManager(auctionProvider);
+
+    auctionManager.subscribe(ObjectID(&quot;572cc825de91f5b2bc3c24d8&quot;), {username: &#039;mimmo&#039;})
+      .then((res) =&gt; {
+        res.status.name.should.be.equal(&#039;Success&#039;);
+        res.auction.should.not.be.null;
+        done();
+      })
+      .catch((err) =&gt; {
+        console.log(err);
+        done(err);
+      });
+  });
+
+  it(&#039;Should not subscribe an Auction when user is active on another one&#039;, (done) =&gt; {
+    let auctionProvider = {};
+
+
+    auctionProvider.getAuctionsBySubscriber = sinon.stub().returns(Promise.resolve([{
+      _id: ObjectID(&quot;572cc825de91f5b2bc3c24d8&quot;),
+      title: &quot;aaa&quot;,
+      description: &quot;Csdfdsfdssdori!&quot;,
+      image: &quot;http://www.oldcomputers.net/pics/C64-left.jpg&quot;,
+      startDate: Date(&quot;2016-06-14T22:00:00.000Z&quot;),
+      startingPrice: 10,
+      price: 10.2,
+      subscribers: [{username: &quot;mimmo&quot;, chatId: 1234}],
+      owner: {
+        username: &quot;guglielmino&quot;,
+        chatId: 19915021
+      }
+    }]));
+    const auctionManager = new AuctionManager(auctionProvider);
+
+    auctionManager.subscribe(ObjectID(&quot;572cc825de91f5b2bc3c24d8&quot;), {username: &#039;mimmo&#039;})
+      .then((res) =&gt; {
+        res.status.name.should.be.equal(&#039;MultipleAuctionSubscribe&#039;);
+        done();
+      })
+      .catch((err) =&gt; {
+        console.log(err);
+        done(err);
+      });
+  });
+
+  it(&#039;Should return a list of Acution &#039;, (done) =&gt; {
+    let auctionProvider = {};
+
+    let oneMinutesAgo = new Date(), tenSeconsAgo = new Date();
+    oneMinutesAgo.setMinutes(oneMinutesAgo.getMinutes() - 1);
+
+    tenSeconsAgo.setSeconds(tenSeconsAgo.getSeconds() - 10);
+
+    auctionProvider.getRunningAuctions = sinon.stub().returns(Promise.resolve([{
+      _id: ObjectID(&quot;572cc825de91f5b2bc3c24d8&quot;),
+      title: &quot;title1&quot;,
+      description: &quot;description1&quot;,
+      image: &quot;http://www.nowhere.og/img2.jpg&quot;,
+      startDate: new Date(),
+      startingPrice: 10,
+      price: 10.2,
+      subscribers: [{username: &quot;fake1&quot;, chatId: 123}],
+      owner: {
+        username: &quot;auctionusr&quot;,
+        chatId: 19915021
+      },
+      lastBid: oneMinutesAgo
+    },
+      {
+        _id: ObjectID(&quot;572cc825de91f5b2bc3c18a4&quot;),
+        title: &quot;title2&quot;,
+        description: &quot;description2&quot;,
+        image: &quot;http://www.nowhere.og/img2.jpg&quot;,
+        startDate: new Date(),
+        startingPrice: 10,
+        price: 10.2,
+        subscribers: [{username: &quot;fake2&quot;, chatId: 5678}],
+        owner: {
+          username: &quot;auctionusr&quot;,
+          chatId: 19915021
+        },
+        lastBid: tenSeconsAgo
+      }]));
+    const auctionManager = new AuctionManager(auctionProvider);
+
+    auctionManager.getRunningAuctionsBidAge(new Date(), 60)
+      .then((res) =&gt; {
+        res.length.should.be.equal(1);
+        res[0].bidAge.should.exists;
+
+        done();
+      })
+      .catch((err) =&gt; {
+        console.log(err);
+        done(err);
+      });
+  });
+
+  it(&#039;Should return a list of Acution editable by the user&#039;, (done) =&gt; {
+    let auctionProvider = {};
+
+
+    auctionProvider.getAuctionsByOwner = sinon.stub().returns(Promise.resolve([
+      {
+        _id: ObjectID(&quot;572cc825de91f5b2bc3c24d8&quot;),
+        title: &quot;title1&quot;,
+        description: &quot;description1&quot;,
+        image: &quot;http://www.nowhere.og/img2.jpg&quot;,
+        startDate: new Date(),
+        startingPrice: 10,
+        price: 10.2,
+        subscribers: [{username: &quot;fake1&quot;, chatId: 123}],
+        owner: {
+          username: &quot;auctionusr&quot;,
+          chatId: 19915021
+        },
+        lastBid: new Date()
+      },
+      {
+        _id: ObjectID(&quot;572cc825de91f5b2bc3c18a4&quot;),
+        title: &quot;title2&quot;,
+        description: &quot;description2&quot;,
+        image: &quot;http://www.nowhere.og/img2.jpg&quot;,
+        startDate: new Date(),
+        startingPrice: 10,
+        price: 10.2,
+        subscribers: [{username: &quot;fake2&quot;, chatId: 5678}],
+        owner: {
+          username: &quot;auctionusr&quot;,
+          chatId: 19915021
+        }
+      }]));
+
+    const auctionManager = new AuctionManager(auctionProvider);
+
+    auctionManager.getAuctionsByOwner(&#039;auctionusr&#039;)
+      .then((res) =&gt; {
+        res.length.should.be.equal(1);
+        expect(res[0].lastBid)
+          .to.be.empty;
+
+        done();
+      })
+      .catch((err) =&gt; {
+        console.log(err);
+        done(err);
+      });
+  });
+
+});</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

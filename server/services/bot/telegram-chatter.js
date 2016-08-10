@@ -14,12 +14,12 @@ export default class TelegramChatter {
     const message = this.telegramRequestParser
       .getMessage(request);
 
-    if(message) {
+    if (message) {
       this.stateManager
         .exists(message.chat.id)
         .then((exist) => {
           if (!exist) {
-            this.stateManager.setState(message.chat.id, {chat: message.chat})
+            this.stateManager.setState(message.chat.id, { chat: message.chat });
           }
           return this.stateManager.getState(message.chat.id);
         })
@@ -39,7 +39,7 @@ export default class TelegramChatter {
   }
 
   addCommand(key, cmd, type = 'Interactive') {
-    this.commands[key.toLowerCase()] = {cmd: cmd, type: type};
+    this.commands[key.toLowerCase()] = { cmd: cmd, type: type };
   }
 
   /**
@@ -57,14 +57,14 @@ export default class TelegramChatter {
             .updateState(state.chat.id, res);
         }
       })
-      .catch((err) => {
-        logger.error("Execute command error: " + err.message);
+      .catch(err => {
+        logger.error(`Execute command error: ${err.message}`);
       });
   }
 
   _getCommand(key, type) {
     let res = null;
-    if(key) {
+    if (key) {
       const lowerKey = key.toLowerCase();
       if (this.commands.hasOwnProperty(lowerKey)) {
         let command = this.commands[lowerKey];

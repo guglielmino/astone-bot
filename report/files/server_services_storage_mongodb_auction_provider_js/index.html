@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - server/services/storage/mongodb/auction-provider.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>server/services/storage/mongodb/auction-provider.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">75.09</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">298</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">47.15</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.77</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">import {ObjectID} from &#039;mongodb&#039;;
+import {queryExecutor} from &#039;./provider-helper&#039;;
+
+const COLLECTION_NAME = &#039;auctions&#039;;
+
+export default class AuctionProvider {
+
+  constructor(db) {
+    this.db = db;
+    this.findDocs = queryExecutor(db, COLLECTION_NAME);
+    this.db.collection(COLLECTION_NAME, (err, col) =&gt; {
+      col.createIndex({ description: &#039;text&#039; });
+      col.createIndex({ title: 1 }, { w: 1, unique: true });
+    });
+  }
+
+  save(auctionData) {
+    return new Promise((resolve, reject) =&gt; {
+      this.db.collection(COLLECTION_NAME, (err, col) =&gt; {
+        if (err) {
+          reject(err);
+        }
+
+        let doc = Object.assign({
+          createdAt: new Date()
+        }, auctionData);
+
+        col.insertOne(doc, (err, r) =&gt; {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(r.insertedId);
+          }
+        });
+      });
+    });
+  }
+
+  getAuctionById(auctionId) {
+    return new Promise((resolve, reject) =&gt; {
+      this.db.collection(COLLECTION_NAME, (err, col) =&gt; {
+        let objId = ObjectID(auctionId);
+        col.find({_id: objId})
+          .toArray((err, docs) =&gt; {
+            if (err) {
+              reject(err);
+            } else {
+              if (docs.length !== 1)
+                reject(new Error(&quot;Query returned wrong number of elements&quot;));
+              else
+                resolve(docs[0]);
+            }
+          });
+
+      });
+    });
+  }
+
+  /**
+   * Get all active auctions, active means with a startDate less or equal date
+   * and not closed
+   * @returns {Promise}
+   */
+  getActiveAuctions(date) {
+    const query = {
+      $and: [
+        {startDate: {$lte: date}},
+        {
+          $or: [
+            {closed: false},
+            {closed: {$exists: false}}
+          ]
+        }
+      ]
+    };
+
+    return this.findDocs(query);
+  }
+
+  /**
+   * Get auctions waiting for approvation
+   */
+  getNewAuctions() {
+    const query = {
+      startDate: { $exists: false }
+    };
+
+    return this.findDocs(query);
+  }
+
+  /**
+   * Returns all the Auctions with at least a bid
+   * @returns {Promise}
+   */
+  getRunningAuctions() {
+    const query = {
+      $and: [
+        { lastBid: { $exists: true } },
+        {
+          $or: [
+            { closed: false },
+            { closed: { $exists: false } }
+          ]
+        }
+      ]
+    };
+
+    return this.findDocs(query);
+  }
+
+  /**
+   * Get all closed auctions, ie. the ones with closed=true having the state passed
+   * as second argument
+   * @returns {Promise}
+   */
+  getClosedInState(date, state) {
+    const query = {
+      $and: [
+        { startDate: { $lte: date } },
+        { closed: true },
+        { state: state }
+      ]
+    };
+
+    return this.findDocs(query);
+  }
+
+  /**
+   * Returns the auctions starting in &quot;minutes&quot; from the date
+   * Ie. passing as date 2016-01-01 10:00  and minutes 5 it returns
+   * all the auctions with startDate 2016-01-01 10:05
+   * @param date
+   * @param minutes
+   */
+  getStarting(date, minutes) {
+    const startRange = new Date(date.getTime() + (minutes * 60000));
+    const endRange = new Date(startRange.getTime() + (1 * 60000));
+
+    const query = {
+      $and: [
+        {startDate: { $gte: startRange, $lte: endRange } },
+        {
+          $or: [
+            { closed: false },
+            { closed: { $exists: false } }
+          ]
+        }
+      ]
+    };
+
+    return this.findDocs(query);
+  }
+
+  /**
+   * Get auctions owned by a username
+   * @param username
+   */
+  getAuctionsByOwner(username) {
+    const query = {
+      $and: [
+        { username: username},
+        {
+          $or: [
+            { closed: false },
+            { closed: { $exists: false } }
+          ]
+        }
+      ]
+    };
+
+    return this.findDocs(query);
+  }
+
+
+  search(term) {
+    return new Promise((resolve, reject) =&gt; {
+      this.db.collection(COLLECTION_NAME, (err, col) =&gt; {
+        col.find({ $text: { $search: term } }, { score: { $meta: &#039;textScore&#039; } })
+          .sort({ score: { $meta: &#039;textScore&#039; } })
+          .toArray((err, docs) =&gt; {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(docs);
+            }
+          });
+      });
+    });
+  }
+
+  addBid(auctionId, user, value) {
+    return new Promise((resolve, reject) =&gt; {
+      this.db.collection(COLLECTION_NAME, (err, col) =&gt; {
+        if (err) {
+          reject(err);
+        }
+
+        col.updateOne({ _id: ObjectID(auctionId) },
+          {
+            $set: {
+              price: value, bestBidder: user
+            },
+            $currentDate: {
+              lastBid: true
+            }
+          },
+          (err, r) =&gt; {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(r.result.ok === 1);
+            }
+
+          });
+      });
+    });
+  }
+
+  addSubscriberToAuction(auctionId, user) {
+    return new Promise((resolve, reject) =&gt; {
+      this.db.collection(COLLECTION_NAME, (err, col) =&gt; {
+        if (err) {
+          reject(err);
+        }
+
+        col.updateOne({_id: ObjectID(auctionId)},
+          {$addToSet: {subscribers: user}},
+          (err, r) =&gt; {
+            if (err) {
+              reject(err);
+            } else {
+              col.find({_id: ObjectID(auctionId)})
+                .limit(1)
+                .next((err, doc) =&gt; {
+                  if (err) {
+                    reject(err);
+                  }
+                  else {
+                    resolve(doc);
+                  }
+                });
+
+            }
+          });
+      });
+    });
+  }
+
+  getAuctionsBySubscriber(username) {
+    return this.findDocs({username: username});
+  }
+
+  closeAuction(auctionId) {
+    return new Promise((resolve, reject) =&gt; {
+      this.db.collection(COLLECTION_NAME, (err, col) =&gt; {
+        if (err) {
+          reject(err);
+        }
+
+        col.updateOne({_id: ObjectID(auctionId)},
+          {
+            $set: {closed: true, state: &#039;WAIT_FOR_PAYMENT&#039;},
+            $currentDate: {
+              closeDate: true
+            }
+          },
+          (err, r) =&gt; {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(r.result.ok == 1);
+            }
+          });
+      });
+    });
+  }
+
+  updateAuction(auctionId, data) {
+    return new Promise((resolve, reject) =&gt; {
+      this.db.collection(COLLECTION_NAME, (err, col) =&gt; {
+        if (err) {
+          reject(err);
+        }
+        col.updateOne({_id: ObjectID(auctionId)},
+          {
+            $set: data
+          },
+          (err, r) =&gt; {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(r.result.ok === 1);
+            }
+          });
+      });
+    });
+  }
+}</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

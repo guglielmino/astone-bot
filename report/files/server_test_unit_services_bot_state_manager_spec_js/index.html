@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - server/test/unit/services/bot/state-manager.spec.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>server/test/unit/services/bot/state-manager.spec.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">82.27</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">118</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">16.18</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">0.81</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">&#039;use strict&#039;;
+
+import chai from &#039;chai&#039;;
+import sinon from &#039;sinon&#039;;
+
+chai.should();
+
+const expect = chai.expect;
+import StateManager from &#039;../../../../services/bot/state-manager&#039;;
+import bluebird from &#039;bluebird&#039;;
+import redis from &#039;redis-mock&#039;;
+
+bluebird.promisifyAll(redis.RedisClient.prototype);
+
+
+describe(&#039;StateManager&#039;, () =&gt; {
+	let stateManager;
+
+	beforeEach((done)=&gt; {
+
+		const client = redis.createClient();
+		stateManager = StateManager(client);
+
+		stateManager
+			.del(&#039;sample&#039;)
+			.then((res) =&gt; {
+				done();
+			});
+	});
+
+	it(&#039;Should get state prevously set for key \&#039;sample\&#039;&#039;, (done)=&gt; {
+		stateManager
+      .setState(&#039;sample&#039;, {name: 1, last: true})
+			.then((res) =&gt; {
+				stateManager
+					.getState(&#039;sample&#039;)
+					.then((state) =&gt; {
+						state.should.to.haveOwnProperty(&#039;name&#039;);
+						state.should.to.haveOwnProperty(&#039;last&#039;);
+						done();
+					});
+			})
+			.catch((err) =&gt; {
+				done(err);
+			});
+
+	});
+
+	it(&#039;Should return \&#039;null\&#039; when try to get inexistent key&#039;, (done)=&gt; {
+		stateManager.getState(&#039;fakekey&#039;)
+			.then((state) =&gt; {
+				expect(state).to.be.null;
+				done();
+			});
+	});
+
+	it(&#039;Should update state when called with a new field and value&#039;, (done) =&gt; {
+		stateManager
+			.setState(&#039;sample&#039;, {name: &quot;Sample name&quot;, last: false})
+			.then((res) =&gt; {
+				return stateManager.updateState(&#039;sample&#039;, {newkey: &quot;newvalue&quot;});
+			})
+			.then((state) =&gt; {
+				state.should.to.haveOwnProperty(&#039;name&#039;);
+				state.should.to.haveOwnProperty(&#039;last&#039;);
+				state.should.to.haveOwnProperty(&#039;newkey&#039;);
+				done();
+			});
+
+	});
+
+	it(&#039;Should throw exception when update is called without an object&#039;, () =&gt; {
+		stateManager.setState(&#039;sample&#039;, {name: 5, last: false});
+		expect(()=&gt; {
+			stateManager.updateState(&#039;sample&#039;, &quot;newvalue&quot;)
+		}).to.throws(&quot;\&#039;value\&#039; must be an object&quot;);
+
+	});
+
+	it(&#039;Should return \&#039;true\&#039; when exists method called for a valid key&#039;, (done) =&gt; {
+		stateManager
+			.setState(&#039;exkey&#039;, {color: &quot;Red&quot;, price: 100})
+			.then((res) =&gt; {
+				stateManager.exists(&#039;exkey&#039;)
+					.then((exist) =&gt; {
+						exist.should.be.true;
+						done();
+					});
+			});
+
+	});
+
+	it(&#039;Should return \&#039;false\&#039; when exists method called for not valid key&#039;, (done) =&gt; {
+		let exist = stateManager.exists(&#039;nokey&#039;)
+			.then((exist) =&gt; {
+				exist.should.be.false;
+				done();
+			});
+	});
+
+	it(&#039;Should delete partial state&#039;, (done) =&gt; {
+		stateManager
+			.setState(&#039;sample&#039;, {name: &quot;my name&quot;, last: false})
+			.then((res) =&gt; {
+				return stateManager
+					.updateState(&#039;sample&#039;, {last: null});
+			})
+			.then((res) =&gt; {
+				return stateManager.getState(&#039;sample&#039;);
+			})
+			.then((state) =&gt; {
+				expect(state.last).to.be.null;
+				done();
+			})
+
+
+	});
+});</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>
