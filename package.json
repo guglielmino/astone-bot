@@ -10,7 +10,8 @@
     "start": "node server/babel.js",
     "tunnel": "lt --port 9001 --subdomain bidbot",
     "lint": "eslint --cache .",
-    "astone-cli": "babel-node server/astone-cli.js "
+    "code-check": "plato -r -x test -d report server/"
+
   },
   "dependencies": {
     "async-polling": "^0.2.1",
