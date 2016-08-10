@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - server/test/unit/commands/interactive/set-auction-property.cmd.spec.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>server/test/unit/commands/interactive/set-auction-property.cmd.spec.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">72.77</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">71</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">13.17</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">0.47</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">&#039;use strict&#039;;
+
+import chai from &#039;chai&#039;;
+import sinon from &#039;sinon&#039;;
+import {ObjectID} from &#039;mongodb&#039;;
+import CommandHelper from &#039;../../../../commands/command-helper&#039;;
+import * as constants from &#039;../../../../commands/consts&#039;;
+
+chai.should();
+const expect = chai.expect;
+
+import SetTitleCommand from &#039;../../../../commands/interactive/set-auction-property.cmd&#039;;
+
+describe(&#039;SetAuctionPropertyCommand&#039;, () =&gt; {
+
+  let telegram;
+  let managerFactory;
+  let auctionManager;
+  let commandHelper;
+  let command;
+
+  beforeEach(() =&gt; {
+    telegram = {};
+    auctionManager = {};
+
+    managerFactory = {
+      getAuctionManager: () =&gt; {
+        return auctionManager;
+      }
+    };
+
+    telegram.sendMessage = sinon.stub();
+    commandHelper = sinon.stub(CommandHelper(telegram));
+    command = new SetTitleCommand(telegram, managerFactory, commandHelper, {
+      queryCommand: constants.QCOMMAND_SET_DESCR, answerText: &#039;Choose an auction to change the description&#039;});
+  });
+
+  it(&#039;Should respond with a list of buttons for each auction returned by the manager and right text&#039;, (done) =&gt; {
+    auctionManager.getAuctionsByOwner = sinon.stub()
+      .returns(Promise.resolve([
+        {
+          _id: ObjectID(&quot;572cc825de91f5b2bc3c24d8&quot;),
+          title: &quot;Commodore 64&quot;,
+          description: &quot;A beautiful Commodore 64!&quot;,
+          image: &quot;http://www.oldcomputers.net/pics/C64-left.jpg&quot;,
+          startingPrice: 10,
+          price: 11,
+          owner: {
+            username: &quot;guglielmino&quot;,
+            chatId: 19915021
+          },
+        }
+      ]));
+
+    command.execute({chat: {id: 10, username: &#039;guglielmino&#039;}})
+      .then((res) =&gt; {
+
+        telegram.sendMessage
+          .calledWith(
+            sinon.match(value =&gt;{
+              return value.reply_markup.inline_keyboard.length === 1 &amp;&amp; value.text === &#039;Choose an auction to change the description&#039;;
+            }))
+          .should.be.ok;
+
+        done();
+      })
+      .catch((err) =&gt; {
+        done(err);
+      });
+  });
+});</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

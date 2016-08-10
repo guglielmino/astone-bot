@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - server/app.commands.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>server/app.commands.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">56.09</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">128</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">26.29</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.26</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">import CommandHelper from &#039;./commands/command-helper&#039;;
+
+
+import AuctionListCommand from &#039;./commands/interactive/auction-list.cmd&#039;;
+import StartCommand from &#039;./commands/interactive/start.cmd&#039;;
+import NewAuctionCommand from &#039;./commands/interactive/new-auction.cmd&#039;;
+import HelpCommand from &#039;./commands/interactive/help.cmd&#039;;
+import SetAuctionPropertyCommand from &#039;./commands/interactive/set-auction-property.cmd&#039;;
+
+import BidCommand from &#039;./commands/callbackquery/bid.cmd&#039;;
+import StartAuctionCommand from &#039;./commands/callbackquery/start-auction.cmd&#039;;
+import ActionProperty from &#039;./commands/callbackquery/auction-property&#039;;
+
+import AuctionNameCommand from &#039;./commands/state/auction-name.cmd&#039;;
+import AuctionDescriptionCommand from &#039;./commands/state/auction-description.cmd&#039;;
+import AuctionPriceCommand from &#039;./commands/state/auction-price.cmd&#039;;
+import AuctionPictureCommand from &#039;./commands/state/auction-picture.cmd&#039;;
+import AuctionMinSubscribersCommand from &#039;./commands/state/auction-min-sub.cmd&#039;;
+
+import StorageS3 from &#039;./services/storage/aws/s3&#039;;
+
+import * as constants from &#039;./commands/consts&#039;;
+
+export default (chatManager, telegram, managerFactory) =&gt; {
+
+  const commandHelper = CommandHelper(telegram);
+
+  InteractiveCommands(chatManager, telegram, managerFactory, commandHelper);
+  QueryCommandsCommands(chatManager, telegram, managerFactory, commandHelper);
+  StateCommands(chatManager, telegram, managerFactory, commandHelper);
+}
+
+/**
+ * Istantiate and schedule interactive commands (ie starting with /) to chat manager
+ */
+function InteractiveCommands(chatManager, telegram, managerFactory, commandHelper) {
+  const listCmd = new AuctionListCommand(telegram, managerFactory, commandHelper);
+  const startCmd = new StartCommand(telegram, managerFactory, commandHelper);
+  const helpCommand = new HelpCommand(telegram, managerFactory, commandHelper);
+  const newAuctionCmd = new NewAuctionCommand(telegram, commandHelper);
+  const setTitleCmd = new SetAuctionPropertyCommand(telegram, managerFactory, commandHelper,
+    {
+      queryCommand: constants.QCOMMAND_SET_TITLE,
+      answerText: `Choose an auction to change the title`
+    });
+  const setDescritionCmd = new SetAuctionPropertyCommand(telegram, managerFactory, commandHelper,
+    {
+      queryCommand: constants.QCOMMAND_SET_DESCR,
+      answerText: &#039;Choose an auction to change the description&#039;
+    });
+  const setPriceCmd =new SetAuctionPropertyCommand(telegram, managerFactory, commandHelper,
+    {
+      queryCommand: constants.QCOMMAND_SET_PRICE,
+      answerText: `Choose an auction to change starting price`
+    });
+  const setPictCmd =new SetAuctionPropertyCommand(telegram, managerFactory, commandHelper,
+    {
+      queryCommand: constants.QCOMMAND_SET_PICT,
+      answerText: `Choose an auction to change item picture`
+    });
+  const setMinSubCmd =new SetAuctionPropertyCommand(telegram, managerFactory, commandHelper,
+    {
+      queryCommand: constants.QCOMMAND_SET_MINSUB,
+      answerText: `Choose an auction to change min number of participants`
+    });
+
+  chatManager.addCommand(constants.COMMAND_LIST, listCmd);
+  chatManager.addCommand(constants.COMMAND_START, startCmd);
+  chatManager.addCommand(constants.COMMAND_HELP, helpCommand);
+  chatManager.addCommand(constants.COMMAND_NEW_AUCTION, newAuctionCmd);
+  chatManager.addCommand(constants.COMMAND_SET_AUCTION_TITLE, setTitleCmd);
+  chatManager.addCommand(constants.COMMAND_SET_AUCTION_DESCR, setDescritionCmd);
+  chatManager.addCommand(constants.COMMAND_SET_AUCTION_PRICE, setPriceCmd);
+  chatManager.addCommand(constants.COMMAND_SET_AUCTION_PICT, setPictCmd);
+  chatManager.addCommand(constants.COMMAND_SET_AUCTION_MINSUB, setMinSubCmd);
+}
+
+/**
+ * Instantiate ad schedule QueryCallback Commands (ie &#039;out-of-band&#039;) to chatManager
+ */
+function QueryCommandsCommands(chatManager, telegram, managerFactory, commandHelper) {
+  const bidCmd = new BidCommand(telegram, managerFactory, commandHelper);
+  const startAuctionCmd = new StartAuctionCommand(telegram, managerFactory, commandHelper);
+  const titleCmd = new ActionProperty(telegram, managerFactory, commandHelper,  {
+    answerText: &#039;Ok, write the new name for the Auction&#039;,
+    stateCommand: constants.STATE_WAIT_FOR_NAME
+  });
+  const decrCmd = new ActionProperty(telegram, managerFactory, commandHelper, {
+    answerText: &#039;Ok, write the new description for the Auction&#039;,
+    stateCommand: constants.STATE_WAIT_FOR_DESC
+  });
+  const priceCmd = new ActionProperty(telegram, managerFactory, commandHelper, {
+    answerText: &#039;Ok, write the new starting price for the Auction&#039;,
+    stateCommand: constants.STATE_WAIT_FOR_PRICE
+  });
+  const pictCmd = new ActionProperty(telegram, managerFactory, commandHelper, {
+    answerText: &#039;Ok, send me a new picture for the Auction&#039;,
+    stateCommand: constants.STATE_WAIT_FOR_PICTURE
+  });
+  const minSubCmd = new ActionProperty(telegram, managerFactory, commandHelper, {
+    answerText: &#039;Ok, send me a new min number of participants&#039;,
+    stateCommand: constants.STATE_WAIT_FOR_MIN_SUB
+  });
+
+  chatManager.addCommand(constants.QCOMMAND_START_AUCTION, startAuctionCmd, &#039;QueryResponse&#039;);
+  chatManager.addCommand(constants.QCOMMAND_BID, bidCmd, &#039;QueryResponse&#039;);
+  chatManager.addCommand(constants.QCOMMAND_SET_TITLE, titleCmd, &#039;QueryResponse&#039;);
+  chatManager.addCommand(constants.QCOMMAND_SET_DESCR, decrCmd, &#039;QueryResponse&#039;);
+  chatManager.addCommand(constants.QCOMMAND_SET_PRICE, priceCmd, &#039;QueryResponse&#039;);
+  chatManager.addCommand(constants.QCOMMAND_SET_PICT, pictCmd, &#039;QueryResponse&#039;);
+  chatManager.addCommand(constants.QCOMMAND_SET_MINSUB, minSubCmd, &#039;QueryResponse&#039;);
+}
+
+/**
+ * Instantiate and schedule state commands (ie. commands triggered by state) to chatManager
+ */
+function StateCommands(chatManager, telegram, managerFactory, commandHelper) {
+  const nameCommand = new AuctionNameCommand(telegram, managerFactory, commandHelper);
+  const descCommand = new AuctionDescriptionCommand(telegram, managerFactory, commandHelper);
+  const priceCommand = new AuctionPriceCommand(telegram, managerFactory, commandHelper);
+  const pictureCommand = new AuctionPictureCommand(telegram, managerFactory, commandHelper, StorageS3());
+  const minSubCommand = new AuctionMinSubscribersCommand(telegram, managerFactory, commandHelper);
+  chatManager.addCommand(constants.STATE_WAIT_FOR_NAME, nameCommand, &#039;State&#039;);
+  chatManager.addCommand(constants.STATE_WAIT_FOR_DESC, descCommand, &#039;State&#039;);
+  chatManager.addCommand(constants.STATE_WAIT_FOR_PRICE, priceCommand, &#039;State&#039;);
+  chatManager.addCommand(constants.STATE_WAIT_FOR_PICTURE, pictureCommand, &#039;State&#039;);
+  chatManager.addCommand(constants.STATE_WAIT_FOR_MIN_SUB, minSubCommand, &#039;State&#039;);
+}</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

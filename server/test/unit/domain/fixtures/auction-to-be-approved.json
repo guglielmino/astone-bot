@@ -5,6 +5,7 @@
   "image": "https://upload.wikimedia.org/wikipedia/commons/3/34/Commodore-64-Computer.png",
   "startingPrice": 1,
   "price": 1,
+  "startDate": "2016-08-01T10:00:00.000Z",
   "owner": {
     "username": "guglielmino",
     "chatId": 19915021
