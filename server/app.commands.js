@@ -48,17 +48,17 @@ function InteractiveCommands(chatManager, telegram, managerFactory, commandHelpe
       queryCommand: constants.QCOMMAND_SET_DESCR,
       answerText: 'Choose an auction to change the description'
     });
-  const setPriceCmd =new SetAuctionPropertyCommand(telegram, managerFactory, commandHelper,
+  const setPriceCmd = new SetAuctionPropertyCommand(telegram, managerFactory, commandHelper,
     {
       queryCommand: constants.QCOMMAND_SET_PRICE,
       answerText: `Choose an auction to change starting price`
     });
-  const setPictCmd =new SetAuctionPropertyCommand(telegram, managerFactory, commandHelper,
+  const setPictCmd = new SetAuctionPropertyCommand(telegram, managerFactory, commandHelper,
     {
       queryCommand: constants.QCOMMAND_SET_PICT,
       answerText: `Choose an auction to change item picture`
     });
-  const setMinSubCmd =new SetAuctionPropertyCommand(telegram, managerFactory, commandHelper,
+  const setMinSubCmd = new SetAuctionPropertyCommand(telegram, managerFactory, commandHelper,
     {
       queryCommand: constants.QCOMMAND_SET_MINSUB,
       answerText: `Choose an auction to change min number of participants`
@@ -81,7 +81,7 @@ function InteractiveCommands(chatManager, telegram, managerFactory, commandHelpe
 function QueryCommandsCommands(chatManager, telegram, managerFactory, commandHelper) {
   const bidCmd = new BidCommand(telegram, managerFactory, commandHelper);
   const startAuctionCmd = new StartAuctionCommand(telegram, managerFactory, commandHelper);
-  const titleCmd = new ActionProperty(telegram, managerFactory, commandHelper,  {
+  const titleCmd = new ActionProperty(telegram, managerFactory, commandHelper, {
     answerText: 'Ok, write the new name for the Auction',
     stateCommand: constants.STATE_WAIT_FOR_NAME
   });

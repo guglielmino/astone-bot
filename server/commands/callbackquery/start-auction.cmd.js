@@ -24,6 +24,7 @@ export default class StartAuctionCommand {
                 .answerCallbackQuery(state.callback_query_id, 'AUCTION SUBSCRIBED', false);
 
               this._makeTelegramAnswer(state, res.auction);
+              this._warnSubscribers(state, res.auction);
 
               return Promise.resolve({ auctionId: auctionId.toString() });
               break;
@@ -65,6 +66,19 @@ export default class StartAuctionCommand {
             }]
           ]
         }
+      });
+  }
+
+  _warnSubscribers(state, auction) {
+    auction.subscribers
+      .filter(sub => sub.username !== state.chat.username)
+      .forEach(subscriber => {
+        this._telegram
+          .sendMessage({
+            chat_id: subscriber.chatId,
+            text: `@${state.chat.username} has joined the auction`,
+            parse_mode: 'Markdown'
+          });
       });
   }
 }
