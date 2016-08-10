@@ -41,7 +41,6 @@ export default class AuctionListCommand {
                   reply_markup: {
                     inline_keyboard: buttons
                   }
-
                 });
               });
           });
