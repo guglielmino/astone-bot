@@ -10,6 +10,13 @@ const BaseBuilder = stampit().init(function () {
     return this;
   };
 
+  this.setButtons = (buttons) => {
+    this.message.reply_markup = {
+      inline_keyboard: buttons
+    };
+    return this;
+  };
+
   this.build = () => {
     if (!this.message.chat_id) throw new Error('Recipient not set');
     return this.message;

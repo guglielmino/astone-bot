@@ -1,9 +1,14 @@
 'use strict';
 
 import MsgEncoder from '../services/utilities/msg-encoder';
-import {messageBuilder} from '../bot-api/msg-builder';
+import { messageBuilder, photoBuilder } from '../bot-api/msg-builder';
 
 export default (telegram) => {
+
+  const builders = {
+    message: messageBuilder(),
+    photo: photoBuilder()
+  };
 
   return {
     encodeQueryCommand: (command, data) => {
@@ -30,11 +35,26 @@ export default (telegram) => {
     },
 
     /**
-     * Message builder for telegram
+     * Extract reciptient data to be used in Telegram send* methods
+     * from state
+     * @param state
+     * @returns {{username: *, chatId: number}}
+     */
+    recipientFromState: (state) => {
+      return { username: state.chat.username,  chatId: state.chat.id };
+    },
+
+    /**
+     * Message builder for telegram messages
      * @returns {MessageBuilder}
      */
-    messageBuilder: () => {
-      return new MessageBuilder();
+    builder: (what) => {
+      if (what in builders) {
+        return builders[what];
+      }
+      else {
+        return null;
+      }
     }
   };
 
