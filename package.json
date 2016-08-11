@@ -11,7 +11,6 @@
     "tunnel": "lt --port 9001 --subdomain bidbot",
     "lint": "eslint --cache .",
     "code-check": "plato -r -x test -d report server/"
-
   },
   "dependencies": {
     "async-polling": "^0.2.1",
@@ -42,6 +41,7 @@
     "redis": "^2.6.1",
     "request": "^2.69.0",
     "source-map-support": "^0.4.0",
+    "stampit": "^2.1.2",
     "swig": "^1.4.2",
     "text-encoding": "^0.6.0",
     "winston": "^2.2.0"
