@@ -1,14 +1,8 @@
 'use strict';
 
 import MsgEncoder from '../services/utilities/msg-encoder';
-import { messageBuilder, photoBuilder } from '../bot-api/msg-builder';
 
 export default (telegram) => {
-
-  const builders = {
-    message: messageBuilder(),
-    photo: photoBuilder()
-  };
 
   return {
     encodeQueryCommand: (command, data) => {
@@ -24,14 +18,12 @@ export default (telegram) => {
      * @param message
      */
     simpleResponse: (chatId, message) => {
-      const msg = messageBuilder()
-        .setRecipient({ chatId: chatId })
-        .setText(message)
-        .setMode('Markdown')
-        .build();
-
       return telegram
-        .sendMessage(msg);
+        .sendMessage({
+          chat_id: chatId,
+          text: message,
+          parse_mode: 'Markdown'
+        });
     },
 
     /**
@@ -41,21 +33,8 @@ export default (telegram) => {
      * @returns {{username: *, chatId: number}}
      */
     recipientFromState: (state) => {
-      return { username: state.chat.username,  chatId: state.chat.id };
-    },
-
-    /**
-     * Message builder for telegram messages
-     * @returns {MessageBuilder}
-     */
-    builder: (what) => {
-      if (what in builders) {
-        return builders[what];
-      }
-      else {
-        return null;
-      }
+      return { username: state.chat.username, chatId: state.chat.id };
     }
-  };
 
-};
+  };
+}

@@ -41,21 +41,21 @@ export default class AuctionListCommand {
 
             let auctionDesc = item.description.substring(0, leftSpace);
 
-            const response = this._helper
-              .builder('photo')
-              .setRecipient(this._helper.recipientFromState(state))
-              .setPhoto(item.file_id)
-              .setCaption(`${title}${auctionDesc}${auctionUrl}`)
-              .setButtons(buttons)
-              .build();
-
-            this._telegram.sendPhoto(response);
+            this._telegram.sendPhoto({
+              chat_id: state.chat.id,
+              photo: item.file_id,
+              caption: `${title}${auctionDesc}${auctionUrl}`,
+              reply_markup: {
+                inline_keyboard: buttons
+              }
+            });
 
           });
         }
         else {
           return this._helper.simpleResponse(state.chat.id, 'Sorry, no Auctions active now');
         }
+
         Promise.resolve(null);
       })
       .catch(err => {
