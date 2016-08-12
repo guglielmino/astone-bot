@@ -22,7 +22,7 @@ import AuctionChant from './services/domain/auction-chant';
 import AuctionTimer from './services/domain/auction-timer';
 import AuctionEvents from './services/domain/auction-events';
 import AuctionStartNotification from './services/domain/notifications/auction-start-notification';
-import AuctionPayNotification from './services/domain/notifications/auction-pay-notification';
+import AuctionEndNotification from './services/domain/notifications/auction-end-notification';
 
 import commands from './app.commands';
 import Telegram from './bot-api/telegram';
@@ -87,10 +87,10 @@ storageProvider
       }
     });
 
-    const auctionPayNotification = AuctionPayNotification(telegram, managerFactory);
+    const auctionPayNotification = AuctionEndNotification(telegram, managerFactory);
     auctionTimer.schedule(ticks => {
       if (ticks % 60 === 0) {
-        auctionPayNotification.sendNotification(new Date(), `${config.base_url}/${urlConsts.PAGE_PAYPAL_GETPAYURL}`, config.cipher_password);
+        auctionPayNotification.sendNotification(new Date());
       }
     });
 

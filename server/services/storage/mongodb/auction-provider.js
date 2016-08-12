@@ -40,7 +40,7 @@ export default class AuctionProvider {
     return new Promise((resolve, reject) => {
       this.db.collection(COLLECTION_NAME, (err, col) => {
         let objId = ObjectID(auctionId);
-        col.find({_id: objId})
+        col.find({ _id: objId })
           .toArray((err, docs) => {
             if (err) {
               reject(err);
@@ -64,11 +64,11 @@ export default class AuctionProvider {
   getActiveAuctions(date) {
     const query = {
       $and: [
-        {startDate: {$lte: date}},
+        { startDate: { $lte: date } },
         {
           $or: [
-            {closed: false},
-            {closed: {$exists: false}}
+            { closed: false },
+            { closed: { $exists: false } }
           ]
         }
       ]
@@ -138,7 +138,7 @@ export default class AuctionProvider {
 
     const query = {
       $and: [
-        {startDate: { $gte: startRange, $lte: endRange } },
+        { startDate: { $gte: startRange, $lte: endRange } },
         {
           $or: [
             { closed: false },
@@ -158,7 +158,7 @@ export default class AuctionProvider {
   getAuctionsByOwner(username) {
     const query = {
       $and: [
-        { username: username},
+        { username: username },
         {
           $or: [
             { closed: false },
@@ -198,16 +198,14 @@ export default class AuctionProvider {
         col.updateOne({ _id: ObjectID(auctionId) },
           {
             $set: {
-              price: value, bestBidder: user
-            },
-            $currentDate: {
-              lastBid: true
+              price: value, bestBidder: user, lastBid: new Date()
             }
           },
           (err, r) => {
             if (err) {
               reject(err);
             } else {
+
               resolve(r.result.ok === 1);
             }
 
@@ -223,13 +221,13 @@ export default class AuctionProvider {
           reject(err);
         }
 
-        col.updateOne({_id: ObjectID(auctionId)},
-          {$addToSet: {subscribers: user}},
+        col.updateOne({ _id: ObjectID(auctionId) },
+          { $addToSet: { subscribers: user } },
           (err, r) => {
             if (err) {
               reject(err);
             } else {
-              col.find({_id: ObjectID(auctionId)})
+              col.find({ _id: ObjectID(auctionId) })
                 .limit(1)
                 .next((err, doc) => {
                   if (err) {
@@ -247,7 +245,7 @@ export default class AuctionProvider {
   }
 
   getAuctionsBySubscriber(username) {
-    return this.findDocs({username: username});
+    return this.findDocs({ username: username });
   }
 
   closeAuction(auctionId) {
@@ -257,12 +255,9 @@ export default class AuctionProvider {
           reject(err);
         }
 
-        col.updateOne({_id: ObjectID(auctionId)},
+        col.updateOne({ _id: ObjectID(auctionId) },
           {
-            $set: {closed: true, state: 'WAIT_FOR_PAYMENT'},
-            $currentDate: {
-              closeDate: true
-            }
+            $set: { closed: true, state: 'WAIT_FOR_PAYMENT', closeDate: new Date() }
           },
           (err, r) => {
             if (err) {
@@ -281,7 +276,7 @@ export default class AuctionProvider {
         if (err) {
           reject(err);
         }
-        col.updateOne({_id: ObjectID(auctionId)},
+        col.updateOne({ _id: ObjectID(auctionId) },
           {
             $set: data
           },

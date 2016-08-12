@@ -113,7 +113,7 @@ import AuctionChant from &#039;./services/domain/auction-chant&#039;;
 import AuctionTimer from &#039;./services/domain/auction-timer&#039;;
 import AuctionEvents from &#039;./services/domain/auction-events&#039;;
 import AuctionStartNotification from &#039;./services/domain/notifications/auction-start-notification&#039;;
-import AuctionPayNotification from &#039;./services/domain/notifications/auction-pay-notification&#039;;
+import AuctionEndNotification from &#039;./services/domain/notifications/auction-pay-notification&#039;;
 
 import commands from &#039;./app.commands&#039;;
 import Telegram from &#039;./bot-api/telegram&#039;;
@@ -178,7 +178,7 @@ storageProvider
       }
     });
 
-    const auctionPayNotification = AuctionPayNotification(telegram, managerFactory);
+    const auctionPayNotification = AuctionEndNotification(telegram, managerFactory);
     auctionTimer.schedule(ticks =&gt; {
       if (ticks % 60 === 0) {
         auctionPayNotification.sendNotification(new Date(), `${config.base_url}/${urlConsts.PAGE_PAYPAL_GETPAYURL}`, config.cipher_password);

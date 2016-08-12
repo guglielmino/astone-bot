@@ -1,13 +1,19 @@
 'use strict';
 
-import Cipher from '../../utilities/cipher';
 import * as consts from '../auction-consts';
 
+/**
+ * Notification
+ *
+ * @param telegram
+ * @param managerFactory
+ * @returns {{sendNotification: (function(*=, *=, *=))}}
+ */
 export default (telegram, managerFactory) => {
 
 
   return {
-    sendNotification: (date, payUrl, cipherPassword) => {
+    sendNotification: (date) => {
 
       return new Promise((resolve, reject) => {
         managerFactory
@@ -15,19 +21,19 @@ export default (telegram, managerFactory) => {
           .getClosedAndWaitingForPayment(date)
           .then(auctions => {
             auctions.forEach(auction => {
-              const encryptedId = new Cipher()
-                .encrypt(auction._id.toString(), cipherPassword);
-
               telegram
                 .sendMessage({
                   chat_id: auction.bestBidder.chatId,
-                  text: `You won *${auction.title}*, seller is waiting for payment to send the item.`,
-                  parse_mode: 'Markdown',
-                  reply_markup: {
-                    inline_keyboard: [
-                      [{ text: `Pay ${auction.price} EUR`, url: `${payUrl}?token=${encryptedId}` }]
-                    ]
-                  }
+                  text: `You won *${auction.title}*, @${auction.owner.username} is waiting for payment of ${auction.price} EUR to send the item, chats with him to close the deal.`,
+                  parse_mode: 'Markdown'
+                })
+                .then(res => {
+                  telegram
+                    .sendMessage({
+                      chat_id: auction.owner.chatId,
+                      text: `@${auction.bestBidder.username} won Your auction, he received a notification to contact You and close the deal`,
+                      parse_mode: 'Markdown'
+                    });
                 });
 
               managerFactory

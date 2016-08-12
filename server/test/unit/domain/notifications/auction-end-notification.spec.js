@@ -2,20 +2,20 @@
 
 import chai from 'chai';
 import sinon from 'sinon';
-import AuctionPayNotification from '../../../../services/domain/notifications/auction-pay-notification';
+import AuctionEndNotification from '../../../../services/domain/notifications/auction-end-notification';
 
 // Tell chai that we'll be using the "should" style assertions.
 chai.should();
 let expect = chai.expect;
 
 
-describe('AuctionPayNotification', () => {
-  let auctionPayNotification;
+describe('AuctionEndNotification', () => {
+  let auctionEndNotification;
   let telegram;
 
   beforeEach(() => {
     telegram = {};
-    telegram.sendMessage = sinon.stub();
+    telegram.sendMessage = sinon.stub().returns(Promise.resolve(null));
 
 
     const auctionManager = {
@@ -31,17 +31,17 @@ describe('AuctionPayNotification', () => {
       }
     };
 
-    auctionPayNotification = AuctionPayNotification(telegram,
+    auctionEndNotification = AuctionEndNotification(telegram,
       managerFactory);
   });
 
-  it('Should send payment reminder to auction winner', (done) => {
-    auctionPayNotification
-      .sendNotification(new Date(), 'http//localhost/pages/pay', '123')
+  it('Should notificate auction winner and owner', (done) => {
+    auctionEndNotification
+      .sendNotification(new Date(), '123')
       .then(sent => {
         telegram
           .sendMessage
-          .calledTwice.should.be.true;
+          .callCount.should.be.equal(4);
         done();
       })
       .catch(err => {
