@@ -1,5 +1,6 @@
 // API EndPoint
 export const API_TELEGRAM_UPDATE = '/api/telegram/updates';
+export const API_MESSENGER_UPDATE = '/api/messenger/updates';
 export const API_PAYPAL_SUCCESS = '/api/paypal/success';
 export const API_PAYPAL_CANCEL = '/api/paypal/cancel';
 

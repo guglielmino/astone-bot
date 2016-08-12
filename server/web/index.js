@@ -8,6 +8,8 @@ import views from'koa-views';
 import serve from 'koa-static';
 
 import telegramRoutes from './telegram.route';
+import messengerRoutes from './messenger.routes';
+
 import paymetRoutes from './payment.route';
 import pagesRoutes from './pages.route';
 import logger from '../services/logger';
@@ -30,6 +32,7 @@ export default (auctionManager, chatter, paypal, config) => {
 	const router = new Router();
 
 	telegramRoutes(router, chatter);
+  messengerRoutes(router);
 	paymetRoutes(router, auctionManager, paypal, config);
   pagesRoutes(router, auctionManager, config);
 
