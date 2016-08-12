@@ -6,7 +6,7 @@ const mongo_db_name = process.env.MONGO_DB || '/astone';
 
 const config = {
 	env: process.env.NODE_ENV || 'development',
-	base_url: process.env.BASE_URL || 'https://bidbot.localtunnel.me',
+	base_url: process.env.BASE_URL || 'http://localhost:9001',
 	cipher_password: process.env.CIPHER_PWD || 'password',
 	server: {
 		host: process.env.HOST || '0.0.0.0',

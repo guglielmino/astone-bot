@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - server/app.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>server/app.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">71.24</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">138</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">20.07</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.28</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">&#039;use strict&#039;;
+
+import logger from &#039;./services/logger&#039;;
+
+import bluebird from &#039;bluebird&#039;;
+import redis from &#039;redis&#039;;
+
+import web from &#039;./web&#039;;
+import * as urlConsts from &#039;./web/url-consts&#039;;
+
+import StorageProvider from &#039;./services/storage/mongodb&#039;;
+import RepeatingScheduler from &#039;./services/scheduler/RepeatingScheduler&#039;;
+import StateManager from &#039;./services/bot/state-manager&#039;;
+import TelegramReqParser from &#039;./services/bot/telegram-req-parser&#039;;
+import TelegramChatter from &#039;./services/bot/telegram-chatter&#039;;
+import i18n from &#039;i18n&#039;;
+
+import ManagerFactory from &#039;./services/domain/manager-factory&#039;;
+
+import AuctionAges from &#039;./services/domain/auction-ages&#039;;
+import AuctionChant from &#039;./services/domain/auction-chant&#039;;
+import AuctionTimer from &#039;./services/domain/auction-timer&#039;;
+import AuctionEvents from &#039;./services/domain/auction-events&#039;;
+import AuctionStartNotification from &#039;./services/domain/notifications/auction-start-notification&#039;;
+import AuctionEndNotification from &#039;./services/domain/notifications/auction-pay-notification&#039;;
+
+import commands from &#039;./app.commands&#039;;
+import Telegram from &#039;./bot-api/telegram&#039;;
+import PayPal from &#039;./services/payment/paypal&#039;;
+
+import config from &#039;./config&#039;;
+
+const paypal = new PayPal({
+  env: config.paypal.env,
+  client_id: config.paypal.client_id,
+  client_secret: config.paypal.client_secret,
+  returnUrl: urlConsts.API_PAYPAL_SUCCESS,
+  cancelUrl: urlConsts.API_PAYPAL_CANCEL
+});
+
+
+const request = bluebird.promisify(require(&#039;request&#039;));
+const telegram = new Telegram(request, config.telegram.api_key);
+
+const storageProvider = new StorageProvider();
+const sched = new RepeatingScheduler();
+
+// We want all dates in UTC
+process.env.TZ = &#039;UTC&#039;;
+
+
+i18n.configure({
+  locales: [&#039;en&#039;, &#039;it&#039;],
+  directory: __dirname + &#039;/res/locales&#039;,
+  register: global
+});
+
+storageProvider
+  .connect(config)
+  .then((db) =&gt; {
+    logger.debug(&#039;Db connected, configuring providers&#039;);
+
+    bluebird.promisifyAll(redis.RedisClient.prototype);
+    const redisClient = redis.createClient({
+      host: config.redis.host,
+      port: config.redis.port,
+      db: config.redis.db
+    });
+
+    const stateManager = StateManager(redisClient);
+    const telegramReqParser = TelegramReqParser();
+    const chatter = new TelegramChatter(stateManager, telegramReqParser);
+
+    const managerFactory = ManagerFactory(storageProvider);
+
+    const auctionAges = AuctionAges();
+    const auctionChant = AuctionChant(telegram,
+      managerFactory.getAuctionManager(), auctionAges);
+
+    const auctionTimer = new AuctionTimer(auctionChant);
+    auctionTimer.schedule(ticks =&gt; auctionChant.make(new Date()));
+
+    const auctionStartNotification = AuctionStartNotification(telegram, managerFactory);
+    auctionTimer.schedule(ticks =&gt; {
+      if (ticks % 60 === 0) {
+        auctionStartNotification.sendNotification(new Date(), `${config.base_url}/pages/auction/`);
+      }
+    });
+
+    const auctionPayNotification = AuctionEndNotification(telegram, managerFactory);
+    auctionTimer.schedule(ticks =&gt; {
+      if (ticks % 60 === 0) {
+        auctionPayNotification.sendNotification(new Date(), `${config.base_url}/${urlConsts.PAGE_PAYPAL_GETPAYURL}`, config.cipher_password);
+      }
+    });
+
+    const closeAuctionUrl = config.base_url + urlConsts.PAGE_PAYPAL_GETPAYURL;
+    const auctionEvents = new AuctionEvents(telegram, i18n,
+      managerFactory.getAuctionManager(), closeAuctionUrl);
+
+    auctionTimer.start();
+    commands(chatter, telegram, managerFactory);
+
+    let lastupdateId = 0;
+
+    if (!config.telegram.use_webhook) {
+      logger.debug(&quot;Using polling updates&quot;);
+      sched.schedule(() =&gt; {
+        telegram.getUpdates(lastupdateId, 100, 0)
+          .then((res) =&gt; {
+            if (res.result) {
+              res.result.forEach((req) =&gt; {
+                lastupdateId = chatter.processRequest(req);
+                lastupdateId = req.update_id + 1;
+              });
+            }
+            else {
+              logger.error(JSON.stringify(res));
+            }
+          })
+          .catch((error) =&gt; {
+            logger.error(&quot;getUpdates =&gt; &quot; + error);
+          });
+      }, 2000);
+    }
+    else {
+      logger.debug(&quot;Using webook&quot;);
+    }
+
+    telegram.getMe().then(info =&gt; {
+      logger.info(`${info.result.username} ready to answer!!`);
+    });
+
+    web(managerFactory.getAuctionManager(), chatter, paypal, config);
+  })
+  .catch((err) =&gt; {
+    logger.error(&quot;Startup error: &quot; + err.message + &quot;\n&quot; + err.stack);
+  });</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

@@ -34,11 +34,12 @@ describe('BidCommand', () => {
   });
 
   it('Should respond asking to select an Auction when trying to bid without selecting one', (done) => {
-    let command = new BidCommand(telegram, managerFactory, commandHelper);
+    const command = new BidCommand(telegram, managerFactory, commandHelper);
 
-    command.execute({chat: {id: 10}}, [10])
+    command.execute({ chat: { id: 10 } }, [10])
       .then((res) => {
-        commandHelper.simpleResponse
+        commandHelper
+          .simpleResponse
           .calledWith(10, 'Before bidding You must choose an active auction')
           .should.be.ok;
         done();
@@ -48,11 +49,11 @@ describe('BidCommand', () => {
   it('Should respond \'Auction closed\' when bid on a closed Auction', (done)=> {
 
     auctionManager.bid = sinon.stub()
-      .returns(Promise.resolve({status: BidResponse.AuctionClosed}));
+      .returns(Promise.resolve({ status: BidResponse.AuctionClosed }));
 
-    let command = new BidCommand(telegram, managerFactory, commandHelper);
+    const command = new BidCommand(telegram, managerFactory, commandHelper);
 
-    command.execute({auctionId: "aabbcc", chat: {id: 10, username: "guglielmino"}}, [10])
+    command.execute({ auctionId: "aabbcc", chat: { id: 10, username: "guglielmino" } }, [10])
       .then((res) => {
         commandHelper.simpleResponse
           .calledWith(10, `This auction is closed and can't accept new bids`)
@@ -66,11 +67,11 @@ describe('BidCommand', () => {
 
   it('Should respond Auction isn\'t active when trying to bid on a not started one', (done) => {
     auctionManager.bid = sinon.stub()
-      .returns(Promise.resolve({status: BidResponse.AuctionNotActive}));
+      .returns(Promise.resolve({ status: BidResponse.AuctionNotActive }));
 
-    let command = new BidCommand(telegram, managerFactory, commandHelper);
+    const command = new BidCommand(telegram, managerFactory, commandHelper);
 
-    command.execute({auctionId: "aabbcc", chat: {id: 10, username: "guglielmino"}}, [10])
+    command.execute({ auctionId: "aabbcc", chat: { id: 10, username: "guglielmino" } }, [10])
       .then((res) => {
         commandHelper.simpleResponse
           .calledWith(10, 'Can\'t bid on this Auction because is inactive')
@@ -84,7 +85,7 @@ describe('BidCommand', () => {
 
   it('Should send a message to all subscriber of Auction when bid accepted', (done) => {
 
-    var startDate = new Date();
+    const startDate = new Date();
     startDate.setDate(startDate.getDate() - 1);
     auctionManager.bid = sinon.stub().returns(Promise.resolve(
       {
@@ -102,9 +103,9 @@ describe('BidCommand', () => {
             chatId: 19915021
           },
           subscribers: [
-            {username: "guglielmino", chatId: 123},
-            {username: "tizio", chatId: 234},
-            {username: "caio", chatId: 567}
+            { username: "guglielmino", chatId: 123 },
+            { username: "tizio", chatId: 234 },
+            { username: "caio", chatId: 567 }
           ],
           bestBidder: {
             username: "caio",
@@ -113,11 +114,11 @@ describe('BidCommand', () => {
         }
       }));
 
-    let command = new BidCommand(telegram, managerFactory, commandHelper);
+    const command = new BidCommand(telegram, managerFactory, commandHelper);
     let mock = sinon.mock(command);
     let expectation = mock.expects('_sendMessageToSubscriber').exactly(3);
 
-    command.execute({auctionId: "aabbcc", chat: {id: 123, username: "guglielmino"}}, [10])
+    command.execute({ auctionId: "aabbcc", chat: { id: 123, username: "guglielmino" } }, [10])
       .then((res) => {
         expectation.verify();
         done();
@@ -146,18 +147,19 @@ describe('BidCommand', () => {
           chatId: 19915021
         },
         subscribers: [
-          {username: "guglielmino", chatId: 123},
-          {username: "tizio", chatId: 234},
-          {username: "caio", chatId: 567}
+          { username: "guglielmino", chatId: 123 },
+          { username: "tizio", chatId: 234 },
+          { username: "caio", chatId: 567 }
         ]
       }
     }));
 
     let command = new BidCommand(telegram, managerFactory, commandHelper);
 
-    command.execute({auctionId: "aabbcc", chat: {id: 123, username: "guglielmino"}}, [10])
+    command.execute({ auctionId: "aabbcc", chat: { id: 123, username: "guglielmino" } }, [10])
       .then((res) => {
-        commandHelper.simpleResponse
+        commandHelper
+          .simpleResponse
           .calledWith(123, 'We need at least *10* participants to start the Auction')
           .should.be.ok;
         done();
@@ -186,16 +188,16 @@ describe('BidCommand', () => {
           chatId: 19915021
         },
         subscribers: [
-          {username: "guglielmino", chatId: 123},
-          {username: "tizio", chatId: 234},
-          {username: "caio", chatId: 567}
+          { username: "guglielmino", chatId: 123 },
+          { username: "tizio", chatId: 234 },
+          { username: "caio", chatId: 567 }
         ]
       }
     }));
 
     let command = new BidCommand(telegram, managerFactory, commandHelper);
 
-    command.execute({auctionId: "aabbcc", chat: {id: 123, username: null}}, [10])
+    command.execute({ auctionId: "aabbcc", chat: { id: 123, username: null } }, [10])
       .then((res) => {
         commandHelper.simpleResponse
           .calledWith(123, 'Sorry, we have a problem with Your user, we can\'t accept Your offer')

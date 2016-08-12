@@ -121,27 +121,27 @@ export default class AuctionManager {
       .getAuctionById(auctionId)
       .then((auction) => {
         if (!auction || Object.getOwnPropertyNames(auction).length === 0) {
-          return Promise.resolve({status: BidResponse.AuctionNotExist, auction: null});
+          return Promise.resolve({ status: BidResponse.AuctionNotExist, auction: null });
         }
 
         if (auction.startDate > new Date()) {
-          return Promise.resolve({status: BidResponse.AuctionNotActive, auction: auction});
+          return Promise.resolve({ status: BidResponse.AuctionNotActive, auction: auction });
         }
 
         if (auction.closed) {
-          return Promise.resolve({status: BidResponse.AuctionClosed, auction: auction});
+          return Promise.resolve({ status: BidResponse.AuctionClosed, auction: auction });
         }
 
         if (value === null) value = (auction.price || auction.startingPrice) + (auction.bidStep || 1.0);
 
         if (value <= auction.price) {
-          return Promise.resolve({status: BidResponse.ValueToLow, auction: auction});
+          return Promise.resolve({ status: BidResponse.ValueToLow, auction: auction });
         }
 
         const numSubscribers = (auction.subscribers ? auction.subscribers.length : 0);
         const minSubscribers = (auction.minSubscribers === undefined ? 10 : auction.minSubscribers);
         if (numSubscribers < minSubscribers) {
-          return Promise.resolve({status: BidResponse.InsufficientSubscribers, auction: auction});
+          return Promise.resolve({ status: BidResponse.InsufficientSubscribers, auction: auction });
         }
 
         return this._auctionProvider

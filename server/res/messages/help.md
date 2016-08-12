@@ -26,7 +26,6 @@ makes the auction start when even just one participant bid to it, with risk to s
 very low price. On the other hand putting it to a too big number give the risk of never starting it.
 
 
-*NOTE*: at this time Astone is in _BETA_, You can try to make Auctions and bid on existing
-ones but the auctions never close and object aren't assigned to winner
+*NOTE*: at this time Astone is in _BETA_
 
 Send feedback to @guglielmino

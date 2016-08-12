@@ -55,8 +55,8 @@ class TelegramBot {
         }
       })
       .catch((err) => {
-        Promise.reject(err);
-      })
+        return Promise.reject(err);
+      });
   }
 
   sendPhoto(photoMsg) {
@@ -105,7 +105,7 @@ class TelegramBot {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({url: hook_url})
+      body: JSON.stringify({ url: hook_url })
     };
 
     return this.request(url)
@@ -152,10 +152,10 @@ class TelegramBot {
     return this.request(url)
       .then((res) => {
         let data = JSON.parse(res.body);
-        if(data.ok) {
+        if (data.ok) {
           data.result.file_url = `https://api.telegram.org/file/bot${this.apiKey}/${data.result.file_path}`;
           return Promise.resolve(data.result);
-        }else{
+        } else {
           return Promise.reject(data);
         }
       });

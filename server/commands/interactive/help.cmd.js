@@ -15,11 +15,14 @@ export default class HelpCommand {
   execute(state, ...params) {
 
     this._telegram
-      .sendMessage({
-        chat_id: state.chat.id,
-        text: this.helpMessage,
-        parse_mode: 'Markdown'
-      });
+      .sendMessage(
+        this._helper
+          .builder('message')
+          .setRecipient(this._helper.recipientFromState(state))
+          .setText(this.helpMessage)
+          .setMode('Markdown')
+          .build()
+      );
 
     return Promise.resolve(null);
   }
