@@ -12,15 +12,15 @@ export default class AuctionListCommand {
   }
 
   execute(state, ...params) {
+
     this._telegram
       .sendChatAction(state.chat.id, 'typing');
 
     const now = new Date();
     return this._auctionManager
       .getActiveAuctions(now)
-      .then((res) => {
+      .then(res => {
         if (res && res.length > 0) {
-
           res.forEach((item) => {
             let buttons = [];
 
@@ -49,14 +49,16 @@ export default class AuctionListCommand {
                 inline_keyboard: buttons
               }
             });
+
           });
-          Promise.resolve(null);
         }
         else {
           return this._helper.simpleResponse(state.chat.id, 'Sorry, no Auctions active now');
         }
+
+        Promise.resolve(null);
       })
-      .catch((err) => {
+      .catch(err => {
         return this._helper.simpleResponse(state.chat.id, '*Ops!* We updating our BOT now, retry later. Sorry for the inconvenient :-(');
       });
   }
