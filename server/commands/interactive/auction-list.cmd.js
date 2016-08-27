@@ -12,7 +12,6 @@ export default class AuctionListCommand {
   }
 
   execute(state, ...params) {
-
     this._telegram
       .sendChatAction(state.chat.id, 'typing');
 
