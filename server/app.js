@@ -57,7 +57,7 @@ i18n.configure({
 
 storageProvider
   .connect(config)
-  .then((db) => {
+  .then(db => {
     logger.debug('Db connected, configuring providers');
 
     bluebird.promisifyAll(redis.RedisClient.prototype);

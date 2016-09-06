@@ -32,5 +32,3 @@ Where `1234` is the auction identifier, must be payed attention to parameter val
 it must be max 64 characters long.
 
 
-
-

@@ -86,7 +86,7 @@ describe('AuctionListCommand', () => {
 
         commandHelper
           .simpleResponse
-          .calledWith(10, 'Sorry, no Auctions active now')
+          .calledWith(10, 'Sorry, no active Auctions now')
           .should.be.ok;
 
         done();

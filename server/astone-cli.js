@@ -9,6 +9,8 @@ import StorageProvider from './services/storage/mongodb';
 import ManagerFactory from './services/domain/manager-factory';
 import AuctionApprover from './services/domain/auction-approver';
 
+import * as urlConsts from './web/url-consts';
+
 
 const request = bluebird.promisify(require('request'));
 const telegram = new Telegram(request, config.telegram.api_key);
@@ -20,7 +22,7 @@ function connect() {
       .connect(config)
       .then((db) => {
         const managerFactory = ManagerFactory(storageProvider);
-        resolve({db: db, manager: managerFactory});
+        resolve({ db: db, manager: managerFactory });
 
       })
       .catch(err => {
@@ -32,7 +34,6 @@ function connect() {
 
 const funcs = {};
 
-
 funcs.list = function () {
   connect()
     .then(obj => {
@@ -43,7 +44,8 @@ funcs.list = function () {
         .then(auctions => {
           if (auctions && auctions.length > 0) {
             auctions.forEach(auction => {
-              console.log(`${auction._id } - ${auction.title} `);
+              let auctionUrl = config.base_url + new String(urlConsts.PAGE_AUCTION_DETAILS).replace(':auid', auction._id);
+              console.log(`${auctionUrl} - ${auction.title} `);
             });
           } else {
             console.log('No auctions waiting for approval found');

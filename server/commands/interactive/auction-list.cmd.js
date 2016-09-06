@@ -12,7 +12,6 @@ export default class AuctionListCommand {
   }
 
   execute(state, ...params) {
-
     this._telegram
       .sendChatAction(state.chat.id, 'typing');
 
@@ -53,7 +52,7 @@ export default class AuctionListCommand {
           });
         }
         else {
-          return this._helper.simpleResponse(state.chat.id, 'Sorry, no Auctions active now');
+          return this._helper.simpleResponse(state.chat.id, 'Sorry, no active Auctions now');
         }
 
         Promise.resolve(null);
