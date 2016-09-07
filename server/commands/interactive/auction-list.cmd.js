@@ -1,6 +1,7 @@
 'use strict';
 
 import * as constants from '../consts';
+import encodeQueryCommand from '../../services/utilities/encodeQueryCommand';
 
 export default class AuctionListCommand {
 
@@ -24,8 +25,7 @@ export default class AuctionListCommand {
             let buttons = [];
 
             buttons.push([{
-              text: `Start bidding on ${item.title}`, callback_data: this._helper
-                .encodeQueryCommand(constants.QCOMMAND_START_AUCTION, item._id.toString())
+              text: `Start bidding on ${item.title}`, callback_data: encodeQueryCommand(constants.QCOMMAND_START_AUCTION, item._id.toString())
             }]);
 
             const title = `${item.title} - current price € ${item.price} -\n`;
