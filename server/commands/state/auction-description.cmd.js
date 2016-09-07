@@ -19,18 +19,18 @@ export default class AuctionDescriptionCommand {
         .simpleResponse
         .calledWith(state.chat.id,
           'Give a description of the item You want to sell')
-      return Promise.resolve({state: constants.STATE_WAIT_FOR_DESC, result: false});
+      return Promise.resolve({ state: constants.STATE_WAIT_FOR_DESC, result: false });
     }
 
     let nextState = (state.single ? null : constants.STATE_WAIT_FOR_PRICE);
     return this
       ._auctionManager
-      .updateAuction(state.auctionId, {description: description})
+      .updateAuction(state.auctionId, { description: description })
       .then((res) => {
         this._helper
           .simpleResponse(state.chat.id, state.single ? 'Ok, description changed' : 'Now You need to set a starting price');
 
-        return Promise.resolve({state: nextState, result: true, single: false});
+        return Promise.resolve({ state: nextState, result: true, single: false });
       })
       .catch((err) => {
         return Promise.reject(err);

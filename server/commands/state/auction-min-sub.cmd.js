@@ -19,15 +19,15 @@ export default class AuctionMinSubscribersCommand {
         .simpleResponse
         .calledWith(state.chat.id,
           'Min number of participants must be greather or equal than 0')
-      return Promise.resolve({state: constants.STATE_WAIT_FOR_MIN_SUB, result: false});
+      return Promise.resolve({ state: constants.STATE_WAIT_FOR_MIN_SUB, result: false });
     }
     return this
       ._auctionManager
-      .updateAuction(state.auctionId, {minSubscribers: minParticipants})
+      .updateAuction(state.auctionId, { minSubscribers: minParticipants })
       .then(res => {
         this._helper
-          .simpleResponse(state.chat.id,  state.single ? 'Ok, number of participants changed' : 'Very well, Your Auction will be evaluated by our review Team, You will be contacted when ready.');
-        return Promise.resolve({state: null, result: true, single: false });
+          .simpleResponse(state.chat.id, state.single ? 'Ok, number of participants changed' : 'Very well, Your Auction will be evaluated by our review Team, You will be contacted when ready.');
+        return Promise.resolve({ state: null, result: true, single: false });
       })
       .catch((err) => {
         return Promise.reject(err);

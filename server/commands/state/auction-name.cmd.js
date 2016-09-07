@@ -15,11 +15,11 @@ export default class AuctionNameCommand {
     if (state.auctionId && state.single) {
       return this
         ._auctionManager
-        .updateAuction(state.auctionId, {title: params[0]})
+        .updateAuction(state.auctionId, { title: params[0] })
         .then(res => {
           this._helper
             .simpleResponse(state.chat.id, 'Ok, name changed');
-          return Promise.resolve({state: null, result: true, single: false});
+          return Promise.resolve({ state: null, result: true, single: false });
         })
         .catch((err) => {
           return Promise.reject(err);

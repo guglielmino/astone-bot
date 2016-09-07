@@ -49,10 +49,23 @@ describe('AuctionStartNotification', () => {
   it('Should call sendMessage for all 3 users', (done) => {
 
     auctionStartNotification
-      .sendNotification(new Date(), 'http://astone.gumino.com/pages/auction/')
+      .sendNotification(new Date(), 'http://astone.gumino.com/pages/auction')
       .then(sent => {
         telegram.sendMessage
           .calledThrice
+          .should.be.true;
+
+        done();
+      });
+  });
+
+  it('Should call sendmessage with reply_markup', (done) => {
+
+    auctionStartNotification
+      .sendNotification(new Date(), 'http://astone.gumino.com/pages/auction')
+      .then(sent => {
+        telegram.sendMessage
+          .calledWith(sinon.match.has('reply_markup'))
           .should.be.true;
 
         done();
