@@ -38,7 +38,6 @@ const paypal = new PayPal({
   cancelUrl: urlConsts.API_PAYPAL_CANCEL
 });
 
-
 const request = bluebird.promisify(require('request'));
 const telegram = new Telegram(request, config.telegram.api_key);
 
@@ -47,7 +46,6 @@ const sched = new RepeatingScheduler();
 
 // We want all dates in UTC
 process.env.TZ = 'UTC';
-
 
 i18n.configure({
   locales: ['en', 'it'],
@@ -83,7 +81,7 @@ storageProvider
     const auctionStartNotification = AuctionStartNotification(telegram, managerFactory);
     auctionTimer.schedule(ticks => {
       if (ticks % 60 === 0) {
-        auctionStartNotification.sendNotification(new Date(), `${config.base_url}/pages/auction/`);
+        auctionStartNotification.sendNotification(new Date(), `${config.base_url}/pages/auction`);
       }
     });
 

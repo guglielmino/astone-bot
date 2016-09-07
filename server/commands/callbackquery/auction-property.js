@@ -21,7 +21,7 @@ export default class AuctionPropertyCommand {
       this._telegram
         .answerCallbackQuery(state.callback_query_id, '', false);
 
-      return Promise.resolve({state: this._propertyInfo.stateCommand, auctionId: auctionId, single: true});
+      return Promise.resolve({ state: this._propertyInfo.stateCommand, auctionId: auctionId, single: true });
     }
 
   }

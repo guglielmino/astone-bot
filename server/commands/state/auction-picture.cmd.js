@@ -27,13 +27,13 @@ export default class AuctionPictureCommand {
         .then(res => {
           let nextState = (state.single ? null : constants.STATE_WAIT_FOR_MIN_SUB);
           this._auctionManager
-            .updateAuction(state.auctionId, {file_id: telegramResponse.file_id, image: res.Location}) // res.Location
+            .updateAuction(state.auctionId, { file_id: telegramResponse.file_id, image: res.Location }) // res.Location
             .then((res) => {
               this._helper
                 .simpleResponse(state.chat.id, state.single ? 'Ok, picture changed' : 'Minimum number of participants ? ');
             });
 
-          return Promise.resolve({state: nextState, result: true, single: false});
+          return Promise.resolve({ state: nextState, result: true, single: false });
         });
     }
   }
