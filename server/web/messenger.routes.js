@@ -3,13 +3,11 @@
 import * as urlConsts from './url-consts';
 import logger from '../services/logger';
 
-const VALIDATION_TOKEN = 'EAADzZAuPFqTEBAEQNpyDlGYnd7dcPAgvi3ZBjYMxpFsusvDlvBThZAZAGCFrS6zoZCjQkVfg31VXhCQtLb1027OTZCJ6v61NxYB9PpcbywZBKGXXhRxeIh8OLrRkBJhnZCFZA8mMpQPYzMmLz1VeOsZBrpDvniaG0k2vpuiOF9eEzVDAZDZD';
-
-export default (router) => {
+export default (router, config) => {
 
   router.get(urlConsts.API_MESSENGER_UPDATE, async(ctx) => {
     if (ctx.request.query['hub.mode'] === 'subscribe' &&
-      ctx.request.query['hub.verify_token'] === VALIDATION_TOKEN) {
+      ctx.request.query['hub.verify_token'] === config.messenger.validation_token) {
       console.log("Validating webhook");
       ctx.status = 200;
       ctx.body = ctx.request.query['hub.challenge'];

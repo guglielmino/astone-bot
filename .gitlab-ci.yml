@@ -13,7 +13,7 @@ variables:
   PAYPAL_ENV: SECURE
   PAYPAL_CLIENT_ID: SECURE
   PAYPAL_CLIENT_SECRET: SECURE
-
+  FB_VALIDATION_CODE: SECURE
 
 
 all:
@@ -32,6 +32,7 @@ all:
     - echo "PAYPAL_ENV=$PAYPAL_ENV" >> .env
     - echo "PAYPAL_CLIENT_ID=$PAYPAL_CLIENT_ID" >> .env
     - echo "PAYPAL_CLIENT_SECRET=$PAYPAL_CLIENT_SECRET" >> .env
+    - echo "FB_VALIDATION_CODE=$FB_VALIDATION_CODE" >> .env
     - cat .env
     - npm install
     - npm test
