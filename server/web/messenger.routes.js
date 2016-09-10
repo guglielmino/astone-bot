@@ -3,16 +3,16 @@
 import * as urlConsts from './url-consts';
 import logger from '../services/logger';
 
-export default (router, config) => {
+export default (router, config, logger) => {
 
   router.get(urlConsts.API_MESSENGER_UPDATE, async(ctx) => {
     if (ctx.request.query['hub.mode'] === 'subscribe' &&
       ctx.request.query['hub.verify_token'] === config.messenger.validation_token) {
-      console.log("Validating webhook");
+      logger.debug("Validating webhook");
       ctx.status = 200;
       ctx.body = ctx.request.query['hub.challenge'];
     } else {
-      console.error("Failed validation. Make sure the validation tokens match.");
+      logger.debug("Failed validation. Make sure the validation tokens match.");
       ctx.status = 403;
     }
   });
@@ -30,7 +30,7 @@ export default (router, config) => {
 
         // Iterate over each messaging event
         pageEntry.messaging.forEach(messagingEvent => {
-          console.log(messagingEvent);
+          logger.debug(messagingEvent);
         });
       });
 
