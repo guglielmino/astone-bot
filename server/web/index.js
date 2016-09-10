@@ -32,7 +32,7 @@ export default (auctionManager, chatter, paypal, config) => {
 	const router = new Router();
 
 	telegramRoutes(router, chatter);
-  messengerRoutes(router, config);
+  messengerRoutes(router, config, logger);
 	paymetRoutes(router, auctionManager, paypal, config);
   pagesRoutes(router, auctionManager, config);
 
