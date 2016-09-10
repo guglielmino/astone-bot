@@ -1,6 +1,7 @@
 'use strict';
 
 import * as constants from '../consts';
+import encodeQueryCommand from '../../services/utilities/encodeQueryCommand';
 
 export default class BidCommand {
 
@@ -92,8 +93,7 @@ export default class BidCommand {
         reply_markup: {
           inline_keyboard: [[{
             text: `Bid € ${nextBid}`,
-            callback_data: this._helper
-              .encodeQueryCommand(constants.QCOMMAND_BID, nextBid)
+            callback_data: encodeQueryCommand(constants.QCOMMAND_BID, nextBid)
           }]
           ]
         }

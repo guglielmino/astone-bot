@@ -1,6 +1,7 @@
 'use strict';
 
 import * as constants from '../consts';
+import encodeQueryCommand from '../../services/utilities/encodeQueryCommand';
 
 export default class SetAuctionPropertyCommand {
 
@@ -21,8 +22,8 @@ export default class SetAuctionPropertyCommand {
           let buttons = [];
           res.forEach((item) => {
             buttons.push([{
-              text: `${item.title}`, callback_data: this._helper
-                .encodeQueryCommand(this._propertyInfo.queryCommand, item._id.toString())
+              text: `${item.title}`,
+              callback_data: encodeQueryCommand(this._propertyInfo.queryCommand, item._id.toString())
             }]);
           });
 
