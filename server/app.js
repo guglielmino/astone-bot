@@ -79,61 +79,61 @@ storageProvider
     auctionTimer.schedule(ticks => auctionChant.make(new Date()));
 
     const auctionStartNotification = AuctionStartNotification(telegram, managerFactory);
-    auctionTimer.schedule(ticks => {
-      if (ticks % 60 === 0) {
-        auctionStartNotification.sendNotification(new Date(), `${config.base_url}/pages/auction`);
-      }
-    });
-
     const auctionPayNotification = AuctionEndNotification(telegram, managerFactory);
+
     auctionTimer.schedule(ticks => {
       if (ticks % 60 === 0) {
-        auctionPayNotification.sendNotification(new Date());
+        let date = new Date();
+        auctionPayNotification.sendNotification(date);
+        auctionStartNotification.sendNotification(date, `${config.base_url}/pages/auction`);
       }
     });
 
-    const closeAuctionUrl = config.base_url + urlConsts.PAGE_PAYPAL_GETPAYURL;
-    const auctionEvents = new AuctionEvents(telegram, i18n,
-      managerFactory.getAuctionManager(), closeAuctionUrl);
-
-    auctionTimer.start();
-    commands(chatter, telegram, managerFactory, config);
-
-    let lastupdateId = 0;
-
-    if (!config.telegram.use_webhook) {
-      logger.debug("Using polling updates");
-      sched.schedule(() => {
-        telegram.getUpdates(lastupdateId, 100, 0)
-          .then((res) => {
-            if (res.result) {
-              res.result.forEach((req) => {
-                lastupdateId = chatter.processRequest(req);
-                lastupdateId = req.update_id + 1;
-              });
-            }
-            else {
-              logger.error(JSON.stringify(res));
-            }
-          })
-          .catch((error) => {
-            logger.error("getUpdates => " + error);
-          });
-      }, 2000);
-    }
-    else {
-      logger.debug("Using webook");
-    }
-
-    telegram.getMe().then(info => {
-      logger.info(`${info.result.username} ready to answer!!`);
-    });
-
-    web(managerFactory.getAuctionManager(), chatter, paypal, config);
-  })
-  .catch((err) => {
-    logger.error("Startup error: " + err.message + "\n" + err.stack);
   });
+
+const closeAuctionUrl = config.base_url + urlConsts.PAGE_PAYPAL_GETPAYURL;
+const auctionEvents = new AuctionEvents(telegram, i18n,
+  managerFactory.getAuctionManager(), closeAuctionUrl);
+
+auctionTimer.start();
+commands(chatter, telegram, managerFactory, config);
+
+let lastupdateId = 0;
+
+if (!config.telegram.use_webhook) {
+  logger.debug("Using polling updates");
+  sched.schedule(() => {
+    telegram.getUpdates(lastupdateId, 100, 0)
+      .then((res) => {
+        if (res.result) {
+          res.result.forEach((req) => {
+            lastupdateId = chatter.processRequest(req);
+            lastupdateId = req.update_id + 1;
+          });
+        }
+        else {
+          logger.error(JSON.stringify(res));
+        }
+      })
+      .catch((error) => {
+        logger.error("getUpdates => " + error);
+      });
+  }, 2000);
+}
+else {
+  logger.debug("Using webook");
+}
+
+telegram.getMe().then(info => {
+  logger.info(`${info.result.username} ready to answer!!`);
+});
+
+web(managerFactory.getAuctionManager(), chatter, paypal, config);
+})
+.
+catch((err) => {
+  logger.error("Startup error: " + err.message + "\n" + err.stack);
+});
 
 
 

@@ -83,7 +83,7 @@ class TelegramBot {
       })
       .catch((err) => {
         Promise.reject(err);
-      })
+      });
   }
 
   sendChatAction(chat_id, action) {

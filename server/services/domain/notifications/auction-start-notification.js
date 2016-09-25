@@ -13,7 +13,6 @@ export default (telegram, managerFactory) => {
 
   function notify(auction, auctionBaseUrl) {
 
-
     managerFactory
       .getUserManager()
       .getAll()
