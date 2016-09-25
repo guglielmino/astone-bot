@@ -47,6 +47,27 @@ describe('AuctionProvider', () => {
             .getStarting(refDate, 5)
             .then(auctions => {
               auctions.length.should.be.equal(1);
+              auctions[0].title.should.be.equal('GameBoy');
+              done();
+            })
+            .catch(err => {
+              done(err);
+            });
+        });
+  });
+
+  it('Should returns auctions starting now', (done) => {
+    const refDate = new Date('2016-12-16T09:00:00.000Z');
+
+    storageProvider
+      .readFixture('starting-auctions.json',
+        err => {
+          storageProvider
+            .auctionProvider
+            .getStarting(refDate, 0)
+            .then(auctions => {
+              auctions.length.should.be.equal(1);
+              auctions[0].title.should.be.equal('VIC 20');
               done();
             })
             .catch(err => {

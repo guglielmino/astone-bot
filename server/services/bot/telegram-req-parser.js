@@ -8,7 +8,7 @@ export default () => {
     let ret = false;
     if(message.entities){
         let bot_cmd = message.entities.find((i) => i.type === 'bot_command');
-        ret = bot_cmd != null;
+        ret = bot_cmd !== null;
     }
 
     return ret;
