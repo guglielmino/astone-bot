@@ -31,9 +31,9 @@ Invites other users to get more chances to make a big deal!!!`,
         .catch(err => console.log(err));
     },
 
-    reject: function (autionId) {
+    reject: function (auctionId) {
       const yesterday = new Date();
-      yesterday.setDate(dyesterday.getDate() - 1);
+      yesterday.setDate(yesterday.getDate() - 1);
 
       return auctionManager
         .getAuctionById(auctionId)

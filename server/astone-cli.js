@@ -79,11 +79,12 @@ funcs.approve = function (auctionId, date) {
         .then(res => {
           obj.db.close();
         })
-        .catch(err => console.log);
+        .catch(err => console.log(err));
     });
 };
 
 funcs.reject = function(auctionId) {
+
   connect()
     .then(obj => {
 
@@ -95,7 +96,7 @@ funcs.reject = function(auctionId) {
         .then(res => {
           obj.db.close();
         })
-        .catch(err => console.log);
+        .catch(err => console.log(err));
     });
 };
 
@@ -103,10 +104,11 @@ program
   .version('0.0.1')
   .option('-l, --list', 'List auctions waiting for approval', funcs.list)
   .option('-a, --approve <auctionId> [date]', 'Approve an auction')
+  .option('-r --reject <auctionId>', 'Reject auction', funcs.reject)
   .action(function (date, options) {
     funcs.approve(options.approve, date);
   })
-  .option('-r --reject <auctionId>', 'Reject auction', funcs.reject)
+
   .parse(process.argv);
 
 
