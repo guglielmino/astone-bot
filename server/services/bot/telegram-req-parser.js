@@ -6,9 +6,9 @@ export default () => {
 
   const isBotCommand = (message) => {
     let ret = false;
-    if(message.entities){
-        let bot_cmd = message.entities.find((i) => i.type === 'bot_command');
-        ret = bot_cmd !== null;
+    if (message.entities) {
+      let bot_cmd = message.entities.find((i) => i.type === 'bot_command');
+      ret = (bot_cmd !== null && bot_cmd !== undefined);
     }
 
     return ret;
@@ -18,7 +18,7 @@ export default () => {
     let commandId = null;
     const readText = message.text.toLowerCase();
     const cli = readText.startsWith('/') ? readText.split(' ') : [];
-    if(cli.length > 0) {
+    if (cli.length > 0) {
       commandId = {
         commandKey: cli[0],
         params: cli.slice(1),
@@ -28,10 +28,10 @@ export default () => {
     return commandId;
   };
 
-  const  getQueryCallbackCommandId = (request) => {
+  const getQueryCallbackCommandId = (request) => {
     let commandId = null;
     let queryData = new MsgEncoder().decode(request.callback_query.data);
-    if(queryData) {
+    if (queryData) {
       commandId = {
         commandKey: queryData.c,
         params: queryData.d,
@@ -51,7 +51,7 @@ export default () => {
   };
 
   let self = {
-		/**
+    /**
      * Extract message object from the Telegram request
      * @param request
      * @returns {*}
@@ -60,7 +60,7 @@ export default () => {
       return (request.message || request.edited_message) || request.callback_query.message;
     },
 
-		/**
+    /**
      * Get data to identify command to be executed for the request
      * received (if any)
      * @param request
@@ -73,7 +73,7 @@ export default () => {
       if (request.callback_query) {
         ret = getQueryCallbackCommandId(request);
       }
-      else if(isBotCommand(message)) {
+      else if (isBotCommand(message)) {
         ret = getSlashCommandId(message);
       }
       else {

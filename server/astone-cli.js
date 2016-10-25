@@ -58,7 +58,6 @@ funcs.list = function () {
     });
 };
 
-
 funcs.approve = function (auctionId, date) {
   let startDate = null;
   if (date) {
@@ -84,6 +83,22 @@ funcs.approve = function (auctionId, date) {
     });
 };
 
+funcs.reject = function(auctionId) {
+  connect()
+    .then(obj => {
+
+      let managerFactory = obj.manager;
+      const approver = AuctionApprover(telegram, managerFactory.getAuctionManager());
+
+      approver
+        .reject(auctionId)
+        .then(res => {
+          obj.db.close();
+        })
+        .catch(err => console.log);
+    });
+};
+
 program
   .version('0.0.1')
   .option('-l, --list', 'List auctions waiting for approval', funcs.list)
@@ -91,6 +106,7 @@ program
   .action(function (date, options) {
     funcs.approve(options.approve, date);
   })
+  .option('-r --reject <auctionId>', 'Reject auction', funcs.reject)
   .parse(process.argv);
 
 
