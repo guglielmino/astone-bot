@@ -51,7 +51,7 @@ Invites other users to get more chances to make a big deal!!!`,
             .sendMessage({
               chat_id: updatedAuction.owner.chatId,
               text: `Your auction *${updatedAuction.title}* not comply with policies of Astone.
-Auction is is rejected, sorry :-(`,
+Auction was rejected, sorry :-(`,
               parse_mode: 'Markdown'
             });
         })
