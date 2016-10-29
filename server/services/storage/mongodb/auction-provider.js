@@ -82,7 +82,15 @@ export default class AuctionProvider {
    */
   getNewAuctions() {
     const query = {
-      startDate: { $exists: false }
+      $and: [
+        { startDate: { $exists: false } },
+        {
+          $or: [
+            { closed: false },
+            { closed: { $exists: false } }
+          ]
+        }
+      ]
     };
 
     return this.findDocs(query);

@@ -42,11 +42,11 @@ Invites other users to get more chances to make a big deal!!!`,
         .getAuctionById(auctionId)
         .then(res => {
           updatedAuction = res;
+          console.log("UP " + JSON.stringify(updatedAuction));
           return auctionManager
             .closeAuction(auctionId);
         })
-        .then(updatedAuction => {
-          console.log("here");
+        .then(x => {
           return telegram
             .sendMessage({
               chat_id: updatedAuction.owner.chatId,
