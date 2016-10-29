@@ -84,7 +84,6 @@ funcs.approve = function (auctionId, date) {
 };
 
 funcs.reject = function(auctionId) {
-
   connect()
     .then(obj => {
 
@@ -101,10 +100,10 @@ funcs.reject = function(auctionId) {
 };
 
 program
-  .version('0.0.1')
+  .version('0.0.2')
   .option('-l, --list', 'List auctions waiting for approval', funcs.list)
+  .option('-r, --reject <auctionId>', 'Reject auction', funcs.reject)
   .option('-a, --approve <auctionId> [date]', 'Approve an auction')
-  .option('-r --reject <auctionId>', 'Reject auction', funcs.reject)
   .action(function (date, options) {
     funcs.approve(options.approve, date);
   })
