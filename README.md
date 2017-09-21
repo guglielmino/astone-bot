@@ -1,4 +1,4 @@
-[![build status](https://gitlab.com/gumino-node-apps/astone-bot/badges/master/build.svg)](https://gitlab.com/gumino-node-apps/astone-bot/commits/master)
+
 
 ## Astone - The Bot for Bidding
 
