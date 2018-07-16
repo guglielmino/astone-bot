@@ -1,4 +1,4 @@
-
+[![Build Status](https://travis-ci.org/guglielmino/astone-bot.svg?branch=master)](https://travis-ci.org/guglielmino/astone-bot)
 
 ## Astone - The Bot for Bidding
 
