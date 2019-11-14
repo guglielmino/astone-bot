@@ -3,12 +3,16 @@
 import fs from 'fs';
 import chai from 'chai';
 import sinon from 'sinon';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 import AuctionApprover from '../../../services/domain/auction-approver';
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 // Tell chai that we'll be using the "should" style assertions.
 chai.should();
-let expect = chai.expect;
+const { expect } = chai;
 
 describe('AuctionApprover', () => {
   let auctionApprover;
@@ -16,7 +20,6 @@ describe('AuctionApprover', () => {
   let auctionManager;
 
   beforeEach((done) => {
-
     const fixtureData = fs.readFileSync(`${__dirname}/fixtures/auction-to-be-approved.json`);
     const auction = JSON.parse(fixtureData);
     telegram = {};
@@ -31,19 +34,15 @@ describe('AuctionApprover', () => {
   });
 
   it('Should send message to auction\'s owner after approving it', (done) => {
-
     auctionApprover
       .approve('572c7066b3f30a0752a5f86d', new Date('2016-08-01T10:00:00.000Z'))
-      .then(res => {
+      .then((res) => {
         telegram
           .sendMessage
           .calledWith(sinon.match.has('chat_id', 19915021))
           .should.be.true;
         done();
       })
-      .catch(err => done(err));
-
+      .catch((err) => done(err));
   });
-
-
 });

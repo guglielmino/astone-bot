@@ -2,14 +2,14 @@
 
 import chai from 'chai';
 import sinon from 'sinon';
-import {BidResponse} from '../../../../services/domain/auction-manager';
-import {ObjectID} from 'mongodb';
+import { ObjectID } from 'mongodb';
+import { BidResponse } from '../../../../services/domain/auction-manager';
 import CommandHelper from '../../../../commands/command-helper';
 
-chai.should();
-const expect = chai.expect;
-
 import BidCommand from '../../../../commands/callbackquery/bid.cmd';
+
+chai.should();
+const { expect } = chai;
 
 describe('BidCommand', () => {
   let telegram;
@@ -24,13 +24,10 @@ describe('BidCommand', () => {
 
     auctionManager = {};
     managerFactory = {
-      getAuctionManager: () => {
-        return auctionManager;
-      }
+      getAuctionManager: () => auctionManager
     };
 
     commandHelper = sinon.stub(CommandHelper(telegram));
-
   });
 
   it('Should respond asking to select an Auction when trying to bid without selecting one', (done) => {
@@ -46,17 +43,16 @@ describe('BidCommand', () => {
       });
   });
 
-  it('Should respond \'Auction closed\' when bid on a closed Auction', (done)=> {
-
+  it('Should respond \'Auction closed\' when bid on a closed Auction', (done) => {
     auctionManager.bid = sinon.stub()
       .returns(Promise.resolve({ status: BidResponse.AuctionClosed }));
 
     const command = new BidCommand(telegram, managerFactory, commandHelper);
 
-    command.execute({ auctionId: "aabbcc", chat: { id: 10, username: "guglielmino" } }, [10])
+    command.execute({ auctionId: 'aabbcc', chat: { id: 10, username: 'guglielmino' } }, [10])
       .then((res) => {
         commandHelper.simpleResponse
-          .calledWith(10, `This auction is closed and can't accept new bids`)
+          .calledWith(10, 'This auction is closed and can\'t accept new bids')
           .should.be.ok;
         done();
       })
@@ -71,7 +67,7 @@ describe('BidCommand', () => {
 
     const command = new BidCommand(telegram, managerFactory, commandHelper);
 
-    command.execute({ auctionId: "aabbcc", chat: { id: 10, username: "guglielmino" } }, [10])
+    command.execute({ auctionId: 'aabbcc', chat: { id: 10, username: 'guglielmino' } }, [10])
       .then((res) => {
         commandHelper.simpleResponse
           .calledWith(10, 'Can\'t bid on this Auction because is inactive')
@@ -84,41 +80,41 @@ describe('BidCommand', () => {
   });
 
   it('Should send a message to all subscriber of Auction when bid accepted', (done) => {
-
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - 1);
     auctionManager.bid = sinon.stub().returns(Promise.resolve(
       {
         status: BidResponse.Success,
         auction: {
-          _id: ObjectID("572cc825de91f5b2bc3c24d8"),
-          title: "Commodore 64",
-          description: "A beautiful Commodore 64!",
-          image: "http://www.oldcomputers.net/pics/C64-left.jpg",
-          startDate: startDate,
+          _id: ObjectID('572cc825de91f5b2bc3c24d8'),
+          title: 'Commodore 64',
+          description: 'A beautiful Commodore 64!',
+          image: 'http://www.oldcomputers.net/pics/C64-left.jpg',
+          startDate,
           startingPrice: 10,
           price: 11,
           owner: {
-            username: "guglielmino",
+            username: 'guglielmino',
             chatId: 19915021
           },
           subscribers: [
-            { username: "guglielmino", chatId: 123 },
-            { username: "tizio", chatId: 234 },
-            { username: "caio", chatId: 567 }
+            { username: 'guglielmino', chatId: 123 },
+            { username: 'tizio', chatId: 234 },
+            { username: 'caio', chatId: 567 }
           ],
           bestBidder: {
-            username: "caio",
+            username: 'caio',
             chatId: 567
           }
         }
-      }));
+      }
+    ));
 
     const command = new BidCommand(telegram, managerFactory, commandHelper);
-    let mock = sinon.mock(command);
-    let expectation = mock.expects('_sendMessageToSubscriber').exactly(3);
+    const mock = sinon.mock(command);
+    const expectation = mock.expects('_sendMessageToSubscriber').exactly(3);
 
-    command.execute({ auctionId: "aabbcc", chat: { id: 123, username: "guglielmino" } }, [10])
+    command.execute({ auctionId: 'aabbcc', chat: { id: 123, username: 'guglielmino' } }, [10])
       .then((res) => {
         expectation.verify();
         done();
@@ -129,34 +125,33 @@ describe('BidCommand', () => {
   });
 
   it('Should respond with min number of subscriber requests when bid and there are less than 10 subscribers', (done) => {
-
-    var startDate = new Date();
+    const startDate = new Date();
     startDate.setDate(startDate.getDate() - 1);
     auctionManager.bid = sinon.stub().returns(Promise.resolve({
       status: BidResponse.InsufficientSubscribers,
       auction: {
-        _id: ObjectID("572cc825de91f5b2bc3c24d8"),
-        title: "Commodore 64",
-        description: "A beautiful Commodore 64!",
-        image: "http://www.oldcomputers.net/pics/C64-left.jpg",
-        startDate: startDate,
+        _id: ObjectID('572cc825de91f5b2bc3c24d8'),
+        title: 'Commodore 64',
+        description: 'A beautiful Commodore 64!',
+        image: 'http://www.oldcomputers.net/pics/C64-left.jpg',
+        startDate,
         startingPrice: 10,
         price: 11,
         owner: {
-          username: "guglielmino",
+          username: 'guglielmino',
           chatId: 19915021
         },
         subscribers: [
-          { username: "guglielmino", chatId: 123 },
-          { username: "tizio", chatId: 234 },
-          { username: "caio", chatId: 567 }
+          { username: 'guglielmino', chatId: 123 },
+          { username: 'tizio', chatId: 234 },
+          { username: 'caio', chatId: 567 }
         ]
       }
     }));
 
-    let command = new BidCommand(telegram, managerFactory, commandHelper);
+    const command = new BidCommand(telegram, managerFactory, commandHelper);
 
-    command.execute({ auctionId: "aabbcc", chat: { id: 123, username: "guglielmino" } }, [10])
+    command.execute({ auctionId: 'aabbcc', chat: { id: 123, username: 'guglielmino' } }, [10])
       .then((res) => {
         commandHelper
           .simpleResponse
@@ -170,34 +165,33 @@ describe('BidCommand', () => {
   });
 
   it('Should respond with and error when username is null', (done) => {
-
-    var startDate = new Date();
+    const startDate = new Date();
     startDate.setDate(startDate.getDate() - 1);
     auctionManager.bid = sinon.stub().returns(Promise.resolve({
       status: BidResponse.InsufficientSubscribers,
       auction: {
-        _id: ObjectID("572cc825de91f5b2bc3c24d8"),
-        title: "Commodore 64",
-        description: "A beautiful Commodore 64!",
-        image: "http://www.oldcomputers.net/pics/C64-left.jpg",
-        startDate: startDate,
+        _id: ObjectID('572cc825de91f5b2bc3c24d8'),
+        title: 'Commodore 64',
+        description: 'A beautiful Commodore 64!',
+        image: 'http://www.oldcomputers.net/pics/C64-left.jpg',
+        startDate,
         startingPrice: 10,
         price: 11,
         owner: {
-          username: "guglielmino",
+          username: 'guglielmino',
           chatId: 19915021
         },
         subscribers: [
-          { username: "guglielmino", chatId: 123 },
-          { username: "tizio", chatId: 234 },
-          { username: "caio", chatId: 567 }
+          { username: 'guglielmino', chatId: 123 },
+          { username: 'tizio', chatId: 234 },
+          { username: 'caio', chatId: 567 }
         ]
       }
     }));
 
-    let command = new BidCommand(telegram, managerFactory, commandHelper);
+    const command = new BidCommand(telegram, managerFactory, commandHelper);
 
-    command.execute({ auctionId: "aabbcc", chat: { id: 123, username: null } }, [10])
+    command.execute({ auctionId: 'aabbcc', chat: { id: 123, username: null } }, [10])
       .then((res) => {
         commandHelper.simpleResponse
           .calledWith(123, 'Sorry, we have a problem with Your user, we can\'t accept Your offer')
@@ -208,5 +202,4 @@ describe('BidCommand', () => {
         done(err);
       });
   });
-
 });

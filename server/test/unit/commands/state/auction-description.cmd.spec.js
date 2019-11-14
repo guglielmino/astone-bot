@@ -2,14 +2,14 @@
 
 import chai from 'chai';
 import sinon from 'sinon';
+import { ObjectID } from 'mongodb';
 import * as constants from '../../../../commands/consts';
 import CommandHelper from '../../../../commands/command-helper';
-import {ObjectID} from 'mongodb';
-
-chai.should();
-const expect = chai.expect;
 
 import AuctionDescriptionCommand from '../../../../commands/state/auction-description.cmd';
+
+chai.should();
+const { expect } = chai;
 
 describe('AuctionDescriptionCommand', () => {
   let telegram;
@@ -21,15 +21,11 @@ describe('AuctionDescriptionCommand', () => {
   beforeEach(() => {
     telegram = {};
     auctionManager = {
-      updateAuction: (data) => {
-        return Promise.resolve(true);
-      }
+      updateAuction: (data) => Promise.resolve(true)
     };
 
     managerFactory = {
-      getAuctionManager: () => {
-        return auctionManager;
-      }
+      getAuctionManager: () => auctionManager
     };
 
     telegram.sendMessage = sinon.stub();
@@ -40,7 +36,7 @@ describe('AuctionDescriptionCommand', () => {
 
   it('Should set state to STATE_WAIT_FOR_PRICE when no description is passed', (done) => {
     command
-      .execute({chat: {id: 10}, state: constants.STATE_WAIT_FOR_DESC}, "")
+      .execute({ chat: { id: 10 }, state: constants.STATE_WAIT_FOR_DESC }, '')
       .then((res) => {
         res.state.should.be.equal(constants.STATE_WAIT_FOR_DESC);
         res.result.should.be.false;
@@ -53,7 +49,7 @@ describe('AuctionDescriptionCommand', () => {
 
   it('Should set state to STATE_WAIT_FOR_PRICE when description is set', (done) => {
     command
-      .execute({chat: {id: 10}, state: constants.STATE_WAIT_FOR_DESC}, "A description")
+      .execute({ chat: { id: 10 }, state: constants.STATE_WAIT_FOR_DESC }, 'A description')
       .then((res) => {
         res.state.should.be.equal(constants.STATE_WAIT_FOR_PRICE);
         res.result.should.be.true;
@@ -67,7 +63,7 @@ describe('AuctionDescriptionCommand', () => {
 
   it('Should set state to null when description is set and state.single is true', (done) => {
     command
-      .execute({chat: {id: 10}, state: constants.STATE_WAIT_FOR_DESC, single: true},  "A description")
+      .execute({ chat: { id: 10 }, state: constants.STATE_WAIT_FOR_DESC, single: true }, 'A description')
       .then((res) => {
         expect(res.state)
           .to.be.null;
@@ -79,5 +75,4 @@ describe('AuctionDescriptionCommand', () => {
         done(err);
       });
   });
-
 });

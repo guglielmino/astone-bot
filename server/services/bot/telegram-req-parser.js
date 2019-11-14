@@ -3,11 +3,10 @@
 import MsgEncoder from '../utilities/msg-encoder';
 
 export default () => {
-
   const isBotCommand = (message) => {
     let ret = false;
     if (message.entities) {
-      let bot_cmd = message.entities.find((i) => i.type === 'bot_command');
+      const bot_cmd = message.entities.find((i) => i.type === 'bot_command');
       ret = (bot_cmd !== null && bot_cmd !== undefined);
     }
 
@@ -30,7 +29,7 @@ export default () => {
 
   const getQueryCallbackCommandId = (request) => {
     let commandId = null;
-    let queryData = new MsgEncoder().decode(request.callback_query.data);
+    const queryData = MsgEncoder().decode(request.callback_query.data);
     if (queryData) {
       commandId = {
         commandKey: queryData.c,
@@ -42,23 +41,19 @@ export default () => {
     return commandId;
   };
 
-  const getStateCommandId = (message) => {
-    return {
-      commandKey: null,
-      params: message.photo || message.text,
-      type: 'State'
-    };
-  };
+  const getStateCommandId = (message) => ({
+    commandKey: null,
+    params: message.photo || message.text,
+    type: 'State'
+  });
 
-  let self = {
+  const self = {
     /**
      * Extract message object from the Telegram request
      * @param request
      * @returns {*}
      */
-    getMessage: (request) => {
-      return (request.message || request.edited_message) || request.callback_query.message;
-    },
+    getMessage: (request) => (request.message || request.edited_message) || request.callback_query.message,
 
     /**
      * Get data to identify command to be executed for the request
@@ -72,11 +67,9 @@ export default () => {
       const message = self.getMessage(request);
       if (request.callback_query) {
         ret = getQueryCallbackCommandId(request);
-      }
-      else if (isBotCommand(message)) {
+      } else if (isBotCommand(message)) {
         ret = getSlashCommandId(message);
-      }
-      else {
+      } else {
         ret = getStateCommandId(message);
       }
       return ret;
@@ -85,4 +78,4 @@ export default () => {
   };
 
   return self;
-}
+};

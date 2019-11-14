@@ -2,14 +2,14 @@
 
 import chai from 'chai';
 import sinon from 'sinon';
+import { ObjectID } from 'mongodb';
 import * as constants from '../../../../commands/consts';
 import CommandHelper from '../../../../commands/command-helper';
-import {ObjectID} from 'mongodb';
-
-chai.should();
-const expect = chai.expect;
 
 import AuctionNameCommand from '../../../../commands/state/auction-name.cmd';
+
+chai.should();
+const { expect } = chai;
 
 describe('AuctionNameCommand', () => {
   let telegram;
@@ -21,18 +21,12 @@ describe('AuctionNameCommand', () => {
   beforeEach(() => {
     telegram = {};
     auctionManager = {
-      createAuction: (title) => {
-        return Promise.resolve(ObjectID());
-      },
-      updateAuction: (auctionId, obj) => {
-        return Promise.resolve(true);
-      }
+      createAuction: (title) => Promise.resolve(ObjectID()),
+      updateAuction: (auctionId, obj) => Promise.resolve(true)
     };
 
     managerFactory = {
-      getAuctionManager: () => {
-        return auctionManager;
-      }
+      getAuctionManager: () => auctionManager
     };
 
     telegram.sendMessage = sinon.stub();
@@ -43,7 +37,7 @@ describe('AuctionNameCommand', () => {
 
   it('Should set state to STATE_WAIT_FOR_DESC when suceed', (done) => {
     command
-      .execute({chat: {id: 10}, state: constants.STATE_WAIT_FOR_NAME}, "Auction title")
+      .execute({ chat: { id: 10 }, state: constants.STATE_WAIT_FOR_NAME }, 'Auction title')
       .then((res) => {
         res.state.should.be.equal(constants.STATE_WAIT_FOR_DESC);
         res.auctionId.should.not.be.null;
@@ -57,7 +51,9 @@ describe('AuctionNameCommand', () => {
 
   it('Should set state to null when succeed and was passed an auctionId and single is true', (done) => {
     command
-      .execute({chat: {id: 10}, state: constants.STATE_WAIT_FOR_NAME, auctionId: 12344, single: true}, "Auction title")
+      .execute({
+        chat: { id: 10 }, state: constants.STATE_WAIT_FOR_NAME, auctionId: 12344, single: true
+      }, 'Auction title')
       .then((res) => {
         expect(res.state)
           .to.be.null;
@@ -69,5 +65,4 @@ describe('AuctionNameCommand', () => {
         done(err);
       });
   });
-
 });

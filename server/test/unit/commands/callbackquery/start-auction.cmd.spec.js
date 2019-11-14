@@ -1,10 +1,8 @@
-'use strict';
-
 import chai from 'chai';
 import sinon from 'sinon';
 
 import CommandHelper from '../../../../commands/command-helper';
-import StartAuctionCommand from '../../../../commands/callbackquery/start-auction.cmd.js';
+import StartAuctionCommand from '../../../../commands/callbackquery/start-auction.cmd';
 
 // Tell chai that we'll be using the "should" style assertions.
 chai.should();
@@ -21,9 +19,7 @@ describe('StartAuctionCommand', () => {
     auctionManager = {};
 
     managerFactory = {
-      getAuctionManager: () => {
-        return auctionManager;
-      }
+      getAuctionManager: () => auctionManager
     };
 
     telegram.sendMessage = sinon.stub();
@@ -36,7 +32,7 @@ describe('StartAuctionCommand', () => {
     const auction = require('./fixtures/subscribing-auction.json');
 
     auctionManager.subscribe = sinon.stub()
-      .returns(Promise.resolve({ auction: auction, status: { name: 'Success' } }));
+      .returns(Promise.resolve({ auction, status:  'Success' }));
 
     const command = new StartAuctionCommand(telegram, managerFactory, commandHelper);
     command._makeTelegramAnswer = sinon.stub();
@@ -48,8 +44,9 @@ describe('StartAuctionCommand', () => {
             id: 10,
             owner: { username: 'guglielmino', chatId: 2333030 }
           }
-        }, '572c7066b3f30a0752a5f86d')
-      .then(res => {
+        }, '572c7066b3f30a0752a5f86d'
+      )
+      .then((res) => {
         res.auctionId.should.be.equal('572c7066b3f30a0752a5f86d');
 
         command
@@ -67,7 +64,7 @@ describe('StartAuctionCommand', () => {
 
   it('Should respond with \'Sorry, this auction isn\'t active You can\'t start bidding on it.\' when Auction is closes', (done) => {
     auctionManager.subscribe = sinon.stub()
-      .returns(Promise.resolve({ status: { name: 'AuctionNotActive' } }));
+      .returns(Promise.resolve({ status:  'AuctionNotActive' }));
 
     const command = new StartAuctionCommand(telegram, managerFactory, commandHelper);
     command.execute({
@@ -87,10 +84,9 @@ describe('StartAuctionCommand', () => {
   });
 
   it('Should send a message to all subscriber but the one subscribing', (done) => {
-
     const auction = require('./fixtures/subscribing-auction.json');
     auctionManager.subscribe = sinon.stub()
-      .returns(Promise.resolve({ auction: auction, status: { name: 'Success' } }));
+      .returns(Promise.resolve({ auction, status:  'Success' }));
 
     const command = new StartAuctionCommand(telegram, managerFactory, commandHelper);
     command._warnSubscribers = sinon.stub();
@@ -101,8 +97,9 @@ describe('StartAuctionCommand', () => {
           id: 10,
           owner: { username: 'guglielmino', chatId: 2333030 }
         }
-      }, 123)
-      .then(res => {
+      }, 123
+    )
+      .then((res) => {
         command
           ._warnSubscribers
           .calledOnce
@@ -113,6 +110,4 @@ describe('StartAuctionCommand', () => {
         done(err);
       });
   });
-
-
 });

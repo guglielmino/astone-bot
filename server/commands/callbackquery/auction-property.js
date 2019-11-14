@@ -1,7 +1,6 @@
 'use strict';
 
 export default class AuctionPropertyCommand {
-
   constructor(telegram, managerFactory, commandHelper, propertyInfo) {
     this._telegram = telegram;
     this._auctionManager = managerFactory.getAuctionManager();
@@ -11,7 +10,6 @@ export default class AuctionPropertyCommand {
   }
 
   execute(state, ...params) {
-
     if (params && params.length > 0) {
       const auctionId = params[0];
       this._helper
@@ -21,8 +19,7 @@ export default class AuctionPropertyCommand {
       this._telegram
         .answerCallbackQuery(state.callback_query_id, '', false);
 
-      return Promise.resolve({ state: this._propertyInfo.stateCommand, auctionId: auctionId, single: true });
+      return Promise.resolve({ state: this._propertyInfo.stateCommand, auctionId, single: true });
     }
-
   }
 }

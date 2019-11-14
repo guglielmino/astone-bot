@@ -2,11 +2,14 @@
 
 import fs from 'fs';
 import chai from 'chai';
-import sinon from 'sinon';
 import TelegramReqParser from '../../../../services/bot/telegram-req-parser';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 chai.should();
-const expect = chai.expect;
+const { expect } = chai;
 
 const readFixture = (fixtureName, cb) => {
   fs.readFile(`${__dirname}/fixtures/${fixtureName}`, (err, data) => {
@@ -24,7 +27,6 @@ describe('TelegramReqParser', () => {
   });
 
   describe('#getMessage', () => {
-
     it('Should get the right message from text request', (done) => {
       readFixture('text-simple-req.json', (request) => {
         const message = telegramReqParser.getMessage(request);
@@ -101,14 +103,12 @@ describe('TelegramReqParser', () => {
         done();
       });
     });
-
   });
 
   describe('#getCommandId', () => {
-
     it('Should get commandId from slash request', (done) => {
       readFixture('slash-cmd-req.json', (request) => {
-        let commandId = telegramReqParser
+        const commandId = telegramReqParser
           .getCommandId(request);
 
         commandId.commandKey
@@ -125,8 +125,7 @@ describe('TelegramReqParser', () => {
 
     it('Should get commandId from query subscribe request', (done) => {
       readFixture('query-subscribe-req.json', (request) => {
-
-        let commandId = telegramReqParser
+        const commandId = telegramReqParser
           .getCommandId(request);
 
         commandId.commandKey
@@ -147,8 +146,7 @@ describe('TelegramReqParser', () => {
 
     it('Should get commandId from photo request', (done) => {
       readFixture('photo-req.json', (request) => {
-
-        let commandId = telegramReqParser
+        const commandId = telegramReqParser
           .getCommandId(request);
 
         (commandId.commandKey === null)
@@ -163,8 +161,7 @@ describe('TelegramReqParser', () => {
 
     it('Should get commandId from plain text request', (done) => {
       readFixture('text-simple-req.json', (request) => {
-
-        let commandId = telegramReqParser
+        const commandId = telegramReqParser
           .getCommandId(request);
 
         (commandId.commandKey === null)
@@ -176,7 +173,5 @@ describe('TelegramReqParser', () => {
         done();
       });
     });
-
   });
-
 });

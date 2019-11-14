@@ -7,9 +7,9 @@
 // the styles are combined.
 
 // overlayParser is the old, deprecated name
-CodeMirror.overlayMode = CodeMirror.overlayParser = function(base, overlay, combine) {
+CodeMirror.overlayMode = CodeMirror.overlayParser = function (base, overlay, combine) {
   return {
-    startState: function() {
+    startState() {
       return {
         base: CodeMirror.startState(base),
         overlay: CodeMirror.startState(overlay),
@@ -17,7 +17,7 @@ CodeMirror.overlayMode = CodeMirror.overlayParser = function(base, overlay, comb
         overlayPos: 0, overlayCur: null
       };
     },
-    copyState: function(state) {
+    copyState(state) {
       return {
         base: CodeMirror.copyState(base, state.base),
         overlay: CodeMirror.copyState(overlay, state.overlay),
@@ -26,7 +26,7 @@ CodeMirror.overlayMode = CodeMirror.overlayParser = function(base, overlay, comb
       };
     },
 
-    token: function(stream, state) {
+    token(stream, state) {
       if (stream.start == state.basePos) {
         state.baseCur = base.token(stream, state.base);
         state.basePos = stream.pos;
@@ -40,18 +40,18 @@ CodeMirror.overlayMode = CodeMirror.overlayParser = function(base, overlay, comb
       if (stream.eol()) state.basePos = state.overlayPos = 0;
 
       if (state.overlayCur == null) return state.baseCur;
-      if (state.baseCur != null && combine) return state.baseCur + " " + state.overlayCur;
-      else return state.overlayCur;
+      if (state.baseCur != null && combine) return `${state.baseCur } ${ state.overlayCur}`;
+      return state.overlayCur;
     },
-    
-    indent: base.indent && function(state, textAfter) {
+
+    indent: base.indent && function (state, textAfter) {
       return base.indent(state.base, textAfter);
     },
     electricChars: base.electricChars,
 
-    innerMode: function(state) { return {state: state.base, mode: base}; },
-    
-    blankLine: function(state) {
+    innerMode(state) { return { state: state.base, mode: base }; },
+
+    blankLine(state) {
       if (base.blankLine) base.blankLine(state.base);
       if (overlay.blankLine) overlay.blankLine(state.overlay);
     }

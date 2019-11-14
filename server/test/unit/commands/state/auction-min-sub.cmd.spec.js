@@ -2,14 +2,14 @@
 
 import chai from 'chai';
 import sinon from 'sinon';
+import { ObjectID } from 'mongodb';
 import * as constants from '../../../../commands/consts';
 import CommandHelper from '../../../../commands/command-helper';
-import {ObjectID} from 'mongodb';
-
-chai.should();
-const expect = chai.expect;
 
 import AuctionMinSubscribersCommand from '../../../../commands/state/auction-min-sub.cmd';
+
+chai.should();
+const { expect } = chai;
 
 describe('AuctionMinSubscribersCommand', () => {
   let telegram;
@@ -21,15 +21,11 @@ describe('AuctionMinSubscribersCommand', () => {
   beforeEach(() => {
     telegram = {};
     auctionManager = {
-      updateAuction: (data) => {
-        return Promise.resolve(true);
-      }
+      updateAuction: (data) => Promise.resolve(true)
     };
 
     managerFactory = {
-      getAuctionManager: () => {
-        return auctionManager;
-      }
+      getAuctionManager: () => auctionManager
     };
 
     telegram.sendMessage = sinon.stub();
@@ -40,7 +36,7 @@ describe('AuctionMinSubscribersCommand', () => {
 
   it('Should set state to null if min subscriber is greater or equal 0', (done) => {
     command
-      .execute({chat: {id: 10}, state: constants.STATE_WAIT_FOR_MIN_SUB}, 6)
+      .execute({ chat: { id: 10 }, state: constants.STATE_WAIT_FOR_MIN_SUB }, 6)
       .then((res) => {
         expect(res.state)
           .to.be.null;
@@ -55,7 +51,7 @@ describe('AuctionMinSubscribersCommand', () => {
 
   it('Should still STATE_WAIT_FOR_MIN_SUB if min subscriber is lower than 0', (done) => {
     command
-      .execute({chat: {id: 10}, state: constants.STATE_WAIT_FOR_MIN_SUB}, -3)
+      .execute({ chat: { id: 10 }, state: constants.STATE_WAIT_FOR_MIN_SUB }, -3)
       .then((res) => {
         res.state.should.be.equal(constants.STATE_WAIT_FOR_MIN_SUB);
         res.result.should.be.false;
@@ -66,5 +62,4 @@ describe('AuctionMinSubscribersCommand', () => {
         done(err);
       });
   });
-
 });

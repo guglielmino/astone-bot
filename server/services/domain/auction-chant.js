@@ -7,7 +7,7 @@ export default (telegram, auctionManager, auctionAges) => {
     let ret = false;
 
     if (auction.bidAge > AGE_TRIGGER) {
-      let ageMessage = auctionAges.getMessage(auction);
+      const ageMessage = auctionAges.getMessage(auction);
       if (ageMessage) {
         _sendMessageToSubscribers(auction, ageMessage.message);
         ret = ageMessage.isLast;
@@ -28,18 +28,16 @@ export default (telegram, auctionManager, auctionAges) => {
   }
 
   return {
-    make: (now) => {
-      return auctionManager
-        .getRunningAuctionsBidAge(now, AGE_TRIGGER)
-        .then((res) => {
-          res.forEach((auction) => {
-            if (_handleAgeMessage(auction)) {
-              auctionManager
-                .closeAuction(auction._id);
-            }
-          });
-          return Promise.resolve(res.length);
+    make: (now) => auctionManager
+      .getRunningAuctionsBidAge(now, AGE_TRIGGER)
+      .then((res) => {
+        res.forEach((auction) => {
+          if (_handleAgeMessage(auction)) {
+            auctionManager
+              .closeAuction(auction._id);
+          }
         });
-    }
+        return Promise.resolve(res.length);
+      })
   };
 };

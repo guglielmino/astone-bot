@@ -6,7 +6,7 @@ import AuctionEndNotification from '../../../../services/domain/notifications/au
 
 // Tell chai that we'll be using the "should" style assertions.
 chai.should();
-let expect = chai.expect;
+const { expect } = chai;
 
 
 describe('AuctionEndNotification', () => {
@@ -26,7 +26,7 @@ describe('AuctionEndNotification', () => {
     };
 
     const managerFactory = {
-      getAuctionManager: function () {
+      getAuctionManager() {
         return auctionManager;
       }
     };
@@ -38,15 +38,14 @@ describe('AuctionEndNotification', () => {
   it('Should notificate auction winner and owner', (done) => {
     auctionEndNotification
       .sendNotification(new Date(), '123')
-      .then(sent => {
+      .then((sent) => {
         telegram
           .sendMessage
           .callCount.should.be.equal(4);
         done();
       })
-      .catch(err => {
+      .catch((err) => {
         done(err);
       });
   });
-
 });

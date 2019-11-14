@@ -1,9 +1,9 @@
-'use strict';
-
-import logger from './services/logger';
-
-import bluebird from 'bluebird';
 import redis from 'redis';
+import i18n from 'i18n';
+import requestsync from 'request';
+import logger from './services/logger';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 import web from './web';
 import * as urlConsts from './web/url-consts';
@@ -13,7 +13,6 @@ import RepeatingScheduler from './services/scheduler/RepeatingScheduler';
 import StateManager from './services/bot/state-manager';
 import TelegramReqParser from './services/bot/telegram-req-parser';
 import TelegramChatter from './services/bot/telegram-chatter';
-import i18n from 'i18n';
 
 import ManagerFactory from './services/domain/manager-factory';
 
@@ -27,8 +26,12 @@ import AuctionEndNotification from './services/domain/notifications/auction-end-
 import commands from './app.commands';
 import Telegram from './bot-api/telegram';
 import PayPal from './services/payment/paypal';
+import Bluebird from 'bluebird';
+import util from 'util';
 
 import config from './config';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const paypal = new PayPal({
   env: config.paypal.env,
@@ -38,7 +41,7 @@ const paypal = new PayPal({
   cancelUrl: urlConsts.API_PAYPAL_CANCEL
 });
 
-const request = bluebird.promisify(require('request'));
+const request = util.promisify(requestsync);
 const telegram = new Telegram(request, config.telegram.api_key);
 
 const storageProvider = new StorageProvider();
@@ -49,16 +52,16 @@ process.env.TZ = 'UTC';
 
 i18n.configure({
   locales: ['en', 'it'],
-  directory: __dirname + '/res/locales',
+  directory: `${__dirname}/res/locales`,
   register: global
 });
 
 storageProvider
   .connect(config)
-  .then(db => {
+  .then((db) => {
     logger.debug('Db connected, configuring providers');
 
-    bluebird.promisifyAll(redis.RedisClient.prototype);
+    Bluebird.promisifyAll(redis.RedisClient.prototype);
     const redisClient = redis.createClient({
       host: config.redis.host,
       port: config.redis.port,
@@ -76,14 +79,14 @@ storageProvider
       managerFactory.getAuctionManager(), auctionAges);
 
     const auctionTimer = new AuctionTimer(auctionChant);
-    auctionTimer.schedule(ticks => auctionChant.make(new Date()));
+    auctionTimer.schedule((ticks) => auctionChant.make(new Date()));
 
     const auctionStartNotification = AuctionStartNotification(telegram, managerFactory);
     const auctionPayNotification = AuctionEndNotification(telegram, managerFactory);
 
-    auctionTimer.schedule(ticks => {
+    auctionTimer.schedule((ticks) => {
       if (ticks % 60 === 0) {
-        let date = new Date();
+        const date = new Date();
         auctionPayNotification.sendNotification(date);
         auctionStartNotification.sendNotification(date, `${config.base_url}/pages/auction`);
       }
@@ -99,38 +102,34 @@ storageProvider
     let lastupdateId = 0;
 
     if (!config.telegram.use_webhook) {
-      logger.debug("Using polling updates");
-      sched.schedule(() => {
+      logger.debug('Using polling updates');
+     
+      setInterval(() => {
         telegram.getUpdates(lastupdateId, 100, 0)
-          .then((res) => {
-            if (res.result) {
-              res.result.forEach((req) => {
-                lastupdateId = chatter.processRequest(req);
-                lastupdateId = req.update_id + 1;
-              });
-            }
-            else {
-              logger.error(JSON.stringify(res));
-            }
-          })
-          .catch((error) => {
-            logger.error("getUpdates => " + error);
-          });
-      }, 2000);
-    }
-    else {
-      logger.debug("Using webook");
+        .then((res) => {
+          if (res.result) {
+            res.result.forEach((req) => {
+              lastupdateId = chatter.processRequest(req);
+              lastupdateId = req.update_id + 1;
+            });
+          } else {
+            logger.error(JSON.stringify(res));
+          }
+        })
+        .catch((error) => {
+          logger.error(`getUpdates => ${error}`);
+        });
+      }, 3000) 
+    } else {
+      logger.debug('Using webook');
     }
 
-    telegram.getMe().then(info => {
+    telegram.getMe().then((info) => {
       logger.info(`${info.result.username} ready to answer!!`);
     });
 
     web(managerFactory.getAuctionManager(), chatter, paypal, config);
   })
   .catch((err) => {
-    logger.error("Startup error: " + err.message + "\n" + err.stack);
+    logger.error(`Startup error: ${err.message}\n${err.stack}`);
   });
-
-
-

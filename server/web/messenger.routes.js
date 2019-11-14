@@ -4,32 +4,30 @@ import * as urlConsts from './url-consts';
 import logger from '../services/logger';
 
 export default (router, config, logger) => {
-
-  router.get(urlConsts.API_MESSENGER_UPDATE, async(ctx) => {
-    if (ctx.request.query['hub.mode'] === 'subscribe' &&
-      ctx.request.query['hub.verify_token'] === config.messenger.validation_token) {
-      logger.debug("Validating webhook");
+  router.get(urlConsts.API_MESSENGER_UPDATE, async (ctx) => {
+    if (ctx.request.query['hub.mode'] === 'subscribe'
+      && ctx.request.query['hub.verify_token'] === config.messenger.validation_token) {
+      logger.debug('Validating webhook');
       ctx.status = 200;
       ctx.body = ctx.request.query['hub.challenge'];
     } else {
-      logger.debug("Failed validation. Make sure the validation tokens match.");
+      logger.debug('Failed validation. Make sure the validation tokens match.');
       ctx.status = 403;
     }
   });
 
-  router.post(urlConsts.API_MESSENGER_UPDATE, async(ctx) => {
-    let data = ctx.request.body;
+  router.post(urlConsts.API_MESSENGER_UPDATE, async (ctx) => {
+    const data = ctx.request.body;
 
     if (data.object == 'page') {
-
       // Iterate over each entry
       // There may be multiple if batched
-      data.entry.forEach(pageEntry => {
-        var pageID = pageEntry.id;
-        var timeOfEvent = pageEntry.time;
+      data.entry.forEach((pageEntry) => {
+        const pageID = pageEntry.id;
+        const timeOfEvent = pageEntry.time;
 
         // Iterate over each messaging event
-        pageEntry.messaging.forEach(messagingEvent => {
+        pageEntry.messaging.forEach((messagingEvent) => {
           logger.debug(messagingEvent);
         });
       });

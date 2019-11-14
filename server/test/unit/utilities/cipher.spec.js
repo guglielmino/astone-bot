@@ -7,7 +7,7 @@ import Cipher from '../../../services/utilities/cipher';
 // Tell chai that we'll be using the "should" style assertions.
 chai.should();
 
-describe('Cipher', ()=> {
+describe('Cipher', () => {
   let cipher;
 
   beforeEach(() => {
@@ -20,6 +20,4 @@ describe('Cipher', ()=> {
 
     'plain text'.should.be.equal(decrypted);
   });
-
-
 });

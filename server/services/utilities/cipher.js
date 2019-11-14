@@ -3,7 +3,6 @@ import crypto from 'crypto';
 const ALGORITHM = 'aes-256-ctr';
 
 export default class Cipher {
-
   encrypt(plaintext, passowrd) {
     const cipher = crypto.createCipher(ALGORITHM, passowrd);
     let crypted = cipher.update(plaintext, 'utf8', 'hex');

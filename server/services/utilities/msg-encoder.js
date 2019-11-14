@@ -1,19 +1,18 @@
-var msgpack = require('msgpack5')();
+import msgpack from 'msgpack5';
+
+const { encode, decode } = msgpack();
 
 const encoding = 'base64';
 
-export default class MsgEncoder {
+const MsgEncoder = () => ({
+  encode(val) {
+    const buffer = encode(val);
+    return buffer.toString(encoding);
+  },
+  decode(val) {
+    const buf = Buffer.from(val, encoding);
+    return decode(buf);
+  }
+});
 
-	encode(val) {
-		let buffer = msgpack.encode(val);
-
-		const res = buffer.toString(encoding);
-		return res;
-	}
-	
-	decode(val) {
-		var buf = new Buffer(val, encoding);
-		return msgpack.decode(buf);
-	}
-
-}
+export default MsgEncoder;

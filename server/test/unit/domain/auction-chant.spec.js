@@ -3,13 +3,16 @@
 import fs from 'fs';
 import chai from 'chai';
 import sinon from 'sinon';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 import AuctionChant from '../../../services/domain/auction-chant';
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Tell chai that we'll be using the "should" style assertions.
 chai.should();
-let expect = chai.expect;
+const { expect } = chai;
 
 
 describe('AuctionChant', () => {
@@ -38,12 +41,11 @@ describe('AuctionChant', () => {
 
 
   it('Should respond with num of handled auctions', (done) => {
-
     auctionAges.getMessage = sinon.stub()
-      .returns({message: "Sample", isLast: false});
+      .returns({ message: 'Sample', isLast: false });
 
     auctionChant
-      .make(new Date("2016-07-17T06:11:00.007Z"))
+      .make(new Date('2016-07-17T06:11:00.007Z'))
       .then((res) => {
         res.should.be.equal(2);
         done();
@@ -52,20 +54,17 @@ describe('AuctionChant', () => {
 
   it('Should call closeAuction when auction receive last chant', (done) => {
     auctionAges.getMessage = sinon.stub()
-      .returns({message: "Sample", isLast: true});
+      .returns({ message: 'Sample', isLast: true });
 
     auctionChant
-      .make(new Date("2016-07-17T06:11:00.007Z"))
+      .make(new Date('2016-07-17T06:11:00.007Z'))
       .then((res) => {
-
         res.should.be.equal(2);
         auctionManager.closeAuction
           .calledOnce.should.be.true;
 
         done();
       })
-      .catch(err => done(err));
+      .catch((err) => done(err));
   });
-
-
 });

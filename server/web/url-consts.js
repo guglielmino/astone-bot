@@ -7,4 +7,3 @@ export const API_PAYPAL_CANCEL = '/api/paypal/cancel';
 // Pages
 export const PAGE_PAYPAL_GETPAYURL = '/pages/paypal/pay';
 export const PAGE_AUCTION_DETAILS = '/pages/auction/:auid';
-

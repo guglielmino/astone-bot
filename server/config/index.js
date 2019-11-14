@@ -1,6 +1,9 @@
-'use strict';
+import dotenv from 'dotenv';
 
-require('dotenv').config();
+dotenv.config();
+
+const isNull = (val) => val == null;
+const boolEval = (val) => val.toLowerCase() === 'true';
 
 const mongo_db_name = process.env.MONGO_DB || '/astone';
 
@@ -14,13 +17,14 @@ const config = {
   },
   telegram: {
     api_key: process.env.BOT_KEY || '00000',
-    use_webhook: process.env.USE_WEBHOOK || false
+    use_webhook: boolEval(process.env.USE_WEBHOOK) || false
   },
   messenger: {
     validation_token: process.env.FB_VALIDATION_CODE || ''
   },
   mongo: {
-    uri: `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}${mongo_db_name}`
+    dbname: mongo_db_name,
+    uri: process.env.MONGODB_URL || `mongodb://localhost:27017/${mongo_db_name}`,
   },
   paypal: {
     env: process.env.PAYPAL_ENV,

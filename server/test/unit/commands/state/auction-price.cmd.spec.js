@@ -2,17 +2,16 @@
 
 import chai from 'chai';
 import sinon from 'sinon';
+import { ObjectID } from 'mongodb';
 import * as constants from '../../../../commands/consts';
 import CommandHelper from '../../../../commands/command-helper';
-import {ObjectID} from 'mongodb';
-
-chai.should();
-const expect = chai.expect;
 
 import AuctionPriceCommand from '../../../../commands/state/auction-price.cmd';
 
-describe('AuctionPriceCommand', () => {
+chai.should();
+const { expect } = chai;
 
+describe('AuctionPriceCommand', () => {
   let telegram;
   let managerFactory;
   let auctionManager;
@@ -22,15 +21,11 @@ describe('AuctionPriceCommand', () => {
   beforeEach(() => {
     telegram = {};
     auctionManager = {
-      updateAuction: (data) => {
-        return Promise.resolve(true);
-      }
+      updateAuction: (data) => Promise.resolve(true)
     };
 
     managerFactory = {
-      getAuctionManager: () => {
-        return auctionManager;
-      }
+      getAuctionManager: () => auctionManager
     };
 
     telegram.sendMessage = sinon.stub();
@@ -41,9 +36,8 @@ describe('AuctionPriceCommand', () => {
 
   it('Should respond with result false and maintain STATE_WAIT_FOR_PRICE when price is lower than 0', (done) => {
     command
-      .execute({chat: {id: 10}, state: constants.STATE_WAIT_FOR_PRICE}, "-1")
+      .execute({ chat: { id: 10 }, state: constants.STATE_WAIT_FOR_PRICE }, '-1')
       .then((res) => {
-
         res.state.should.be.equal(constants.STATE_WAIT_FOR_PRICE);
         res.result.should.be.false;
 
@@ -56,9 +50,8 @@ describe('AuctionPriceCommand', () => {
 
   it('Should respond with result false and maintain STATE_WAIT_FOR_PRICE when price isn\'t numeric', (done) => {
     command
-      .execute({chat: {id: 10}, state: constants.STATE_WAIT_FOR_PRICE}, "-1")
+      .execute({ chat: { id: 10 }, state: constants.STATE_WAIT_FOR_PRICE }, '-1')
       .then((res) => {
-
         res.state.should.be.equal(constants.STATE_WAIT_FOR_PRICE);
         res.result.should.be.false;
 
@@ -70,9 +63,8 @@ describe('AuctionPriceCommand', () => {
   });
 
   it('Should respond with result true when price is number greather than 0', (done) => {
-
     command
-      .execute({chat: {id: 10}, state: constants.STATE_WAIT_FOR_PRICE}, "10.7")
+      .execute({ chat: { id: 10 }, state: constants.STATE_WAIT_FOR_PRICE }, '10.7')
       .then((res) => {
         res.result.should.be.true;
         res.state.should.be.equal(constants.STATE_WAIT_FOR_PICTURE);
@@ -84,9 +76,8 @@ describe('AuctionPriceCommand', () => {
   });
 
   it('Should set status to null when state.single is true', (done) => {
-
     command
-      .execute({chat: {id: 10}, state: constants.STATE_WAIT_FOR_PRICE, single: true}, "10.7")
+      .execute({ chat: { id: 10 }, state: constants.STATE_WAIT_FOR_PRICE, single: true }, '10.7')
       .then((res) => {
         res.result.should.be.true;
         expect(res.state).to.be.null;

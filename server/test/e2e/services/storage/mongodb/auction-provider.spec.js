@@ -2,12 +2,12 @@
 
 import chai from 'chai';
 import sinon from 'sinon';
+import { ObjectID } from 'mongodb';
 import StorageProvider from './storage-provivider-test-extensions';
-import {ObjectID} from 'mongodb';
 
 // Tell chai that we'll be using the "should" style assertions.
 chai.should();
-let expect = chai.expect;
+const { expect } = chai;
 
 describe('AuctionProvider', () => {
   let storageProvider;
@@ -17,15 +17,14 @@ describe('AuctionProvider', () => {
 
     storageProvider
       .connect({
-          mongo: {
-            uri: 'mongodb://192.168.99.100:27017/astone-test'
-          }
+        mongo: {
+          uri: 'mongodb://192.168.99.100:27017/astone-test'
         }
-      )
+      })
       .then((db) => {
         done();
       })
-      .catch(err => {
+      .catch((err) => {
         done(err);
       });
   });
@@ -41,16 +40,16 @@ describe('AuctionProvider', () => {
 
     storageProvider
       .readFixture('starting-auctions.json',
-        err => {
+        (err) => {
           storageProvider
             .auctionProvider
             .getStarting(refDate, 5)
-            .then(auctions => {
+            .then((auctions) => {
               auctions.length.should.be.equal(1);
               auctions[0].title.should.be.equal('GameBoy');
               done();
             })
-            .catch(err => {
+            .catch((err) => {
               done(err);
             });
         });
@@ -61,57 +60,54 @@ describe('AuctionProvider', () => {
 
     storageProvider
       .readFixture('starting-auctions.json',
-        err => {
+        (err) => {
           storageProvider
             .auctionProvider
             .getStarting(refDate, 0)
-            .then(auctions => {
+            .then((auctions) => {
               auctions.length.should.be.equal(1);
               auctions[0].title.should.be.equal('VIC 20');
               done();
             })
-            .catch(err => {
+            .catch((err) => {
               done(err);
             });
         });
   });
 
   it('Should returns auctions without start date', (done) => {
-
     storageProvider
       .readFixture('new-auctions.json',
-        err => {
+        (err) => {
           storageProvider
             .auctionProvider
             .getNewAuctions()
-            .then(auctions => {
+            .then((auctions) => {
               auctions.length.should.be.equal(2);
               done();
             })
-            .catch(err => {
+            .catch((err) => {
               done(err);
             });
         });
   });
 
   it('Should create an auction with specific owner data', (done) => {
-
     storageProvider
       .auctionProvider
-      .save({ owner: {username: 'guglielmino', chatId: '12344444'} , title: 'A sample auction' })
+      .save({ owner: { username: 'guglielmino', chatId: '12344444' }, title: 'A sample auction' })
       .then((res) => {
         res.should.not.be.null;
         return storageProvider
           .auctionProvider
           .getAuctionById(res);
       })
-      .then(auction => {
-        auction.owner.username.should.be.equal("guglielmino");
+      .then((auction) => {
+        auction.owner.username.should.be.equal('guglielmino');
         done();
       })
-      .catch(err => {
+      .catch((err) => {
         done(err);
       });
   });
-
 });

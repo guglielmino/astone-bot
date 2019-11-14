@@ -1,15 +1,11 @@
 'use strict';
 
-export default (userProvider) => {
-  return {
+export default (userProvider) => ({
 
-    save: (userData) => {
-      userProvider.save(userData);
-    },
+  save: (userData) => {
+    userProvider.save(userData);
+  },
 
-    getAll: () => {
-      return userProvider
-        .getAll();
-    }
-  };
-};
+  getAll: () => userProvider
+    .getAll()
+});

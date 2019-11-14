@@ -2,14 +2,16 @@
 
 import fs from 'fs';
 import chai from 'chai';
-import sinon from 'sinon';
 
 import AuctionAges from '../../../services/domain/auction-ages';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Tell chai that we'll be using the "should" style assertions.
 chai.should();
-let expect = chai.expect;
+const { expect } = chai;
 
 const readFixture = (fixtureName, cb) => {
   fs.readFile(`${__dirname}/fixtures/${fixtureName}`, (err, data) => {
@@ -34,7 +36,7 @@ describe('AuctionAges', () => {
     });
   }
 
-  beforeEach(()=> {
+  beforeEach(() => {
     auctionAges = AuctionAges();
   });
 
@@ -72,6 +74,4 @@ describe('AuctionAges', () => {
       done();
     });
   });
-
-
 });

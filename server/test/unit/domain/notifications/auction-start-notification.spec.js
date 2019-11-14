@@ -2,13 +2,13 @@
 
 import chai from 'chai';
 import sinon from 'sinon';
+import { ObjectID } from 'mongodb';
 import AuctionStartNotification from '../../../../services/domain/notifications/auction-start-notification';
 
-import {ObjectID} from 'mongodb';
 
 // Tell chai that we'll be using the "should" style assertions.
 chai.should();
-let expect = chai.expect;
+const { expect } = chai;
 
 
 describe('AuctionStartNotification', () => {
@@ -34,10 +34,10 @@ describe('AuctionStartNotification', () => {
 
 
     const managerFactory = {
-      getUserManager: function () {
+      getUserManager() {
         return userManager;
       },
-      getAuctionManager: function () {
+      getAuctionManager() {
         return auctionManager;
       }
     };
@@ -47,10 +47,9 @@ describe('AuctionStartNotification', () => {
   });
 
   it('Should call sendMessage for all 3 users', (done) => {
-
     auctionStartNotification
       .sendNotification(new Date(), 'http://astone.gumino.com/pages/auction')
-      .then(sent => {
+      .then((sent) => {
         telegram.sendMessage
           .calledThrice
           .should.be.true;
@@ -60,10 +59,9 @@ describe('AuctionStartNotification', () => {
   });
 
   it('Should call sendmessage with reply_markup', (done) => {
-
     auctionStartNotification
       .sendNotification(new Date(), 'http://astone.gumino.com/pages/auction')
-      .then(sent => {
+      .then((sent) => {
         telegram.sendMessage
           .calledWith(sinon.match.has('reply_markup'))
           .should.be.true;
@@ -71,5 +69,4 @@ describe('AuctionStartNotification', () => {
         done();
       });
   });
-
 });

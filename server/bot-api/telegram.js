@@ -1,12 +1,10 @@
 /**
  * Created by fabrizio on 17/03/16.
  */
+
 'use strict';
 
-let Promise = require('bluebird');
-
 class TelegramBot {
-
   constructor(request, apiKey) {
     this.request = request;
     this.apiKey = apiKey;
@@ -17,7 +15,7 @@ class TelegramBot {
 
     return this.request(url)
       .then((res) => {
-        let data = JSON.parse(res.body);
+        const data = JSON.parse(res.body);
         return Promise.resolve(data);
       });
   }
@@ -27,13 +25,13 @@ class TelegramBot {
 
     return this.request(url)
       .then((res) => {
-        let data = JSON.parse(res.body);
+        const data = JSON.parse(res.body);
         return Promise.resolve(data);
       });
   }
 
   sendMessage(msg) {
-    let url = `https://api.telegram.org/bot${this.apiKey}/sendMessage`;
+    const url = `https://api.telegram.org/bot${this.apiKey}/sendMessage`;
 
     const options = {
       method: 'POST',
@@ -46,21 +44,18 @@ class TelegramBot {
 
     return this.request(options)
       .then((res) => {
-        let data = JSON.parse(res.body);
+        const data = JSON.parse(res.body);
         if (data.ok) {
           return Promise.resolve(data);
         }
-        else {
-          return Promise.reject(data.description);
-        }
+
+        return Promise.reject(data.description);
       })
-      .catch((err) => {
-        return Promise.reject(err);
-      });
+      .catch((err) => Promise.reject(err));
   }
 
   sendPhoto(photoMsg) {
-    let url = `https://api.telegram.org/bot${this.apiKey}/sendPhoto`;
+    const url = `https://api.telegram.org/bot${this.apiKey}/sendPhoto`;
 
     const options = {
       method: 'POST',
@@ -73,13 +68,12 @@ class TelegramBot {
 
     return this.request(options)
       .then((res) => {
-        let data = JSON.parse(res.body);
+        const data = JSON.parse(res.body);
         if (data.ok) {
           return Promise.resolve(data);
         }
-        else {
-          return Promise.reject(data.description);
-        }
+
+        return Promise.reject(data.description);
       })
       .catch((err) => {
         Promise.reject(err);
@@ -87,17 +81,17 @@ class TelegramBot {
   }
 
   sendChatAction(chat_id, action) {
-    let url = `https://api.telegram.org/bot${this.apiKey}/sendChatAction?chat_id=${chat_id}&action=${action}`;
+    const url = `https://api.telegram.org/bot${this.apiKey}/sendChatAction?chat_id=${chat_id}&action=${action}`;
 
     return this.request(url)
       .then((res) => {
-        let data = JSON.parse(res.body);
+        const data = JSON.parse(res.body);
         return Promise.resolve(data);
       });
   }
 
   setWebhook(hook_url) {
-    let url = `https://api.telegram.org/bot${this.apiKey}/setWebhook`;
+    const url = `https://api.telegram.org/bot${this.apiKey}/setWebhook`;
 
     const options = {
       method: 'POST',
@@ -110,13 +104,13 @@ class TelegramBot {
 
     return this.request(url)
       .then((res) => {
-        let data = JSON.parse(res.body);
+        const data = JSON.parse(res.body);
         return Promise.resolve(data);
       });
   }
 
   answerCallbackQuery(callback_query_id, text = null, show_alert = false) {
-    let url = `https://api.telegram.org/bot${this.apiKey}/answerCallbackQuery`;
+    const url = `https://api.telegram.org/bot${this.apiKey}/answerCallbackQuery`;
 
     const options = {
       method: 'POST',
@@ -125,25 +119,24 @@ class TelegramBot {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        callback_query_id: callback_query_id,
-        text: text,
-        show_alert: show_alert
+        callback_query_id,
+        text,
+        show_alert
       })
     };
 
     return this.request(options)
       .then((res) => {
-        let data = JSON.parse(res.body);
+        const data = JSON.parse(res.body);
         if (data.ok) {
           return Promise.resolve(data);
         }
-        else {
-          return Promise.reject(data.description);
-        }
+
+        return Promise.reject(data.description);
       })
       .catch((err) => {
         Promise.reject(err);
-      })
+      });
   }
 
   getFile(file_id) {
@@ -151,15 +144,14 @@ class TelegramBot {
 
     return this.request(url)
       .then((res) => {
-        let data = JSON.parse(res.body);
+        const data = JSON.parse(res.body);
         if (data.ok) {
           data.result.file_url = `https://api.telegram.org/file/bot${this.apiKey}/${data.result.file_path}`;
           return Promise.resolve(data.result);
-        } else {
-          return Promise.reject(data);
         }
+        return Promise.reject(data);
       });
   }
 }
 
-module.exports = TelegramBot;
+export default TelegramBot;

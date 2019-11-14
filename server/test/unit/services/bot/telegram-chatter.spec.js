@@ -4,10 +4,10 @@ import chai from 'chai';
 import sinon from 'sinon';
 import redis from 'redis-mock';
 
-chai.should();
-
 import TelegramChatter from '../../../../services/bot/telegram-chatter';
 import StateManager from '../../../../services/bot/state-manager';
+
+chai.should();
 
 describe('TelegramChatter', () => {
   let chatter;
@@ -27,12 +27,12 @@ describe('TelegramChatter', () => {
 
 
   it('Should call updateState of stateManager when command.execute returns an object', () => {
-    let command = { cmd: { } };
+    const command = { cmd: { } };
     command.cmd.execute = sinon.stub()
       .returns(Promise.resolve({ a: 1, b: 2 }));
 
-    let state = { chat: { id: 1 } };
-    chatter._executeCommand(command, state, "sample data");
+    const state = { chat: { id: 1 } };
+    chatter._executeCommand(command, state, 'sample data');
 
     // NOTE: TO BAD!!! This implies a design flaw (TO BE REFACTORED!)
     setTimeout(() => {

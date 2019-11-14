@@ -1,10 +1,9 @@
-import {ObjectID} from 'mongodb';
-import {queryExecutor} from './provider-helper';
+import mongodb from 'mongodb';
+import { queryExecutor } from './provider-helper';
 
 const COLLECTION_NAME = 'auctions';
 
 export default class AuctionProvider {
-
   constructor(db) {
     this.db = db;
     this.findDocs = queryExecutor(db, COLLECTION_NAME);
@@ -21,9 +20,7 @@ export default class AuctionProvider {
           reject(err);
         }
 
-        let doc = Object.assign({
-          createdAt: new Date()
-        }, auctionData);
+        const doc = {createdAt: new Date(), ...auctionData};
 
         col.insertOne(doc, (err, r) => {
           if (err) {
@@ -39,19 +36,13 @@ export default class AuctionProvider {
   getAuctionById(auctionId) {
     return new Promise((resolve, reject) => {
       this.db.collection(COLLECTION_NAME, (err, col) => {
-        let objId = ObjectID(auctionId);
+        const objId = mongodb.ObjectID(auctionId);
         col.find({ _id: objId })
           .toArray((err, docs) => {
             if (err) {
               reject(err);
-            } else {
-              if (docs.length !== 1)
-                reject(new Error("Query returned wrong number of elements"));
-              else
-                resolve(docs[0]);
-            }
+            } else if (docs.length !== 1) {reject(new Error('Query returned wrong number of elements'));} else {resolve(docs[0]);}
           });
-
       });
     });
   }
@@ -126,7 +117,7 @@ export default class AuctionProvider {
       $and: [
         { startDate: { $lte: date } },
         { closed: true },
-        { state: state }
+        { state }
       ]
     };
 
@@ -166,7 +157,7 @@ export default class AuctionProvider {
   getAuctionsByOwner(username) {
     const query = {
       $and: [
-        { username: username },
+        { username },
         {
           $or: [
             { closed: false },
@@ -203,7 +194,7 @@ export default class AuctionProvider {
           reject(err);
         }
 
-        col.updateOne({ _id: ObjectID(auctionId) },
+        col.updateOne({ _id: mongodb.ObjectID(auctionId) },
           {
             $set: {
               price: value, bestBidder: user, lastBid: new Date()
@@ -213,10 +204,8 @@ export default class AuctionProvider {
             if (err) {
               reject(err);
             } else {
-
               resolve(r.result.ok === 1);
             }
-
           });
       });
     });
@@ -229,23 +218,21 @@ export default class AuctionProvider {
           reject(err);
         }
 
-        col.updateOne({ _id: ObjectID(auctionId) },
+        col.updateOne({ _id: mongodb.ObjectID(auctionId) },
           { $addToSet: { subscribers: user } },
           (err, r) => {
             if (err) {
               reject(err);
             } else {
-              col.find({ _id: ObjectID(auctionId) })
+              col.find({ _id: mongodb.ObjectID(auctionId) })
                 .limit(1)
                 .next((err, doc) => {
                   if (err) {
                     reject(err);
-                  }
-                  else {
+                  } else {
                     resolve(doc);
                   }
                 });
-
             }
           });
       });
@@ -253,7 +240,7 @@ export default class AuctionProvider {
   }
 
   getAuctionsBySubscriber(username) {
-    return this.findDocs({ username: username });
+    return this.findDocs({ username });
   }
 
   closeAuction(auctionId) {
@@ -263,7 +250,7 @@ export default class AuctionProvider {
           reject(err);
         }
 
-        col.updateOne({ _id: ObjectID(auctionId) },
+        col.updateOne({ _id: mongodb.ObjectID(auctionId) },
           {
             $set: { closed: true, state: 'WAIT_FOR_PAYMENT', closeDate: new Date() }
           },
@@ -284,7 +271,7 @@ export default class AuctionProvider {
         if (err) {
           reject(err);
         }
-        col.updateOne({ _id: ObjectID(auctionId) },
+        col.updateOne({ _id: mongodb.ObjectID(auctionId) },
           {
             $set: data
           },

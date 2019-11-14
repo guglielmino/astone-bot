@@ -1,55 +1,33 @@
-'use strict';
-
 const keyPrefix = 'state:';
 
 export default (client) => {
+  const self = {
+    setState: (chatId, value) => client
+      .setAsync(`${keyPrefix}${chatId}`, JSON.stringify(value)),
 
-	let self = {
-		setState: (chatId, value) => {
-			return client
-				.setAsync(`${keyPrefix}${chatId}`, JSON.stringify(value));
-		},
+    getState: (chatId) => client
+      .getAsync(`${keyPrefix}${chatId}`)
+      .then((val) => (val ? Promise.resolve(JSON.parse(val)) : null)),
 
-		getState: (chatId) => {
-			return client
-				.getAsync(`${keyPrefix}${chatId}`)
-				.then((val) => {
-					return (val ? Promise.resolve(JSON.parse(val)) : null);
-				});
-		},
+    updateState: (chatId, value) => {
+      if (typeof value !== 'object') {
+        throw Error("\'value\' must be an object");
+      }
+      return self.getState(chatId)
+        .then((stored) => self
+          .setState(chatId, Object.assign(stored, value)))
+        .then(() => self
+          .getState(chatId));
+    },
 
-		updateState: (chatId, value) => {
-			if (typeof value !== "object") {
-				throw Error("\'value\' must be an object");
-			}
-
-  		return self.getState(chatId)
-				.then((stored) => {
-
-					return self
-						.setState(chatId, Object.assign(stored, value));
-				})
-				.then((res) => {
-					return self
-						.getState(chatId);
-				});
-		},
-
-		exists: (chatId) => {
-			return client
-				.existsAsync(`${keyPrefix}${chatId}`)
-				.then((res) => {
-					return Promise.resolve(res > 0);
-				});
-		},
+    exists: (chatId) => client
+      .existsAsync(`${keyPrefix}${chatId}`)
+      .then((res) => Promise.resolve(res > 0)),
 
 
-		del: (chatId) => {
-			return client
-				.delAsync(`${keyPrefix}${chatId}`);
+    del: (chatId) => client
+      .delAsync(`${keyPrefix}${chatId}`)
+  };
 
-		}
-	}
-
-	return self;
-}
+  return self;
+};

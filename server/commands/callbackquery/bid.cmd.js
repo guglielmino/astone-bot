@@ -4,15 +4,13 @@ import * as constants from '../consts';
 import encodeQueryCommand from '../../services/utilities/encodeQueryCommand';
 
 export default class BidCommand {
-
   constructor(telegram, managerFactory, commandHelper) {
     this._telegram = telegram;
     this._auctionManager = managerFactory.getAuctionManager();
     this._helper = commandHelper;
 
     this._responses = {
-      'Success': (state, auction) => {
-
+      Success: (state, auction) => {
         const currentPrice = auction.price.toFixed(2);
         const nextBid = parseFloat(auction.price + parseFloat(auction.bidStep || 1.00)).toFixed(2);
         const bidRespMessage = `@${auction.bestBidder.username} offered * € ${currentPrice}*, who wants to bid for *€ ${nextBid}* ?`;
@@ -26,37 +24,35 @@ export default class BidCommand {
               ._sendMessageToSubscriber(subscriber, bidRespMessage, nextBid);
           });
       },
-      'NotAccepted': (state, auction) => {
+      NotAccepted: (state, auction) => {
         this._telegram
           .answerCallbackQuery(state.callback_query_id, 'Bid NOT accepted!', false);
         this._helper.simpleResponse(state.chat.id, 'Offer can\'t be accepted. Try again.');
       },
-      'ValueToLow': (state, auction) => {
+      ValueToLow: (state, auction) => {
         this._telegram
           .answerCallbackQuery(state.callback_query_id, 'Bid NOT accepted!', false);
         this._helper.simpleResponse(state.chat.id, `Your offer is lower than current value (€ ${auction.price})`);
       },
-      'AuctionNotActive': (state, auction) => {
+      AuctionNotActive: (state, auction) => {
         this._telegram
           .answerCallbackQuery(state.callback_query_id, 'Bid NOT accepted!', false);
         this._helper.simpleResponse(state.chat.id, 'Can\'t bid on this Auction because is inactive');
       },
-      'InsufficientSubscribers': (state, auction) => {
+      InsufficientSubscribers: (state, auction) => {
         this._telegram
           .answerCallbackQuery(state.callback_query_id, 'Bid NOT accepted!', false);
         this._helper.simpleResponse(state.chat.id, `We need at least *${auction.minSubscribers || 10}* participants to start the Auction`);
-      }
-      ,
-      'AuctionClosed': (state, auction) => {
+      },
+      AuctionClosed: (state, auction) => {
         this._telegram
           .answerCallbackQuery(state.callback_query_id, 'Auction closed', false);
-        this._helper.simpleResponse(state.chat.id, `This auction is closed and can't accept new bids`);
+        this._helper.simpleResponse(state.chat.id, 'This auction is closed and can\'t accept new bids');
       }
     };
   }
 
   execute(state, ...params) {
-
     if (!state.auctionId) {
       this._helper
         .simpleResponse(state.chat.id, 'Before bidding You must choose an active auction');
@@ -75,8 +71,8 @@ export default class BidCommand {
         return this._auctionManager
           .bid(state.auctionId, { username: state.chat.username, chatId: state.chat.id }, bidValue)
           .then((res) => {
-            if (res.status.name in this._responses) {
-              this._responses[res.status.name](state, res.auction);
+            if (res.status in this._responses) {
+              this._responses[res.status](state, res.auction);
             }
             Promise.resolve(null);
           });
@@ -99,5 +95,4 @@ export default class BidCommand {
         }
       });
   }
-
 }

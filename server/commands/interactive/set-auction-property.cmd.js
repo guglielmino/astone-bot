@@ -1,10 +1,6 @@
-'use strict';
-
-import * as constants from '../consts';
 import encodeQueryCommand from '../../services/utilities/encodeQueryCommand';
 
 export default class SetAuctionPropertyCommand {
-
   constructor(telegram, managerFactory, commandHelper, propertyInfo) {
     this._telegram = telegram;
     this._auctionManager = managerFactory.getAuctionManager();
@@ -14,12 +10,11 @@ export default class SetAuctionPropertyCommand {
   }
 
   execute(state, ...params) {
-
     return this._auctionManager
       .getAuctionsByOwner(state.chat.username)
       .then((res) => {
         if (res && res.length > 0) {
-          let buttons = [];
+          const buttons = [];
           res.forEach((item) => {
             buttons.push([{
               text: `${item.title}`,

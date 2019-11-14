@@ -4,7 +4,6 @@ import * as constants from '../../../commands/consts';
 import encodeQueryCommand from '../../utilities/encodeQueryCommand';
 
 export default (telegram, managerFactory) => {
-
   function getStartingAuctions(date, minutes) {
     return managerFactory
       .getAuctionManager()
@@ -12,13 +11,12 @@ export default (telegram, managerFactory) => {
   }
 
   function notify(auction, auctionBaseUrl) {
-
     managerFactory
       .getUserManager()
       .getAll()
       .then((users) => {
-        users.forEach(user => {
-          let buttons = [];
+        users.forEach((user) => {
+          const buttons = [];
           buttons.push([
             {
               text: `Start bidding on ${auction.title}`,
@@ -37,25 +35,22 @@ export default (telegram, managerFactory) => {
             });
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }
 
   return {
-    sendNotification: (date, auctionBaseUrl) => {
-      return new Promise((resolve, reject) => {
-        getStartingAuctions(date, 0)
-          .then(auctions => {
-            auctions.forEach(auction => {
-              notify(auction, auctionBaseUrl);
-            });
+    sendNotification: (date, auctionBaseUrl) => new Promise((resolve, reject) => {
+      getStartingAuctions(date, 0)
+        .then((auctions) => {
+          auctions.forEach((auction) => {
+            notify(auction, auctionBaseUrl);
+          });
 
-            resolve(auctions.length);
-          })
-          .catch(err => reject(err));
-      });
-
-    }
+          resolve(auctions.length);
+        })
+        .catch((err) => reject(err));
+    })
   };
-}
+};

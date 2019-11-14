@@ -21,15 +21,6 @@ import StorageS3 from './services/storage/aws/s3';
 import * as constants from './commands/consts';
 import * as urlConsts from './web/url-consts';
 
-export default (chatManager, telegram, managerFactory, config) => {
-
-  const commandHelper = CommandHelper(telegram);
-
-  InteractiveCommands(chatManager, telegram, managerFactory, commandHelper, config);
-  QueryCommandsCommands(chatManager, telegram, managerFactory, commandHelper);
-  StateCommands(chatManager, telegram, managerFactory, commandHelper);
-}
-
 /**
  * Istantiate and schedule interactive commands (ie starting with /) to chat manager
  */
@@ -42,7 +33,7 @@ function InteractiveCommands(chatManager, telegram, managerFactory, commandHelpe
   const setTitleCmd = new SetAuctionPropertyCommand(telegram, managerFactory, commandHelper,
     {
       queryCommand: constants.QCOMMAND_SET_TITLE,
-      answerText: `Choose an auction to change the title`
+      answerText: 'Choose an auction to change the title'
     });
   const setDescritionCmd = new SetAuctionPropertyCommand(telegram, managerFactory, commandHelper,
     {
@@ -52,17 +43,17 @@ function InteractiveCommands(chatManager, telegram, managerFactory, commandHelpe
   const setPriceCmd = new SetAuctionPropertyCommand(telegram, managerFactory, commandHelper,
     {
       queryCommand: constants.QCOMMAND_SET_PRICE,
-      answerText: `Choose an auction to change starting price`
+      answerText: 'Choose an auction to change starting price'
     });
   const setPictCmd = new SetAuctionPropertyCommand(telegram, managerFactory, commandHelper,
     {
       queryCommand: constants.QCOMMAND_SET_PICT,
-      answerText: `Choose an auction to change item picture`
+      answerText: 'Choose an auction to change item picture'
     });
   const setMinSubCmd = new SetAuctionPropertyCommand(telegram, managerFactory, commandHelper,
     {
       queryCommand: constants.QCOMMAND_SET_MINSUB,
-      answerText: `Choose an auction to change min number of participants`
+      answerText: 'Choose an auction to change min number of participants'
     });
 
   chatManager.addCommand(constants.COMMAND_LIST, listCmd);
@@ -127,3 +118,11 @@ function StateCommands(chatManager, telegram, managerFactory, commandHelper) {
   chatManager.addCommand(constants.STATE_WAIT_FOR_PICTURE, pictureCommand, 'State');
   chatManager.addCommand(constants.STATE_WAIT_FOR_MIN_SUB, minSubCommand, 'State');
 }
+
+export default (chatManager, telegram, managerFactory, config) => {
+  const commandHelper = CommandHelper(telegram);
+
+  InteractiveCommands(chatManager, telegram, managerFactory, commandHelper, config);
+  QueryCommandsCommands(chatManager, telegram, managerFactory, commandHelper);
+  StateCommands(chatManager, telegram, managerFactory, commandHelper);
+};

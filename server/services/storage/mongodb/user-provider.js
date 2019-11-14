@@ -1,5 +1,5 @@
-import {ObjectID} from 'mongodb';
-import {queryExecutor} from './provider-helper';
+import { queryExecutor } from './provider-helper';
+
 const COLLECTION_NAME = 'users';
 
 export default class UserProvider {
@@ -23,20 +23,18 @@ export default class UserProvider {
         col.insertOne(userData, (err, r) => {
           if (err) {
             if (err.code === 11000) {
-              col.updateOne({username: userData.username},
-                {$set: {id: userData.id}},
+              col.updateOne({ username: userData.username },
+                { $set: { id: userData.id } },
                 (err, r) => {
                   if (err) {
                     reject(err);
-                  }
-                  else {
+                  } else {
                     resolve(r.result.ok);
                   }
                 });
             }
             reject(err);
-          }
-          else {
+          } else {
             resolve(r.insertedCount);
           }
         });
@@ -53,8 +51,7 @@ export default class UserProvider {
         col.updateOne({ username: usename }, { $set: { lang: langCode } }, (err, r) => {
           if (err) {
             reject(err);
-          }
-          else {
+          } else {
             resolve(r.result.ok === 1);
           }
         });

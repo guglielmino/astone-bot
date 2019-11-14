@@ -5,7 +5,7 @@ import sinon from 'sinon';
 import StorageProvider from './storage-provivider-test-extensions';
 
 chai.should();
-let expect = chai.expect;
+const { expect } = chai;
 
 describe('UsersProvider', () => {
   let storageProvider;
@@ -14,11 +14,10 @@ describe('UsersProvider', () => {
     storageProvider = new StorageProvider();
     storageProvider
       .connect({
-          mongo: {
-            uri: 'mongodb://192.168.99.100:27017/astone-test'
-          }
+        mongo: {
+          uri: 'mongodb://192.168.99.100:27017/astone-test'
         }
-      )
+      })
       .then((db) => {
         storageProvider
           .readFixture('all-users.json',
@@ -35,18 +34,16 @@ describe('UsersProvider', () => {
   });
 
   it('Should returns all registered users', (done) => {
-
     storageProvider
       .userProvider
       .getAll()
-      .then(users => {
+      .then((users) => {
         users.length
           .should.be.equal(3);
         done();
       })
-      .catch(err => {
+      .catch((err) => {
         done(err);
       });
   });
-
 });

@@ -1,0 +1,53 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Program",
+            "runtimeArgs": [
+                "--experimental-modules",
+                "--es-module-specifier-resolution=node"
+            ],
+            "program": "${workspaceFolder}/server/app.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch AstoneCli",
+            "runtimeArgs": [
+                "--experimental-modules",
+                "--es-module-specifier-resolution=node"
+            ],
+            "args": [
+                "--approve",
+                "5dcaca3e3bbbf13ed909a8bc",
+                "2019-01-01"
+            ],
+            "program": "${workspaceFolder}/server/astone-cli.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Mocha Tests",
+            "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+            "stopOnEntry": false,
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "args": [
+                "--require",
+                "esm",
+                "--inspect-brk",
+                 "'${workspaceFolder}/server/test/unit/**/*.spec.js'"
+            ],
+            "runtimeExecutable": null,
+            "env": {
+                "NODE_ENV": "testing"
+            }
+        }
+    }
+]
+}

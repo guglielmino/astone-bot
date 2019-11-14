@@ -48,5 +48,8 @@ const PhotoBuilder = stampit().init(function () {
 });
 
 
-exports.messageBuilder = stampit().compose(BaseBuilder, MessageBuilder);
-exports.photoBuilder = stampit().compose(BaseBuilder, PhotoBuilder);
+const messageBuilder = stampit().compose(BaseBuilder, MessageBuilder);
+const photoBuilder = stampit().compose(BaseBuilder, PhotoBuilder);
+
+export { messageBuilder, photoBuilder };
+

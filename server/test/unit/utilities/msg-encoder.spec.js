@@ -7,28 +7,26 @@ import MsgEncoder from '../../../services/utilities/msg-encoder';
 
 // Tell chai that we'll be using the "should" style assertions.
 chai.should();
-let expect = chai.expect;
+const { expect } = chai;
 
-describe('MsgEncoder', ()=> {
-	let encoder;
+describe('MsgEncoder', () => {
+  let encoder;
 
-	beforeEach(() => {
-		encoder = new MsgEncoder();
-	});
+  beforeEach(() => {
+    encoder = MsgEncoder();
+  });
 
-	it('Should return an encoded string when called with an object', () => {
-		let sampleObj = {name: "Fabrizio", age: 40};
-		let result = encoder.encode(sampleObj);
+  it('Should return an encoded string when called with an object', () => {
+    const sampleObj = { name: 'Fabrizio', age: 40 };
+    const result = encoder.encode(sampleObj);
 
-		result.should.be.a('string');
-	});
+    result.should.be.a('string');
+  });
 
-	it('Should decode an object previous encoded', () => {
-		let sampleObj = {name: "Fabrizio", age: 40};
-		let result = encoder.encode(sampleObj);
-		let decodedObj = encoder.decode(result);
-		decodedObj.name.should.be.equal(sampleObj.name);
-
-	});
-
+  it('Should decode an object previous encoded', () => {
+    const sampleObj = { name: 'Fabrizio', age: 40 };
+    const result = encoder.encode(sampleObj);
+    const decodedObj = encoder.decode(result);
+    decodedObj.name.should.be.equal(sampleObj.name);
+  });
 });

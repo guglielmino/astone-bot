@@ -6,42 +6,40 @@ import I18nBuild from '../../../services/utilities/i18n';
 
 // Tell chai that we'll be using the "should" style assertions.
 chai.should();
-let expect = chai.expect;
+const { expect } = chai;
 
-describe('i18n', ()=> {
+describe('i18n', () => {
+  it('Should traslate "Hello ${name}" with "it" messageBundle', () => {
+    const en = {
+      'Hello {0}': 'Hello {0}'
+    };
 
-	it('Should traslate "Hello ${name}" with "it" messageBundle', ()=> {
-		let en = {
-			"Hello {0}" : "Hello {0}"
-		};
+    const it = {
+      'Hello {0}': 'Ciao {0}'
+    };
 
-		let it = {
-			"Hello {0}" : "Ciao {0}"
-		};
+    const name = 'Fabrizio';
 
-		let name = 'Fabrizio';
+    const i18n = I18nBuild({ locale: 'it', defaultCurrency: 'EUR', messageBundle: it });
+    const res = i18n`Hello ${name}`;
 
-		let i18n = I18nBuild({locale: 'it', defaultCurrency: 'EUR', messageBundle: it});
-		const res = i18n`Hello ${name}`;
+    res.should.be.equal('Ciao Fabrizio');
+  });
 
-		res.should.be.equal('Ciao Fabrizio');
-	});
+  it('Should return original string when translation does not exists', () => {
+    const en = {
+      'Hello {0}': 'Hello {0}'
+    };
 
-	it('Should return original string when translation does not exists', ()=> {
-		let en = {
-			"Hello {0}" : "Hello {0}"
-		};
+    const it = {
+      'Hello {0}': 'Ciao {0}'
+    };
 
-		let it = {
-			"Hello {0}" : "Ciao {0}"
-		};
+    const test = 'test';
 
-		let test = 'test';
+    const i18n = I18nBuild({ locale: 'it', defaultCurrency: 'EUR', messageBundle: it });
+    const res = i18n`${test} string not mapped`;
 
-		let i18n = I18nBuild({locale: 'it', defaultCurrency: 'EUR', messageBundle: it});
-		const res = i18n`${test} string not mapped`;
-
-		res.should.be.equal('test string not mapped');
-	});
-
+    res.should.be.equal('test string not mapped');
+  });
 });

@@ -1,38 +1,27 @@
-'use strict';
-
-import {Enum} from 'enumify';
 import * as consts from './auction-consts';
 
-export class BidResponse extends Enum {
-}
-;
 
-BidResponse.initEnum([
-  'Success',
-  'NotAccepted',
-  'ValueToLow',
-  'AuctionNotActive',
-  'CanNotSubscribe',
-  'MultipleAuctionSubscribe',
-  'AuctionNotExist',
-  'InsufficientSubscribers',
-  'AuctionClosed'
-]);
+export const BidResponse = {
+  Success: 'Success',
+  NotAccepted: 'NotAccepted',
+  ValueToLow: 'ValueToLow',
+  AuctionNotActive: 'AuctionNotActive',
+  CanNotSubscribe: 'CanNotSubscribe',
+  MultipleAuctionSubscribe: 'MultipleAuctionSubscribe',
+  AuctionNotExist: 'AuctionNotExist',
+  InsufficientSubscribers: 'InsufficientSubscribers',
+  AuctionClosed: 'AuctionClosed'
+};
 
-export class SubscribeResponse extends Enum {
-}
-;
+export const SubscribeResponse = {
+  Success: 'Success',
+  AuctionNotActive: 'AuctionNotActive',
+  CanNotSubscribe: 'CanNotSubscribe',
+  MultipleAuctionSubscribe: 'MultipleAuctionSubscribe',
+  AuctionNotExist: 'AuctionNotExist'
+};
 
-SubscribeResponse.initEnum([
-  'Success',
-  'AuctionNotActive',
-  'CanNotSubscribe',
-  'MultipleAuctionSubscribe',
-  'AuctionNotExist'
-]);
-
-export default class AuctionManager {
-
+export class AuctionManager {
   constructor(auctionProvider) {
     this._auctionProvider = auctionProvider;
   }
@@ -61,9 +50,7 @@ export default class AuctionManager {
   getAuctionsByOwner(username) {
     return this._auctionProvider
       .getAuctionsByOwner(username)
-      .then(auctions => {
-        return auctions.filter(a => !a.lastBid);
-      });
+      .then((auctions) => auctions.filter((a) => !a.lastBid));
   }
 
   /**
@@ -78,7 +65,6 @@ export default class AuctionManager {
     return this._auctionProvider
       .getRunningAuctions()
       .then((res) => {
-
         const getDiffSeconds = (date, itemDate) => {
           const diff = (date - itemDate);
           return Math.round(Math.floor(diff / 1000));
@@ -89,8 +75,7 @@ export default class AuctionManager {
             x.bidAge = getDiffSeconds(date, x.lastBid);
             return x;
           })
-          .filter((x) => x.bidAge >= trigger)
-        );
+          .filter((x) => x.bidAge >= trigger));
       });
   }
 
@@ -112,11 +97,9 @@ export default class AuctionManager {
    * Make a bid on a auction
    * @param auctionId
    * @param user
-   * @param value
    * @returns {Promise.<T>}
    */
   bid(auctionId, user, value = null) {
-
     return this._auctionProvider
       .getAuctionById(auctionId)
       .then((auction) => {
@@ -125,23 +108,23 @@ export default class AuctionManager {
         }
 
         if (auction.startDate > new Date()) {
-          return Promise.resolve({ status: BidResponse.AuctionNotActive, auction: auction });
+          return Promise.resolve({ status: BidResponse.AuctionNotActive, auction });
         }
 
         if (auction.closed) {
-          return Promise.resolve({ status: BidResponse.AuctionClosed, auction: auction });
+          return Promise.resolve({ status: BidResponse.AuctionClosed, auction });
         }
 
         if (value === null) value = (auction.price || auction.startingPrice) + (auction.bidStep || 1.0);
 
         if (value <= auction.price) {
-          return Promise.resolve({ status: BidResponse.ValueToLow, auction: auction });
+          return Promise.resolve({ status: BidResponse.ValueToLow, auction });
         }
 
         const numSubscribers = (auction.subscribers ? auction.subscribers.length : 0);
         const minSubscribers = (auction.minSubscribers === undefined ? 10 : auction.minSubscribers);
         if (numSubscribers < minSubscribers) {
-          return Promise.resolve({ status: BidResponse.InsufficientSubscribers, auction: auction });
+          return Promise.resolve({ status: BidResponse.InsufficientSubscribers, auction });
         }
 
         return this._auctionProvider
@@ -152,14 +135,11 @@ export default class AuctionManager {
             auction.bestBidder = user;
             return Promise.resolve({
               status: (res ? BidResponse.Success : BidResponse.NotAccepted),
-              auction: auction
+              auction
             });
           });
       })
-      .catch((err) => {
-        return Promise.reject(err);
-      });
-
+      .catch((err) => Promise.reject(err));
   }
 
   /**
@@ -177,25 +157,20 @@ export default class AuctionManager {
           return this._auctionProvider
             .addSubscriberToAuction(auctionId, user);
         }
-        else {
-          return Promise.resolve(null);
-        }
+
+        return Promise.resolve(null);
       })
       .then((auction) => {
         if (auction) {
           if (!auction.closed) {
-            return Promise.resolve({ status: SubscribeResponse.Success, auction: auction });
+            return Promise.resolve({ status: SubscribeResponse.Success, auction });
           }
-          else {
-            return Promise.resolve({ status: SubscribeResponse.AuctionNotActive, auction: auction });
-          }
-        } else {
-          return Promise.resolve({ status: SubscribeResponse.MultipleAuctionSubscribe });
+
+          return Promise.resolve({ status: SubscribeResponse.AuctionNotActive, auction });
         }
+        return Promise.resolve({ status: SubscribeResponse.MultipleAuctionSubscribe });
       })
-      .catch((err) => {
-        return Promise.reject(err);
-      });
+      .catch((err) => Promise.reject(err));
   }
 
   /**
@@ -225,9 +200,8 @@ export default class AuctionManager {
   }
 
   createAuction(owner, title) {
-
     return this._auctionProvider
-      .save({ owner: owner, title: title });
+      .save({ owner, title });
   }
 
   updateAuction(auctionId, updateObj) {
@@ -235,4 +209,3 @@ export default class AuctionManager {
       .updateAuction(auctionId, updateObj);
   }
 }
-

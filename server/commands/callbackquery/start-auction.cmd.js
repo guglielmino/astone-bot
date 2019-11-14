@@ -4,7 +4,6 @@ import * as constants from '../consts';
 import encodeQueryCommand from '../../services/utilities/encodeQueryCommand';
 
 export default class StartAuctionCommand {
-
   constructor(telegram, managerFactory, commandHelper) {
     this._telegram = telegram;
     this._auctionManager = managerFactory.getAuctionManager();
@@ -12,14 +11,12 @@ export default class StartAuctionCommand {
   }
 
   execute(state, ...params) {
-
     if (params && params.length > 0) {
       const auctionId = params[0];
       return this._auctionManager
         .subscribe(auctionId, { username: state.chat.username, chatId: state.chat.id })
         .then((res) => {
-
-          switch (res.status.name) {
+          switch (res.status) {
             case 'Success':
               this._telegram
                 .answerCallbackQuery(state.callback_query_id, 'AUCTION SUBSCRIBED', false);
@@ -33,7 +30,7 @@ export default class StartAuctionCommand {
               this._telegram
                 .sendMessage({
                   chat_id: state.chat.id,
-                  text: `Sorry, this auction isn't active You can't start bidding on it.`,
+                  text: 'Sorry, this auction isn\'t active You can\'t start bidding on it.',
                   parse_mode: 'Markdown'
                 });
               break;
@@ -71,8 +68,8 @@ export default class StartAuctionCommand {
 
   _warnSubscribers(state, auction) {
     auction.subscribers
-      .filter(sub => sub.username !== state.chat.username)
-      .forEach(subscriber => {
+      .filter((sub) => sub.username !== state.chat.username)
+      .forEach((subscriber) => {
         this._telegram
           .sendMessage({
             chat_id: subscriber.chatId,
