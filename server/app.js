@@ -9,7 +9,7 @@ import web from './web';
 import * as urlConsts from './web/url-consts';
 
 import StorageProvider from './services/storage/mongodb';
-import RepeatingScheduler from './services/scheduler/RepeatingScheduler';
+
 import StateManager from './services/bot/state-manager';
 import TelegramReqParser from './services/bot/telegram-req-parser';
 import TelegramChatter from './services/bot/telegram-chatter';
@@ -45,7 +45,7 @@ const request = util.promisify(requestsync);
 const telegram = new Telegram(request, config.telegram.api_key);
 
 const storageProvider = new StorageProvider();
-const sched = new RepeatingScheduler();
+
 
 // We want all dates in UTC
 process.env.TZ = 'UTC';
@@ -107,7 +107,6 @@ storageProvider
       setInterval(() => {
         telegram.getUpdates(lastupdateId, 100, 0)
         .then((res) => {
-          console.log(`DUMP ${JSON.stringify(res)}`);
           if (res.result) {
             res.result.forEach((req) => {
               lastupdateId = chatter.processRequest(req);
