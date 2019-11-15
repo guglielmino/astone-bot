@@ -1,6 +1,4 @@
-'use strict';
-
-export default (userProvider) => ({
+const AuctionManager = (userProvider) => ({
 
   save: (userData) => {
     userProvider.save(userData);
@@ -9,3 +7,5 @@ export default (userProvider) => ({
   getAll: () => userProvider
     .getAll()
 });
+
+export default AuctionManager;

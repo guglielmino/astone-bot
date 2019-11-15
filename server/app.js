@@ -107,6 +107,7 @@ storageProvider
       setInterval(() => {
         telegram.getUpdates(lastupdateId, 100, 0)
         .then((res) => {
+          console.log(`DUMP ${JSON.stringify(res)}`);
           if (res.result) {
             res.result.forEach((req) => {
               lastupdateId = chatter.processRequest(req);

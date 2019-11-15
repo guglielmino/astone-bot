@@ -21,10 +21,8 @@ export const SubscribeResponse = {
   AuctionNotExist: 'AuctionNotExist'
 };
 
-export class AuctionManager {
-  constructor(auctionProvider) {
-    this._auctionProvider = auctionProvider;
-  }
+export const AuctionManager = (auctionProvider) => ({
+
 
   /**
    * Get all auctions not closed and with a start date lower than 'date'
@@ -33,25 +31,24 @@ export class AuctionManager {
    * @returns {*|Promise}
    */
   getActiveAuctions(date) {
-    return this._auctionProvider
+    return auctionProvider
       .getActiveAuctions(date);
-  }
+  },
 
   getNewAuctions() {
-    return this._auctionProvider
+    return auctionProvider
       .getNewAuctions();
-  }
-
+  },
 
   /**
    * Get all auction for a specific owner
    * @param username
    */
   getAuctionsByOwner(username) {
-    return this._auctionProvider
+    return auctionProvider
       .getAuctionsByOwner(username)
       .then((auctions) => auctions.filter((a) => !a.lastBid));
-  }
+  },
 
   /**
    * Returns a list of auction with at least one bid adding a "bidAge"
@@ -62,7 +59,7 @@ export class AuctionManager {
    * @returns {Promise}
    */
   getRunningAuctionsBidAge(date, trigger) {
-    return this._auctionProvider
+    return auctionProvider
       .getRunningAuctions()
       .then((res) => {
         const getDiffSeconds = (date, itemDate) => {
@@ -77,21 +74,21 @@ export class AuctionManager {
           })
           .filter((x) => x.bidAge >= trigger));
       });
-  }
+  },
 
   /**
    * Returns all closed auction in state WAIT_FOR_PAYMENT
    * @param date
    */
   getClosedAndWaitingForPayment(date) {
-    return this._auctionProvider
+    return auctionProvider
       .getClosedInState(date, consts.AUCTION_STATE_WAIT_FOR_PAYMENT);
-  }
+  },
 
   getStarting(date, minutes) {
-    return this._auctionProvider
+    return auctionProvider
       .getStarting(date, minutes);
-  }
+  },
 
   /**
    * Make a bid on a auction
@@ -100,7 +97,7 @@ export class AuctionManager {
    * @returns {Promise.<T>}
    */
   bid(auctionId, user, value = null) {
-    return this._auctionProvider
+    return auctionProvider
       .getAuctionById(auctionId)
       .then((auction) => {
         if (!auction || Object.getOwnPropertyNames(auction).length === 0) {
@@ -127,7 +124,7 @@ export class AuctionManager {
           return Promise.resolve({ status: BidResponse.InsufficientSubscribers, auction });
         }
 
-        return this._auctionProvider
+        return auctionProvider
           .addBid(auctionId, user, value)
           .then((res) => {
             // NOTE: We doesn't get auction again so update values are set explicitly here
@@ -140,7 +137,7 @@ export class AuctionManager {
           });
       })
       .catch((err) => Promise.reject(err));
-  }
+  },
 
   /**
    * Subscribe an auction by a user, following bid commands
@@ -150,11 +147,11 @@ export class AuctionManager {
    * @returns {Promise.<TResult>}
    */
   subscribe(auctionId, user) {
-    return this._auctionProvider
+    return auctionProvider
       .getAuctionsBySubscriber(user)
       .then((res) => {
         if (res.length == 0) {
-          return this._auctionProvider
+          return auctionProvider
             .addSubscriberToAuction(auctionId, user);
         }
 
@@ -171,7 +168,7 @@ export class AuctionManager {
         return Promise.resolve({ status: SubscribeResponse.MultipleAuctionSubscribe });
       })
       .catch((err) => Promise.reject(err));
-  }
+  },
 
   /**
    * Unsubscribe a subscribed auction
@@ -180,32 +177,32 @@ export class AuctionManager {
    * @returns {Promise.<TResult>|*}
    */
   unsubscribe(auctionId, user) {
-    return this._auctionProvider
+    return auctionProvider
       .getAuctionById(auctionId)
       .then((res) => {
         res.subscribers = res.subscribers.filter((x) => user.username !== x.username);
-        this._auctionProvider
+        auctionProvider
           .save(res);
       });
-  }
+  },
 
   getAuctionById(auctionId) {
-    return this._auctionProvider
+    return auctionProvider
       .getAuctionById(auctionId);
-  }
+  },
 
   closeAuction(auctionId) {
-    return this._auctionProvider
+    return auctionProvider
       .closeAuction(auctionId);
-  }
+  },
 
   createAuction(owner, title) {
-    return this._auctionProvider
+    return auctionProvider
       .save({ owner, title });
-  }
+  },
 
   updateAuction(auctionId, updateObj) {
-    return this._auctionProvider
+    return auctionProvider
       .updateAuction(auctionId, updateObj);
   }
-}
+});

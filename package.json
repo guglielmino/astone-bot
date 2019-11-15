@@ -10,6 +10,7 @@
     "build": "npm run test && npm run clean && npm run babel",
     "deploy": "",
     "start": "node --experimental-modules --es-module-specifier-resolution=node server/app.js",
+    "cli": "node --experimental-modules --es-module-specifier-resolution=node server/astone-cli.js",
     "tunnel": "lt --port 9001 --subdomain bidbot",
     "lint": "eslint --cache .",
     "code-check": "plato -r -x test -d report server/"

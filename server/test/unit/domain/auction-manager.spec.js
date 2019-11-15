@@ -35,7 +35,7 @@ describe('AuctionManager', () => {
 
     auctionProvider.addBid = sinon.stub().returns(Promise.resolve(true));
 
-    const auctionManager = new AuctionManager(auctionProvider);
+    const auctionManager = AuctionManager(auctionProvider);
     auctionManager.bid(ObjectID('572cc825de91f5b2bc3c24d8'), { username: 'guglielmino' }, 10.2)
       .then((res) => {
         res.status.should.be.equal(BidResponse.Success);
@@ -69,7 +69,7 @@ describe('AuctionManager', () => {
 
     auctionProvider.addBid = sinon.stub().returns(Promise.resolve(true));
 
-    const auctionManager = new AuctionManager(auctionProvider);
+    const auctionManager = AuctionManager(auctionProvider);
     auctionManager.bid(ObjectID('572cc825de91f5b2bc3c2123'), { username: 'guglielmino' })
       .then((res) => {
         res.status.should.be.equal(BidResponse.Success);
@@ -101,7 +101,7 @@ describe('AuctionManager', () => {
       }
     }));
 
-    const auctionManager = new AuctionManager(auctionProvider);
+    const auctionManager = AuctionManager(auctionProvider);
     auctionManager.bid(ObjectID('572cc825de91f5b2bc3c24d8'), { username: 'guglielmino' }, 10.2)
       .then((res) => {
         res.status.should.be.equal(BidResponse.AuctionNotActive);
@@ -118,7 +118,7 @@ describe('AuctionManager', () => {
 
     auctionProvider.getAuctionById = sinon.stub().returns(Promise.resolve({}));
 
-    const auctionManager = new AuctionManager(auctionProvider);
+    const auctionManager = AuctionManager(auctionProvider);
     auctionManager.bid(ObjectID('572cc825de91f5b2bc3c24d8'), { username: 'guglielmino' }, 10.2)
       .then((res) => {
         res.status.should.be.equal(BidResponse.AuctionNotExist);
@@ -148,7 +148,7 @@ describe('AuctionManager', () => {
     }));
 
 
-    const auctionManager = new AuctionManager(auctionProvider);
+    const auctionManager = AuctionManager(auctionProvider);
     auctionManager.bid(ObjectID('572cc825de91f5b2bc3c24d8'), { username: 'guglielmino' }, 10)
       .then((res) => {
         res.status.should.be.equal(BidResponse.ValueToLow);
@@ -182,7 +182,7 @@ describe('AuctionManager', () => {
       ]
     }));
 
-    const auctionManager = new AuctionManager(auctionProvider);
+    const auctionManager = AuctionManager(auctionProvider);
     auctionManager.bid(ObjectID('572cc825de91f5b2bc3c24d8'), { username: 'guglielmino' }, 100)
       .then((res) => {
         res.status.should.be.equal(BidResponse.InsufficientSubscribers);
@@ -218,7 +218,7 @@ describe('AuctionManager', () => {
 
     }));
 
-    const auctionManager = new AuctionManager(auctionProvider);
+    const auctionManager = AuctionManager(auctionProvider);
     auctionManager.bid(ObjectID('572cc825de91f5b2bc3c24d8'), { username: 'guglielmino' }, 100)
       .then((res) => {
         res.status.should.be.equal('AuctionClosed');
@@ -248,7 +248,7 @@ describe('AuctionManager', () => {
       },
       subscribers: [{ username: 'mimmo', chatId: 12345 }]
     }));
-    const auctionManager = new AuctionManager(auctionProvider);
+    const auctionManager = AuctionManager(auctionProvider);
 
     auctionManager.subscribe(ObjectID('572cc825de91f5b2bc3c24d8'), { username: 'mimmo' })
       .then((res) => {
@@ -280,7 +280,7 @@ describe('AuctionManager', () => {
         chatId: 19915021
       }
     }]));
-    const auctionManager = new AuctionManager(auctionProvider);
+    const auctionManager = AuctionManager(auctionProvider);
 
     auctionManager.subscribe(ObjectID('572cc825de91f5b2bc3c24d8'), { username: 'mimmo' })
       .then((res) => {
@@ -332,7 +332,7 @@ describe('AuctionManager', () => {
       },
       lastBid: tenSeconsAgo
     }]));
-    const auctionManager = new AuctionManager(auctionProvider);
+    const auctionManager = AuctionManager(auctionProvider);
 
     auctionManager.getRunningAuctionsBidAge(new Date(), 60)
       .then((res) => {
@@ -380,7 +380,7 @@ describe('AuctionManager', () => {
         }
       }]));
 
-    const auctionManager = new AuctionManager(auctionProvider);
+    const auctionManager = AuctionManager(auctionProvider);
 
     auctionManager.getAuctionsByOwner('auctionusr')
       .then((res) => {

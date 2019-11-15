@@ -1,4 +1,4 @@
-import AuctionManager from './auction-manager';
+import { AuctionManager } from './auction-manager';
 import UserManager from './user-manager';
 
 export default (storageProvider) => {
@@ -8,7 +8,7 @@ export default (storageProvider) => {
   return {
     getAuctionManager() {
       if (!_auctionManager) {
-        _auctionManager = new AuctionManager(storageProvider.auctionProvider);
+        _auctionManager = AuctionManager(storageProvider.auctionProvider);
       }
       return _auctionManager;
     },

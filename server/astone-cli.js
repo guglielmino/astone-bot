@@ -1,14 +1,15 @@
 'use strict';
 
 import program from 'commander';
-
 import requestsync from 'request';
+import util from 'util';
+
 import Telegram from './bot-api/telegram';
 import config from './config';
 import StorageProvider from './services/storage/mongodb';
 import ManagerFactory from './services/domain/manager-factory';
 import AuctionApprover from './services/domain/auction-approver';
-import util from 'util';
+
 import * as urlConsts from './web/url-consts';
 
 const request = util.promisify(requestsync);
