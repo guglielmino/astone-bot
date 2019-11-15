@@ -93,7 +93,7 @@ storageProvider
     });
 
     const closeAuctionUrl = config.base_url + urlConsts.PAGE_PAYPAL_GETPAYURL;
-    const auctionEvents = new AuctionEvents(telegram, i18n,
+    const auctionEvents = AuctionEvents(telegram, i18n,
       managerFactory.getAuctionManager(), closeAuctionUrl);
 
     auctionTimer.start();
