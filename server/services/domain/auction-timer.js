@@ -1,33 +1,34 @@
 import cron from 'cron';
 
-export default class AuctionTimer {
-  constructor() {
-    this._timerTicks = 0;
+const AuctionTimer = () => {
+  let timerTicks = 0;
+  const timedFunctions = [];
 
-    this._timedFunctions = [];
+  const timerFunc = () => {
+    timerTicks += 1;
 
-    this._job = new cron.CronJob({
-      cronTime: '* * * * * *',
-      onTick: this._timerFunc.bind(this),
-      start: false,
-      timeZone: 'Europe/Rome'
+    timedFunctions.forEach((func) => {
+      func(timerTicks);
     });
-  }
+  };
 
-  schedule(func) {
-    this._timedFunctions
-      .push(func);
-  }
+  const job = new cron.CronJob({
+    cronTime: '* * * * * *',
+    onTick: timerFunc,
+    start: false,
+    timeZone: 'Europe/Rome'
+  });
 
-  start() {
-    this._job.start();
-  }
+  return {
+    schedule(func) {
+      timedFunctions
+        .push(func);
+    },
 
-  _timerFunc() {
-    this._timerTicks++;
+    start() {
+      job.start();
+    }
+  };
+};
 
-    this._timedFunctions.forEach((func) => {
-      func(this._timerTicks);
-    });
-  }
-}
+export default AuctionTimer;

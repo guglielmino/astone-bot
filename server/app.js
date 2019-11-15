@@ -78,7 +78,7 @@ storageProvider
     const auctionChant = AuctionChant(telegram,
       managerFactory.getAuctionManager(), auctionAges);
 
-    const auctionTimer = new AuctionTimer(auctionChant);
+    const auctionTimer = AuctionTimer(auctionChant);
     auctionTimer.schedule((ticks) => auctionChant.make(new Date()));
 
     const auctionStartNotification = AuctionStartNotification(telegram, managerFactory);
