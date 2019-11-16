@@ -2,64 +2,67 @@ import { queryExecutor } from './provider-helper';
 
 const COLLECTION_NAME = 'users';
 
-export default class UserProvider {
-  constructor(db) {
-    this.db = db;
-    this.findDocs = queryExecutor(db, COLLECTION_NAME);
+const UserProvider = (db) => {
 
-    this.db.collection(COLLECTION_NAME, (err, col) => {
-      col.createIndex({ username: 1 }, { w: 1, unique: true });
-    });
-  }
+  const findDocs = queryExecutor(db, COLLECTION_NAME);
 
-  save(userData) {
-    return new Promise((resolve, reject) => {
-      this.db.collection(COLLECTION_NAME, (err, col) => {
-        if (err) {
-          reject(err);
-        }
+  db.collection(COLLECTION_NAME, (err, col) => {
+    col.createIndex({ username: 1 }, { w: 1, unique: true });
+  });
 
+  return {
 
-        col.insertOne(userData, (err, r) => {
+    save(userData) {
+      return new Promise((resolve, reject) => {
+        db.collection(COLLECTION_NAME, (err, col) => {
           if (err) {
-            if (err.code === 11000) {
-              col.updateOne({ username: userData.username },
-                { $set: { id: userData.id } },
-                (err, r) => {
-                  if (err) {
-                    reject(err);
-                  } else {
-                    resolve(r.result.ok);
-                  }
-                });
+            reject(err);
+          }
+
+
+          col.insertOne(userData, (err, r) => {
+            if (err) {
+              if (err.code === 11000) {
+                col.updateOne({ username: userData.username },
+                  { $set: { id: userData.id } },
+                  (err, r) => {
+                    if (err) {
+                      reject(err);
+                    } else {
+                      resolve(r.result.ok);
+                    }
+                  });
+              }
+              reject(err);
+            } else {
+              resolve(r.insertedCount);
             }
-            reject(err);
-          } else {
-            resolve(r.insertedCount);
-          }
+          });
         });
       });
-    });
-  }
+    },
 
-  updateLang(usename, langCode) {
-    return new Promise((resolve, reject) => {
-      this.db.collection(COLLECTION_NAME, (err, col) => {
-        if (err) {
-          reject(err);
-        }
-        col.updateOne({ username: usename }, { $set: { lang: langCode } }, (err, r) => {
+    updateLang(usename, langCode) {
+      return new Promise((resolve, reject) => {
+        db.collection(COLLECTION_NAME, (err, col) => {
           if (err) {
             reject(err);
-          } else {
-            resolve(r.result.ok === 1);
           }
+          col.updateOne({ username: usename }, { $set: { lang: langCode } }, (err, r) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(r.result.ok === 1);
+            }
+          });
         });
       });
-    });
-  }
+    },
 
-  getAll() {
-    return this.findDocs({});
-  }
-}
+    getAll() {
+      return findDocs({});
+    }
+  };
+};
+
+export default UserProvider;
