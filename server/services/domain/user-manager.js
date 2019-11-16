@@ -1,4 +1,4 @@
-const AuctionManager = (userProvider) => ({
+const UserManager = (userProvider) => ({
 
   save: (userData) => {
     userProvider.save(userData);
@@ -8,4 +8,4 @@ const AuctionManager = (userProvider) => ({
     .getAll()
 });
 
-export default AuctionManager;
+export default UserManager;

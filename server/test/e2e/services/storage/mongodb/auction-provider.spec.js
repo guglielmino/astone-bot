@@ -13,7 +13,7 @@ describe('AuctionProvider', () => {
   let storageProvider;
 
   beforeEach((done) => {
-    storageProvider = new StorageProvider();
+    storageProvider = StorageProvider();
 
     storageProvider
       .connect({

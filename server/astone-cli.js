@@ -17,7 +17,7 @@ const telegram = new Telegram(request, config.telegram.api_key);
 
 function connect() {
   return new Promise((resolve, reject) => {
-    const storageProvider = new StorageProvider();
+    const storageProvider = StorageProvider();
     storageProvider
       .connect(config)
       .then((db) => {

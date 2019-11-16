@@ -2,22 +2,22 @@ import { AuctionManager } from './auction-manager';
 import UserManager from './user-manager';
 
 export default (storageProvider) => {
-  let _auctionManager;
-  let _userManager;
+  let auctionManager;
+  let userManager;
 
   return {
     getAuctionManager() {
-      if (!_auctionManager) {
-        _auctionManager = AuctionManager(storageProvider.auctionProvider);
+      if (!auctionManager) {
+        auctionManager = AuctionManager(storageProvider.auctionProvider);
       }
-      return _auctionManager;
+      return auctionManager;
     },
 
     getUserManager() {
-      if (!_userManager) {
-        _userManager = UserManager(storageProvider.userProvider);
+      if (!userManager) {
+        userManager = UserManager(storageProvider.userProvider);
       }
-      return _userManager;
+      return userManager;
     }
   };
 };

@@ -44,7 +44,7 @@ const paypal = new PayPal({
 const request = util.promisify(requestsync);
 const telegram = new Telegram(request, config.telegram.api_key);
 
-const storageProvider = new StorageProvider();
+const storageProvider = StorageProvider();
 
 
 // We want all dates in UTC

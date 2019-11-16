@@ -2,37 +2,42 @@ import MongoClient from 'mongodb';
 import AuctionProvider from './auction-provider';
 import UserProvider from './user-provider';
 
-export default class StorageProvider {
-  constructor() {
+const StorageProvider = () => {
+  let auctionProvider = null;
+  let userProvider = null;
 
-  }
+  return {
+    connect(config) {
+      if (!config.mongo.uri) {
+        throw Error('MongoDB connection not configured, set MONGO_URI env variable');
+      }
 
-  connect(config) {
-    if (!config.mongo.uri) {
-      throw Error('MongoDB connection not configured, set MONGO_URI env variable');
-    }
+      return new Promise((resolve, reject) => {
+        MongoClient.connect(config.mongo.uri, (err, client) => {
+          if (err) {
+            reject(err);
+          }
 
-    return new Promise((resolve, reject) => {
-      MongoClient.connect(config.mongo.uri, (err, client) => {
-        if (err) {
-          reject(err);
-        }
+          const db = client.db(config.mongo.dbname);
 
-        this.db = client.db(config.mongo.dbname);
+          auctionProvider = AuctionProvider(db);
+          userProvider = UserProvider(db);
 
-        this._auctionProvider = AuctionProvider(this.db);
-        this._userProvider = UserProvider(this.db);
-
-        resolve(client);
+          resolve(client);
+        });
       });
-    });
-  }
+    },
 
-  get auctionProvider() {
-    return this._auctionProvider;
-  }
+    get auctionProvider() {
+      return auctionProvider;
+    },
 
-  get userProvider() {
-    return this._userProvider;
-  }
-}
+    get userProvider() {
+      return userProvider;
+    },
+  };
+
+};
+
+export default StorageProvider;
+
