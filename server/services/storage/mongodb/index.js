@@ -20,7 +20,7 @@ export default class StorageProvider {
 
         this.db = client.db(config.mongo.dbname);
 
-        this._auctionProvider = new AuctionProvider(this.db);
+        this._auctionProvider = AuctionProvider(this.db);
         this._userProvider = new UserProvider(this.db);
 
         resolve(client);
